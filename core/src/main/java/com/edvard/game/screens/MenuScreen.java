@@ -1,6 +1,6 @@
 package com.edvard.game.screens;
 
-import com.badlogic.gdx.ApplicationAdapter;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
@@ -15,18 +15,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.ScreenUtils;
+
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.edvard.game.MainGame;
 
 public class MenuScreen implements Screen {
 
     Stage stage;
-    //SpriteBatch batch;
     OrthographicCamera camera;
-
-    //Sprite startButtonSprite;
-    //Sprite exitButtonSprite;
 
     ImageButton startButton;
     ImageButton exitButton;
@@ -38,9 +34,6 @@ public class MenuScreen implements Screen {
 
         stage = new Stage(new ScreenViewport());
         this.game = game;
-
-        //float height = Gdx.graphics.getHeight();
-        //float width = Gdx.graphics.getWidth();
 
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.setToOrtho(false);
@@ -87,16 +80,6 @@ public class MenuScreen implements Screen {
         stage.addActor(startButton);
         stage.addActor(exitButton);
         Gdx.input.setInputProcessor(stage);
-
-        //startButtonSprite = new Sprite(new Texture("buttons/play01.png"));
-        //exitButtonSprite = new Sprite(new Texture("buttons/back01.png"));
-
-        //startButtonSprite.setSize(790/4, 342/4);
-        //exitButtonSprite.setSize(790/4, 342/4);
-
-        //startButtonSprite.setPosition((float) (width/2.7), (float) (height/1.8));
-        //exitButtonSprite.setPosition((float) (width/2.7), (float) (height/3.2));
-
     }
 
     @Override
@@ -116,7 +99,6 @@ public class MenuScreen implements Screen {
         stage.act();
         stage.draw();
         game.batch.end();
-
     }
 
     @Override
@@ -144,7 +126,5 @@ public class MenuScreen implements Screen {
     @Override
     public void dispose() {
         game.batch.dispose();
-
-
     }
 }

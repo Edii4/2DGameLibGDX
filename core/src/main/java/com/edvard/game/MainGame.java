@@ -8,6 +8,7 @@ import com.edvard.game.screens.PlayScreen;
 public class MainGame extends Game {
     public static final int V_WIDTH = 200;
     public static final int V_HEIGHT = 200;
+    public static final float PPM = 100;
 
     public SpriteBatch batch;
 
