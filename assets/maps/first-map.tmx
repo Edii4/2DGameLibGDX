@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="28" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="29">
+ <tileset firstgid="1" source="SNES - Fire Emblem Mystery of the Emblem JPN - BS Map 04.tsx"/>
+ <layer id="1" name="Tile Layer 1" width="28" height="28">
+  <data encoding="base64" compression="zlib">
+   eJwV1gMSIAYABMGzbdu2bdu2bdu27eRs27Zt206navsNOwEDBAgQiMAEISjBCE4IQhKK0IQhLOEITwQiEonIRCEq0YhODGISi9jEIS7xiE8CEpKIxCQhKclITgpSkorUpCEt6UhPBjKSicxkISvZyE4OcpKL3OQhL/nITwEKUojCFKEoxShOCUpSitKUoSzlKE8FKlKJylShKtWoTg1qUova1KEu9ahPAxrSiMY0oSnNaE4LWtKK1rShLe1oTwc60onOdKEr3ehOD3rSi970oS/96M8ABjKIwQxhKMMYzghGMorRjGEs4xjPBCYyiclMYSrTmM4MZjKL2cxhLvOYzwIWsojFLGEpy1jOCv7hX1ayitWsYS3rWM8GNrKJzWxhK9vYzg52sovd7GEv+9jPAQ5yiMMc4SjHOM4JTnKK05zhLOc4zwUuconLXOEq17jODW5yi9vc4S73uM8DHvKIxzzhKc94zgte8orXvOEt73jPBz7yic984Svf+M4PfvKL3/zhLwECGoEITBCCEozghCAkoQhNGMISjvBEICKRiEwUohKN6MQgJrGITRziEo/4JCAhiUhMEpKSjOSkICWpSE0a0pKO9GQgI5nITBayko3s5CAnuchNHvKSj/wUoCCFKEwRilKM4pSgJKUoTRnKUo7yVKAilahMFapSjerUoCa1qE0d6lKP+jSgIY1oTBOa0ozmtKAlrWhNG9rSjvZ0oCOd6EwXutKN7vSgJ73oTR/60o/+DGAggxjMEIYyjOGMYCSjGM0YxjKO8UxgIpOYzBSmMo3pzGAms5jNHOYyj/ksYCGLWMwSlrKM5azgH/5lJatYzRrWso71bGAjm9jMFrayje3sYCe72M0e9rKP/RzgIIc4zBGOcozjnOAkpzjNGc5yjvNc4CKXuMwVrnKN69zgJre4zR3uco/7POAhj3jME57yjOe84CWveM0b3vKO93zgI5/4zBe+8o3v/OAnv/jNH/7y//EHJBCBCUJQghGcEIQkFKEJQ1jCEZ4IRCQSkYlCVKIRnRjEJBaxiUNc4hGfBCQkEYlJQlKSkZwUpCQVqUlDWtKRngxkJBOZyUJWspGdHOQkF7nJQ17ykZ8CFKQQhSlCUYpRnBKUpBSlKUNZylGeClSkEpWpQlWqUZ0a1KQWtalDXepRnwY0pBGNaUJTmtGcFrSkFa1pQ1va0Z4OdKQTnelCV7rRnR70pBe96UNf+tGfAQxkEIMZwlCGMZwRjGQUoxnDWMYxnglMZBKTmcJUpjGdGcxkFrOZw1zmMZ8FLGQRi1nCUpaxnBX8w7+sZBWrWcNa1rGeDWxkE5vZwla2sZ0d7GQXu9nDXvaxnwMc5BCHOcJRjnGcE5zkFKc5w1nOcZ4LXOQSl7nCVa5xnRvc5Ba3ucNd7nGfBzzkEY95wlOe8ZwXvOQVr3nDW97xng985BOf+cJXvvGdH/zkF7/5w1/+j/6ABCIwQQhKMIITgpCEIjRhCEs4whOB/wAFPoJL
+  </data>
+ </layer>
+ <objectgroup id="2" name="terrain">
+  <object id="6" x="69.75" y="0.75">
+   <polygon points="0,0 -38,41.5 -27.25,42 -27.5,97.75 -40.5,98.25 -39.25,143 -27.75,143.25 -26.75,158 -14.25,158.25 -12.75,195.25 -13.75,200.25 -26,200 -25.75,213 -49.75,214.75 -25.75,239.25 -53,271 -53.25,283.25 -25.75,309 -39.25,328.75 -39.75,361.5 -49.75,369.5 -47.75,386.5 10.25,446.75 -69.75,446.75 -69.75,-0.5"/>
+  </object>
+  <object id="7" x="69.5" y="1.25">
+   <polygon points="0,0 7,20 21.25,20 29.25,11.5 44.5,15.25 58.5,21.25 70.25,13 101.5,14.25 105.25,0 114.75,0.25 114.75,69 128.75,70.25 129,110.5 116.5,111 114,99.25 92.25,98 86.75,102.5 87,112.75 75.5,111.25 87.75,99.5 87.5,67.75 82.75,62 78.25,61.25 70,46.75 60.5,52 45.5,55.25 42,68.5 29.25,69 29,85.5 3.75,84.5 0.5,96 -14,101 -12.75,127.25 13.25,127.75 15.75,193.5 73.5,251 74.25,284.5 100.5,306 99.25,313.25 89.75,312 86.5,300.25 68,295.75 43.75,300.25 43.25,424.25 74.5,426 74,439.5 86.5,439.75 86.5,427.5 92.5,427 103.75,439.25 135.75,440.25 136,446.5 206.5,446.25 201.5,397.75 171.5,366.75 171.5,322.25 143.5,296.75 143.5,279.25 101,238.25 102,207.75 73,183.25 74,127.25 116,126.75 116.5,154.75 129.5,155.25 129.5,224.25 143.5,224.25 171.5,251.75 171.5,270.75 187,270.25 200.5,257.75 200,283.75 186,285.75 186.5,310.75 213.5,310.75 216,297.75 228,297.25 229,283.75 243.5,281.75 243.5,213.25 229.5,207.75 229.5,155.25 217,155.75 215.5,141.25 188,141.25 257,73.25 216.5,26.25 215.5,-0.75"/>
+  </object>
+  <object id="9" x="327.455" y="243.273">
+   <polygon points="0,0 0.545455,103.455 27.2727,127.091 27.2727,140.727 41.8182,141.273 42.5455,168.227 86.0455,168.727 85.5455,140.727 45.0455,140.727 56.0455,129.227 56.5455,112.227 73.0455,97.2273 57.5455,83.7273 57.5455,24.2273 47.5455,14.7273 56.0455,10.2273 56.0455,-0.272727 48.0455,-2.27273 56.1818,-50.1818 39.6364,-67.8182 14.9091,-58.5455 0.727273,-43.8182"/>
+  </object>
+  <object id="10" x="383.5" y="-1">
+   <polygon points="0,0 0,29.5 -16,29.5 -16,42.5 -39.5,43 -44,56 -57.5,58 -56,83.5 -29,84 -30,95.5 -14,98 -1.5,112 15,113.5 15,127.5 29.5,129.5 54.5,164 54.5,170 46,171 43,176 44,195 56.5,198 58,356 44,356 44,367 44.5,414.5 29,413.5 29,428.5 -13.5,428 -14.5,448.5 64.5,448.5 64.5,1"/>
+  </object>
+  <object id="11" x="353" y="433">
+   <polygon points="0,0 10,14.5 -68.5,14.5 -67,8.5 -44.5,0 -30,13.5"/>
+  </object>
+  <object id="12" x="271.5" y="398.5">
+   <polygon points="0,0 13,0 13.5,28 26,29.5 26.5,36.5 14.5,42.5 4,42"/>
+  </object>
+  <object id="13" x="287" y="341">
+   <polygon points="0,0 25,1 25,27 12.5,27 12.5,41.5 -15,42 -15,15 -2,14"/>
+  </object>
+  <object id="14" x="412" y="199">
+   <polygon points="0,0 0.5,13 15,13 13,1"/>
+  </object>
+  <object id="15" x="426.5" y="225">
+   <polygon points="0,0 0,-11.5 12,-12 12.5,1"/>
+  </object>
+  <object id="20" x="401" y="227.667">
+   <polygon points="0,0 0.333333,44 12,44 12,29.6667 26.3333,29.3333 25,44 39.3333,44 39.3333,-0.666667"/>
+  </object>
+  <object id="21" x="45.6667" y="368.667">
+   <polygon points="0,0 38,0 38,-53 24.3333,-52.6667 24.6667,-42 14,-40.6667 3,-41"/>
+  </object>
+  <object id="22" x="59" y="241.667">
+   <polygon points="0,0 25,1.33333 25,28 12.3333,28.3333 11.3333,55.3333 -14,57 -14,13.6667 -2.33333,14"/>
+  </object>
+  <object id="23" x="99.6667" y="257.333">
+   <polygon points="0,0 0.666667,26.6667 12.6667,27.6667 12.6667,-0.666667"/>
+  </object>
+  <object id="24" x="127.333" y="256.667">
+   <polygon points="0,0 1.66667,15.3333 16.6667,15 15.6667,0"/>
+  </object>
+  <object id="25" x="86.6667" y="214.333">
+   <polygon points="0,0 -0.333333,11.3333 10.6667,12.6667 11.6667,-1.66667"/>
+  </object>
+ </objectgroup>
+ <objectgroup id="5" name="house">
+  <object id="26" x="407" y="300.75">
+   <polygon points="0,0 0.5,25 24.5,25.25 25,1.75"/>
+  </object>
+ </objectgroup>
+ <objectgroup id="6" name="chests">
+  <object id="27" x="56.9091" y="384">
+   <polygon points="0,0 0.181818,14.7273 14,14.7273 14,0"/>
+  </object>
+  <object id="28" x="326.75" y="27.75">
+   <polygon points="0,0 0.25,14.25 14.25,14.125 14.125,0.25"/>
+  </object>
+ </objectgroup>
+</map>

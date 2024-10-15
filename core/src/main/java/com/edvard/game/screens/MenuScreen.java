@@ -1,15 +1,15 @@
-package com.edvard.game;
+package com.edvard.game.screens;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -17,11 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.edvard.game.MainGame;
 
-public class MenuScreen extends ApplicationAdapter implements Screen {
+public class MenuScreen implements Screen {
 
     Stage stage;
-    SpriteBatch batch;
+    //SpriteBatch batch;
     OrthographicCamera camera;
 
     //Sprite startButtonSprite;
@@ -31,28 +32,28 @@ public class MenuScreen extends ApplicationAdapter implements Screen {
     ImageButton exitButton;
 
 
-    MainGame game;
+    private MainGame game;
 
     public MenuScreen(MainGame game) {
 
         stage = new Stage(new ScreenViewport());
         this.game = game;
 
-        float height = Gdx.graphics.getHeight();
-        float width = Gdx.graphics.getWidth();
+        //float height = Gdx.graphics.getHeight();
+        //float width = Gdx.graphics.getWidth();
 
-        camera = new OrthographicCamera(width, height);
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.setToOrtho(false);
 
-        batch = new SpriteBatch();
+        game.batch = new SpriteBatch();
 
         Drawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/play01.png"))));
         startButton = new ImageButton(drawable);
         drawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/back01.png"))));
         exitButton = new ImageButton(drawable);
 
-        startButton.setSize(790/4, 342/4);
-        exitButton.setSize(790/4, 342/4);
+        startButton.setSize((float) Gdx.graphics.getWidth() /4, (float) Gdx.graphics.getHeight() /4);
+        exitButton.setSize((float) Gdx.graphics.getWidth() /4, (float) Gdx.graphics.getHeight() /4);
 
         startButton.setPosition((float) Gdx.graphics.getWidth()/2 - startButton.getWidth()/2, ((float) Gdx.graphics.getHeight() /2) + startButton.getHeight()/2);
         exitButton.setPosition((float) Gdx.graphics.getWidth()/2 - exitButton.getWidth()/2, ((float) Gdx.graphics.getHeight() /2) - exitButton.getHeight());
@@ -66,6 +67,9 @@ public class MenuScreen extends ApplicationAdapter implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/button-clicked-sound.mp3"));
                 sound.play();
+                startButton.remove();
+                exitButton.remove();
+                game.setScreen(new PlayScreen(game));
                 System.out.println("clicked");
             }
         });
@@ -103,15 +107,15 @@ public class MenuScreen extends ApplicationAdapter implements Screen {
 
     @Override
     public void render(float v) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+        game.batch.setProjectionMatrix(camera.combined);
 
-        batch.setProjectionMatrix(camera.combined);
-
-        batch.begin();
+        game.batch.begin();
         stage.act();
         stage.draw();
-        batch.end();
+        game.batch.end();
 
     }
 
@@ -119,7 +123,7 @@ public class MenuScreen extends ApplicationAdapter implements Screen {
     public void resize(int i, int i1) {
         stage.getViewport().update(i, i1, true);
         startButton.setPosition((float) Gdx.graphics.getWidth()/2 - startButton.getWidth()/2, ((float) Gdx.graphics.getHeight() /2) + startButton.getHeight()/2);
-        exitButton.setPosition((float) Gdx.graphics.getWidth()/2 - exitButton.getWidth()/2, ((float) Gdx.graphics.getHeight() /2) - exitButton.getHeight());
+        exitButton.setPosition((float) Gdx.graphics.getWidth()/2 - exitButton.getWidth()/2, ((float) Gdx.graphics.getHeight()/2) - exitButton.getHeight());
     }
 
     @Override
@@ -139,7 +143,7 @@ public class MenuScreen extends ApplicationAdapter implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
+        game.batch.dispose();
 
 
     }
