@@ -1,0 +1,19 @@
+
+Hero.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+Player_Actions
+  rotate: false
+  xy: 1, 323
+  size: 96, 576
+  orig: 96, 576
+  offset: 0, 0
+  index: -1
+Player
+  rotate: false
+  xy: 1, 1
+  size: 192, 320
+  orig: 192, 320
+  offset: 0, 0
+  index: -1
