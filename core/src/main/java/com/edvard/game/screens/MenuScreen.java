@@ -27,7 +27,6 @@ public class MenuScreen implements Screen {
     ImageButton startButton;
     ImageButton exitButton;
 
-
     private MainGame game;
 
     public MenuScreen(MainGame game) {
@@ -84,7 +83,6 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-
 
     }
 
