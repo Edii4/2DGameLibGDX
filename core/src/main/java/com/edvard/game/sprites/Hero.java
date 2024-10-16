@@ -11,10 +11,8 @@ public class Hero extends Sprite {
 
     public Hero(World world) {
         this.world = world;
-
         defineHero();
     }
-
 
     public void defineHero() {
         BodyDef bdef = new BodyDef();

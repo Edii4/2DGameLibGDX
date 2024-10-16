@@ -5,12 +5,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -18,6 +15,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.edvard.game.MainGame;
 import com.edvard.game.scenes.Hud;
 import com.edvard.game.sprites.Hero;
+import com.edvard.game.tools.B2WorldCreator;
 
 public class PlayScreen implements Screen {
 
@@ -53,56 +51,8 @@ public class PlayScreen implements Screen {
         world = new World(new Vector2(0, -10), true);
         debugRenderer = new Box2DDebugRenderer();
 
-        BodyDef bodyDef = new BodyDef();
-        PolygonShape shape = new PolygonShape();
-        FixtureDef fixtureDef = new FixtureDef();
-        Body body;
-
-        //terrain
-        for(MapObject object : tiledMap.getLayers().get(1).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            bodyDef.type = BodyDef.BodyType.StaticBody;
-            bodyDef.position.set((rect.getX() + rect.getWidth() / 2) /MainGame.PPM, (rect.getY() + rect.getHeight() / 2) / MainGame.PPM);
-
-            body = world.createBody(bodyDef);
-
-            shape.setAsBox(rect.getWidth() / 2 / MainGame.PPM, rect.getHeight() / 2 / MainGame.PPM);
-            fixtureDef.shape = shape;
-            body.createFixture(fixtureDef);
-
-        }
-
-        //house
-        for(MapObject object : tiledMap.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            bodyDef.type = BodyDef.BodyType.StaticBody;
-            bodyDef.position.set((rect.getX() + rect.getWidth() / 2) / MainGame.PPM, (rect.getY() + rect.getHeight() / 2) / MainGame.PPM);
-
-            body = world.createBody(bodyDef);
-
-            shape.setAsBox(rect.getWidth() / 2 / MainGame.PPM, rect.getHeight() / 2 / MainGame.PPM);
-            fixtureDef.shape = shape;
-            body.createFixture(fixtureDef);
-
-        }
-
-        //chests
-        for(MapObject object : tiledMap.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-
-            bodyDef.type = BodyDef.BodyType.StaticBody;
-            bodyDef.position.set((rect.getX() + rect.getWidth() / 2) / MainGame.PPM, (rect.getY() + rect.getHeight() / 2) / MainGame.PPM);
-
-            body = world.createBody(bodyDef);
-
-            shape.setAsBox(rect.getWidth() / 2 / MainGame.PPM, rect.getHeight() / 2 / MainGame.PPM);
-            fixtureDef.shape = shape;
-            body.createFixture(fixtureDef);
-
-
-        }
+        //objects
+        new B2WorldCreator(world, tiledMap);
 
         //hero
         hero = new Hero(world);
@@ -118,7 +68,6 @@ public class PlayScreen implements Screen {
 
         if(Gdx.input.isKeyPressed(Input.Keys.W)) {
             hero.b2body.applyLinearImpulse(new Vector2(0, 0.5f), hero.b2body.getWorldCenter(), true);
-            System.out.println(delta);
             if(hero.b2body.getLinearVelocity().y > 0.5f) {
                 hero.b2body.setLinearVelocity(new Vector2(0, 0));
             }
@@ -141,8 +90,6 @@ public class PlayScreen implements Screen {
                 hero.b2body.setLinearVelocity(new Vector2(0, 0));
             }
         }
-
-
 
     }
 
@@ -198,6 +145,10 @@ public class PlayScreen implements Screen {
 
     @Override
     public void dispose() {
-
+        tiledMap.dispose();
+        renderer.dispose();
+        world.dispose();
+        debugRenderer.dispose();
+        hud.dispose();
     }
 }
