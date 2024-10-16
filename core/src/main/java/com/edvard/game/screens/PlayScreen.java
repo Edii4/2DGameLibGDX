@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -18,6 +19,8 @@ import com.edvard.game.sprites.Hero;
 import com.edvard.game.tools.B2WorldCreator;
 
 public class PlayScreen implements Screen {
+
+    private TextureAtlas atlas;
 
     private Hero hero;
 
@@ -34,6 +37,8 @@ public class PlayScreen implements Screen {
     private Hud hud;
 
     public PlayScreen(MainGame game) {
+        atlas = new TextureAtlas("textures/hero/Hero.pack");
+
         this.game = game;
         camera = new OrthographicCamera();
 
@@ -55,8 +60,12 @@ public class PlayScreen implements Screen {
         new B2WorldCreator(world, tiledMap);
 
         //hero
-        hero = new Hero(world);
+        hero = new Hero(world, this);
 
+    }
+
+    public TextureAtlas getAtlas() {
+        return atlas;
     }
 
     @Override
@@ -97,6 +106,9 @@ public class PlayScreen implements Screen {
         handleInput(delta);
 
         world.step(1/60f, 6, 2);
+
+        hero.update(delta);
+
         camera.position.x = hero.b2body.getPosition().x;
         camera.position.y = hero.b2body.getPosition().y;
 
@@ -116,6 +128,11 @@ public class PlayScreen implements Screen {
         renderer.render();
 
         debugRenderer.render(world, camera.combined);
+
+        game.batch.setProjectionMatrix(camera.combined);
+        game.batch.begin();
+        hero.draw(game.batch);
+        game.batch.end();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
