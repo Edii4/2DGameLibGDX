@@ -3,22 +3,32 @@ package com.edvard.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.edvard.game.MainGame;
 import com.edvard.game.scenes.Hud;
 import com.edvard.game.sprites.Hero;
 import com.edvard.game.tools.B2WorldCreator;
+import com.edvard.game.tools.WorldContactListener;
 
 public class PlayScreen implements Screen {
+
+    public static Label startFightLabel;
 
     private TextureAtlas atlas;
 
@@ -62,6 +72,15 @@ public class PlayScreen implements Screen {
         //hero
         hero = new Hero(world, this);
 
+
+        world.setContactListener(new WorldContactListener());
+
+        startFightLabel = new Label("Press SPACE", new Label.LabelStyle(new BitmapFont(), Color.CYAN));
+        //startFightLabel.setPosition(hero.b2body.getPosition().x, hero.b2body.getPosition().y -50);
+        startFightLabel.setPosition(100, 80);
+        startFightLabel.setFontScale(0.3f);
+        startFightLabel.setVisible(false);
+        hud.stage.addActor(startFightLabel);
     }
 
     public TextureAtlas getAtlas() {
