@@ -168,7 +168,9 @@ public class Hero extends Sprite {
         shape.setRadius(5 / MainGame.PPM);
 
         fdef.shape = shape;
-        b2body.createFixture(fdef);
+        b2body.createFixture(fdef).setUserData("hero");
+
+
     }
 
 
