@@ -76,26 +76,26 @@ public class PlayScreen implements Screen {
     public void handleInput(float delta) {
 
         if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-            hero.b2body.applyLinearImpulse(new Vector2(0, 0.3f), hero.b2body.getWorldCenter(), true);
-            if(hero.b2body.getLinearVelocity().y > 0.3f) {
+            hero.b2body.applyLinearImpulse(new Vector2(0, 30f * delta), hero.b2body.getWorldCenter(), true);
+            if(hero.b2body.getLinearVelocity().y > 30f * delta) {
                 hero.b2body.setLinearVelocity(new Vector2(0, 0));
             }
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.D) && hero.b2body.getLinearVelocity().x <= 0.3f) {
-            hero.b2body.applyLinearImpulse(new Vector2(0.3f, 0), hero.b2body.getWorldCenter(), true);
-            if(hero.b2body.getLinearVelocity().x > 0.3f) {
+        if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+            hero.b2body.applyLinearImpulse(new Vector2(30f * delta, 0), hero.b2body.getWorldCenter(), true);
+            if(hero.b2body.getLinearVelocity().x > 30f * delta) {
                 hero.b2body.setLinearVelocity(new Vector2(0, 0));
             }
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-            hero.b2body.applyLinearImpulse(new Vector2(0, -0.3f), hero.b2body.getWorldCenter(), true);
-            if(hero.b2body.getLinearVelocity().y < -0.3f) {
+            hero.b2body.applyLinearImpulse(new Vector2(0, -30f * delta), hero.b2body.getWorldCenter(), true);
+            if(hero.b2body.getLinearVelocity().y < -30f * delta) {
                 hero.b2body.setLinearVelocity(new Vector2(0, 0));
             }
         }
         if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-            hero.b2body.applyLinearImpulse(new Vector2(-0.3f, 0), hero.b2body.getWorldCenter(), true);
-            if(hero.b2body.getLinearVelocity().x < -0.3f) {
+            hero.b2body.applyLinearImpulse(new Vector2(-30f * delta, 0), hero.b2body.getWorldCenter(), true);
+            if(hero.b2body.getLinearVelocity().x < -30f * delta) {
                 hero.b2body.setLinearVelocity(new Vector2(0, 0));
             }
         }
