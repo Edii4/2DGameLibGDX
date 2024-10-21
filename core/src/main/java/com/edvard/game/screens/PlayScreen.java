@@ -13,11 +13,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.edvard.game.MainGame;
@@ -28,6 +24,7 @@ import com.edvard.game.tools.WorldContactListener;
 
 public class PlayScreen implements Screen {
 
+    public static boolean isSpacePressable;
     public static Label startFightLabel;
 
     private TextureAtlas atlas;
@@ -81,6 +78,8 @@ public class PlayScreen implements Screen {
         startFightLabel.setFontScale(0.3f);
         startFightLabel.setVisible(false);
         hud.stage.addActor(startFightLabel);
+
+        isSpacePressable = false;
     }
 
     public TextureAtlas getAtlas() {
@@ -121,7 +120,17 @@ public class PlayScreen implements Screen {
 
     }
 
+    public void nextScreen() {
+        if(isSpacePressable && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            game.setScreen(new FightScreen(game));
+            FightScreen.playScreen = this;
+            System.out.println("pressed");
+            System.out.println(this);
+        }
+    }
+
     public void update(float delta) {
+        nextScreen();
         handleInput(delta);
 
         world.step(1/60f, 6, 2);
@@ -166,7 +175,6 @@ public class PlayScreen implements Screen {
 
     @Override
     public void pause() {
-
     }
 
     @Override
