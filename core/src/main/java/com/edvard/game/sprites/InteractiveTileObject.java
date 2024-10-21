@@ -15,6 +15,8 @@ public abstract class InteractiveTileObject {
     protected Body body;
     protected Fixture fixture;
 
+    public MainGame game;
+
     public InteractiveTileObject(World world, TiledMap tiledMap, Rectangle bounds) {
         this.world = world;
         this.tiledMap = tiledMap;

@@ -59,10 +59,7 @@ public class MenuScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/button-clicked-sound.mp3"));
                 sound.play();
-                startButton.remove();
-                exitButton.remove();
                 game.setScreen(new PlayScreen(game));
-                System.out.println("clicked");
             }
         });
         exitButton.addListener(new ClickListener() {
@@ -118,11 +115,12 @@ public class MenuScreen implements Screen {
 
     @Override
     public void hide() {
-
+        stage.dispose();
     }
 
     @Override
     public void dispose() {
+        stage.dispose();
         game.batch.dispose();
     }
 }
