@@ -42,7 +42,11 @@ public class FightScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         this.game = game;
         game.batch = new SpriteBatch();
+        createField();
 
+    }
+
+    public void createField() {
         for(int i = 0; i < MAX_COL; i++) {
             for(int j = 0; j < MAX_ROW; j++) {
                 buttons[i][j] = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/play01.png")))));
@@ -51,8 +55,6 @@ public class FightScreen implements Screen {
                 buttons[i][j].setSize(960 / MAX_COL, 960 / MAX_ROW);
                 buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
                 buttons[i][j].getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field_down.png"))));
-
-
 
                 int finalI = i;
                 int finalJ = j;
@@ -64,7 +66,6 @@ public class FightScreen implements Screen {
                 stage.addActor(buttons[i][j]);
             }
         }
-
     }
 
     public void gameScreen() {
