@@ -1,12 +1,14 @@
 package com.edvard.game.units;
 
 public abstract class Unit {
+    private boolean heroUnit;
     private int quantity;
     private int damage;
     private int hp;
     private int defense;
 
-    public Unit(int quantity, int damage, int hp, int defense) {
+    public Unit(boolean heroUnit, int quantity, int damage, int hp, int defense) {
+        this.heroUnit = heroUnit;
         this.quantity = quantity;
         this.damage = damage;
         this.hp = hp;
@@ -43,5 +45,13 @@ public abstract class Unit {
 
     public void setDefense(int defense) {
         this.defense = defense;
+    }
+
+    public boolean isHeroUnit() {
+        return heroUnit;
+    }
+
+    public void setHeroUnit(boolean heroUnit) {
+        this.heroUnit = heroUnit;
     }
 }
