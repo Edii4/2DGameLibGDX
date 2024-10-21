@@ -51,8 +51,8 @@ public class FightScreen implements Screen {
             for(int j = 0; j < MAX_ROW; j++) {
                 buttons[i][j] = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/play01.png")))));
                 //buttons[i][j].setColor(0, 0, 0, 1);
-                buttons[i][j].setPosition(i * 80, j * 80);
-                buttons[i][j].setSize(960 / MAX_COL, 960 / MAX_ROW);
+                buttons[i][j].setPosition(96 + i * 64, 96 + j * 64);
+                buttons[i][j].setSize(64, 64);
                 buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
                 buttons[i][j].getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field_down.png"))));
 
