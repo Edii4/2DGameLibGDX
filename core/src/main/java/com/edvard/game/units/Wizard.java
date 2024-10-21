@@ -1,7 +1,7 @@
 package com.edvard.game.units;
 
 public class Wizard extends Unit {
-    public Wizard(int quantity, int damage, int hp, int defense) {
-        super(quantity, damage, hp, defense);
+    public Wizard(boolean heroUnit, int quantity, int damage, int hp, int defense) {
+        super(heroUnit, quantity, damage, hp, defense);
     }
 }
