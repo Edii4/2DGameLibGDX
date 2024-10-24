@@ -23,19 +23,47 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.edvard.game.MainGame;
-import com.edvard.game.units.Peasant;
+import com.edvard.game.units.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class FightScreen implements Screen {
 
     private final int MAX_ROW = 10;
     private final int MAX_COL = 10;
 
+    boolean isPeasantPlaced = false;
+    boolean isArcherPlaced = false;
+    boolean isWarriorPlaced = false;
+    boolean isGryffPlaced = false;
+    boolean isWizardPlaced = false;
+
     Peasant heroPeasant;
     Label heroPeasantQuantity;
     Peasant enemyPeasant;
+    Label enemyPeasantQuantity;
+
+    Archer heroArcher;
+    Label heroArcherQuantity;
+    Archer enemyArcher;
+    Label enemyArcherQuantity;
+
+    Warrior heroWarrior;
+    Label heroWarriorQuantity;
+    Warrior enemyWarrior;
+    Label enemyWarriorQuantity;
+
+    Gryff heroGryff;
+    Label heroGryffQuantity;
+    Gryff enemyGryff;
+    Label enemyGryffQuantity;
+
+    Wizard heroWizard;
+    Label heroWizardQuantity;
+    Wizard enemyWizard;
+    Label enemyWizardQuantity;
 
     Stage stage;
     OrthographicCamera camera;
@@ -58,16 +86,88 @@ public class FightScreen implements Screen {
     }
 
     public void placeUnits() {
+
+        int row = (int)(Math.random() * 3);
+
+        buttons[row][8].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyPeasant.png"))));
+        heroPeasantQuantity = new Label(String.valueOf(enemyPeasant.getQuantity()), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        heroPeasantQuantity.setPosition(buttons[row][8].getX() + 32, buttons[row][8].getY());
+        stage.addActor(heroPeasantQuantity);
+
+        row = (int)(Math.random() * 5);
+
+        buttons[row][9].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyArcher.png"))));
+        enemyArcherQuantity = new Label(String.valueOf(enemyArcher.getQuantity()), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        enemyArcherQuantity.setPosition(buttons[row][9].getX() + 32, buttons[row][9].getY());
+        stage.addActor(enemyArcherQuantity);
+
+        row = (int)(Math.random() * (MAX_ROW - 7) + 7);
+
+        buttons[row][8].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyWarrior.png"))));
+        enemyWarriorQuantity = new Label(String.valueOf(enemyWarrior.getQuantity()), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        enemyWarriorQuantity.setPosition(buttons[row][8].getX() + 32, buttons[row][8].getY());
+        stage.addActor(enemyWarriorQuantity);
+
+        row = (int)(Math.random() * (MAX_ROW - 5) + 5);
+
+        buttons[row][9].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyWizard.png"))));
+        enemyWizardQuantity = new Label(String.valueOf(enemyWizard.getQuantity()), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        enemyWizardQuantity.setPosition(buttons[row][9].getX() + 10, buttons[row][9].getY());
+        stage.addActor(enemyWizardQuantity);
+
+        row = (int)(Math.random() * (7 - 3) + 3);
+
+        buttons[row][8].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyGryff.png"))));
+        enemyGryffQuantity = new Label(String.valueOf(enemyGryff.getQuantity()), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        enemyGryffQuantity.setPosition(buttons[row][8].getX() + 7, buttons[row][8].getY() + 45);
+        stage.addActor(enemyGryffQuantity);
+
         for(int i = 0; i < MAX_ROW; i++) {
-            for(int j = 0; j < MAX_COL; j++) {
+            for(int j = 0; j < 2; j++) {
                 int finalI = i;
                 int finalJ = j;
                 buttons[i][j].addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
-                        buttons[finalI][finalJ].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/peasant.png"))));
-                        heroPeasantQuantity = new Label(String.valueOf(heroPeasant.getQuantity()), new Label.LabelStyle(new BitmapFont(), Color.CYAN));
-                        heroPeasantQuantity.setPosition(buttons[finalI][finalJ].getX() + 32, buttons[finalI][finalJ].getY());
-                        stage.addActor(heroPeasantQuantity);
+                        if(!isPeasantPlaced) {
+                            isPeasantPlaced = true;
+                            buttons[finalI][finalJ].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/heroPeasant.png"))));
+                            heroPeasantQuantity = new Label(String.valueOf(heroPeasant.getQuantity()), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+                            heroPeasantQuantity.setPosition(buttons[finalI][finalJ].getX() + 32, buttons[finalI][finalJ].getY());
+                            stage.addActor(heroPeasantQuantity);
+                            buttons[finalI][finalJ].setName("heroPeasant");
+                        }
+                        else if(!isArcherPlaced && !Objects.equals(buttons[finalI][finalJ].getName(), "heroPeasant")) {
+                            isArcherPlaced = true;
+                            buttons[finalI][finalJ].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/heroArcher.png"))));
+                            heroArcherQuantity = new Label(String.valueOf(heroArcher.getQuantity()), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+                            heroArcherQuantity.setPosition(buttons[finalI][finalJ].getX() + 32, buttons[finalI][finalJ].getY());
+                            stage.addActor(heroArcherQuantity);
+                            buttons[finalI][finalJ].setName("heroArcher");
+                        }
+                        else if(!isWarriorPlaced && !Objects.equals(buttons[finalI][finalJ].getName(), "heroPeasant") && !Objects.equals(buttons[finalI][finalJ].getName(), "heroArcher")) {
+                            isWarriorPlaced = true;
+                            buttons[finalI][finalJ].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/heroWarrior.png"))));
+                            heroWarriorQuantity = new Label(String.valueOf(heroWarrior.getQuantity()), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+                            heroWarriorQuantity.setPosition(buttons[finalI][finalJ].getX() + 32, buttons[finalI][finalJ].getY());
+                            stage.addActor(heroWarriorQuantity);
+                            buttons[finalI][finalJ].setName("heroWarrior");
+                        }
+                        else if(!isWizardPlaced && !Objects.equals(buttons[finalI][finalJ].getName(), "heroPeasant") && !Objects.equals(buttons[finalI][finalJ].getName(), "heroArcher") && !Objects.equals(buttons[finalI][finalJ].getName(), "heroWarrior")) {
+                            isWizardPlaced = true;
+                            buttons[finalI][finalJ].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/heroWizard.png"))));
+                            heroWizardQuantity = new Label(String.valueOf(heroWizard.getQuantity()), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+                            heroWizardQuantity.setPosition(buttons[finalI][finalJ].getX() + 10, buttons[finalI][finalJ].getY());
+                            stage.addActor(heroWizardQuantity);
+                            buttons[finalI][finalJ].setName("heroWizard");
+                        }
+                        else if(!isGryffPlaced && !Objects.equals(buttons[finalI][finalJ].getName(), "heroPeasant") && !Objects.equals(buttons[finalI][finalJ].getName(), "heroArcher") && !Objects.equals(buttons[finalI][finalJ].getName(), "heroWarrior") && !Objects.equals(buttons[finalI][finalJ].getName(), "heroWizard")) {
+                            isGryffPlaced = true;
+                            buttons[finalI][finalJ].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/heroGryff.png"))));
+                            heroGryffQuantity = new Label(String.valueOf(heroGryff.getQuantity()), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+                            heroGryffQuantity.setPosition(buttons[finalI][finalJ].getX() + 7, buttons[finalI][finalJ].getY() + 45);
+                            stage.addActor(heroGryffQuantity);
+                            buttons[finalI][finalJ].setName("heroGryff");
+                        }
                     }
                 });
             }
@@ -77,6 +177,14 @@ public class FightScreen implements Screen {
     public void createUnits() {
         heroPeasant = new Peasant(true, 100, 3, 5, 10);
         enemyPeasant = new Peasant(false, 100, 3, 5, 10);
+        heroArcher = new Archer(true, 100, 3, 5, 10);
+        enemyArcher = new Archer(false, 100, 3, 5, 10);
+        heroWarrior = new Warrior(true, 100, 3, 5, 10);
+        enemyWarrior  = new Warrior(false, 100, 3, 5, 10);
+        heroWizard = new Wizard(true, 100, 3, 5, 10);
+        enemyWizard = new Wizard(false, 100, 3, 5, 10);
+        heroGryff = new Gryff(true, 100, 3, 5, 10);
+        enemyGryff = new Gryff(false, 100, 3, 5, 10);
     }
 
     public void createField() {
