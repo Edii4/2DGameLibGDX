@@ -155,7 +155,7 @@ public class PlayScreen implements Screen {
 
         renderer.render();
 
-        debugRenderer.render(world, camera.combined);
+        //debugRenderer.render(world, camera.combined);
 
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
