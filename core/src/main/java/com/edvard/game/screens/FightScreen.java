@@ -10,25 +10,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.edvard.game.MainGame;
 import com.edvard.game.units.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
-import java.awt.*;
 import java.util.Objects;
 
 public class FightScreen implements Screen {
@@ -86,7 +76,6 @@ public class FightScreen implements Screen {
         createField();
         createUnits();
         placeUnits();
-
     }
 
     public void endTurn() {
@@ -95,6 +84,10 @@ public class FightScreen implements Screen {
                 if(buttons[i][j].getName() == null){
                     buttons[i][j].setTouchable(Touchable.disabled);
                 }
+                else {
+                    buttons[i][j].setTouchable(Touchable.enabled);
+                }
+                buttons[i][j].clearListeners();
             }
         }
     }
@@ -103,14 +96,22 @@ public class FightScreen implements Screen {
         ImageButton attackButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/attackButton.png")))));
         ImageButton abilityButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/abilityButton.png")))));
         attackButton.setPosition(buttons[row][col].getX() + 64, buttons[row][col].getY() + 32);
+
         attackButton.addListener(new ClickListener() {
            public void clicked(InputEvent event, float x, float y) {
+               attackButton.remove();
+               abilityButton.remove();
+
+               System.out.println(attackButton.getListeners());
                for(int i = 0; i < MAX_ROW; i++) {
                    for(int j = 0; j < MAX_COL; j++) {
                        if(buttons[i][j].getName() != null) {
-                           buttons[i][j].addListener(new ClickListener() {
+                           int finalI = i;
+                           int finalJ = j;
+                           buttons[finalI][finalJ].addListener(new ClickListener() {
                                public void clicked(InputEvent event, float x, float y) {
                                    System.out.println("suc. hit");
+                                   endTurn();
                                }
                            });
                        }
@@ -147,40 +148,46 @@ public class FightScreen implements Screen {
                 else if(buttons[i][j].getName() != null) {}
                 else {
                     buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/move_field.png"))));
+                    buttons[i][j].setTouchable(Touchable.enabled);
                     int finalJ = j;
                     int finalI = i;
+
                     buttons[i][j].addListener(new ClickListener() {
-                       public void clicked(InputEvent event, float x, float y) {
-                           buttons[finalI][finalJ].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/" + name + ".png"))));;
-                           buttons[finalI][finalJ].setName(name);
+                        public void clicked(InputEvent event, float x, float y) {
+                            buttons[finalI][finalJ].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/" + name + ".png"))));;
+                            buttons[finalI][finalJ].setName(name);
+                            System.out.println("alap: " + name);
+                            System.out.println("gomb: " + buttons[finalI][finalJ].getName());
 
-                           if(name == "heroPeasant") {
-                               heroPeasantQuantity.setPosition(buttons[finalI][finalJ].getX() + 32, buttons[finalI][finalJ].getY());
-                           }
-                           else if(name == "heroArcher") {
-                               heroArcherQuantity.setPosition(buttons[finalI][finalJ].getX() + 32, buttons[finalI][finalJ].getY());
-                           }
-                           else if(name == "heroWarrior") {
-                               heroWarriorQuantity.setPosition(buttons[finalI][finalJ].getX() + 32, buttons[finalI][finalJ].getY());
-                           }
-                           else if(name == "heroGryff") {
-                               heroGryffQuantity.setPosition(buttons[finalI][finalJ].getX() + 7, buttons[finalI][finalJ].getY() + 45);
-                           }
-                           else if(name == "heroWizard") {
-                               heroWizardQuantity.setPosition(buttons[finalI][finalJ].getX() + 10, buttons[finalI][finalJ].getY());
-                           }
+                            if(name == "heroPeasant") {
+                                heroPeasantQuantity.setPosition(buttons[finalI][finalJ].getX() + 32, buttons[finalI][finalJ].getY());
+                            }
+                            else if(name == "heroArcher") {
+                                heroArcherQuantity.setPosition(buttons[finalI][finalJ].getX() + 32, buttons[finalI][finalJ].getY());
+                            }
+                            else if(name == "heroWarrior") {
+                                heroWarriorQuantity.setPosition(buttons[finalI][finalJ].getX() + 32, buttons[finalI][finalJ].getY());
+                            }
+                            else if(name == "heroGryff") {
+                                heroGryffQuantity.setPosition(buttons[finalI][finalJ].getX() + 7, buttons[finalI][finalJ].getY() + 45);
+                            }
+                            else if(name == "heroWizard") {
+                                heroWizardQuantity.setPosition(buttons[finalI][finalJ].getX() + 10, buttons[finalI][finalJ].getY());
+                            }
 
-                           buttons[row][col].setName(null);
+                            buttons[row][col].setName(null);
 
-                           for(int i = 0; i < MAX_ROW; i++) {
-                               for(int j = 0; j < MAX_COL; j++) {
-                                   if(buttons[i][j].getName() == null) {
-                                       buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
-                                   }
-                               }
-                           }
-                           endTurn();
-                       }
+                            for(int i = 0; i < MAX_ROW; i++) {
+                                for(int j = 0; j < MAX_COL; j++) {
+                                    if(buttons[i][j].getName() == null) {
+                                        buttons[i][j].setName(null);
+                                        buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                    }
+                                }
+                            }
+                            endTurn();
+
+                        }
                     });
                 }
             }
@@ -190,20 +197,36 @@ public class FightScreen implements Screen {
     public void selectUnit() {
         for (int i = 0; i < MAX_ROW; i++) {
             for (int j = 0; j < MAX_COL; j++) {
-                if(buttons[i][j].getName() == "heroPeasant" || buttons[i][j].getName() == "heroArcher" || buttons[i][j].getName() == "heroWarrior" || buttons[i][j].getName() == "heroGryff" || buttons[i][j].getName() == "heroWizard") {
+                if(buttons[i][j].getName() == "heroPeasant" || buttons[i][j].getName() == "heroArcher" || buttons[i][j].getName() == "heroWarrior" || buttons[i][j].getName() == "heroGryff" | buttons[i][j].getName() == "heroWizard") {
                     int finalI = i;
                     int finalJ = j;
+                    buttons[i][j].setTouchable(Touchable.enabled);
+
                     buttons[i][j].addListener(new ClickListener() {
                         public void clicked(InputEvent event, float x, float y) {
                             moveUnit(buttons[finalI][finalJ].getName(), finalI, finalJ);
+                            for(int i = 0; i < MAX_ROW; i++) {
+                                for (int j = 0; j < MAX_COL; j++) {
+                                    if (buttons[i][j].getName() != null) {
+                                        buttons[i][j].setTouchable(Touchable.disabled);
+                                    }
+                                }
+                            }
                         }
                     });
-                    buttons[i][j].addListener(new ClickListener(Input.Buttons.RIGHT) {
-                        @Override
+
+                    buttons[finalI][finalJ].addListener(new ClickListener(Input.Buttons.RIGHT) {
                         public void clicked(InputEvent event, float x, float y) {
                             actionUnit(buttons[finalI][finalJ].getName(), finalI, finalJ);
+                            for(int i = 0; i < MAX_ROW; i++) {
+                                for(int j = 0; j < MAX_COL; j++) {
+                                    if(buttons[i][j].getName() != null) {
+                                    }
+                                }
+                            }
                         }
                     });
+
                 }
             }
         }
