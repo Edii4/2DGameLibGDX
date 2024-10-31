@@ -28,6 +28,18 @@ public class FightScreen implements Screen {
 
     ImageButton startButton;
 
+    boolean isEnemyPeasantMoved = false;
+    boolean isEnemyArcherMoved = false;
+    boolean isEnemyWarriorMoved = false;
+    boolean isEnemyGryffMoved = false;
+    boolean isEnemyWizardMoved = false;
+
+    boolean isHeroPeasantMoved = false;
+    boolean isHeroArcherMoved = false;
+    boolean isHeroWarriorMoved = false;
+    boolean isHeroGryffMoved = false;
+    boolean isHeroWizardMoved = false;
+
     boolean isPeasantPlaced = false;
     boolean isArcherPlaced = false;
     boolean isWarriorPlaced = false;
@@ -69,13 +81,196 @@ public class FightScreen implements Screen {
     public static PlayScreen playScreen;
 
     public FightScreen(MainGame game) {
-
         stage = new Stage(new ScreenViewport());
         this.game = game;
         game.batch = new SpriteBatch();
         createField();
         createUnits();
         placeUnits();
+    }
+
+    public void enemyTurn() {
+        if(enemyGryff.getQuantity() > 0 && !isEnemyGryffMoved) {
+            for(int i = 0; i < MAX_ROW; i++) {
+                for(int j = 0; j < MAX_COL; j++) {
+                    if(buttons[i][j].getName() == "enemyGryff") {
+                        for(int k = i - enemyGryff.getMoveRange() -1; k <= i + enemyGryff.getMoveRange() + 1; k++) {
+                            for(int l = j - enemyGryff.getMoveRange() - 1; l <= j + enemyGryff.getMoveRange() + 1; l++) {
+                                if(k < 0 || l < 0 || k >= MAX_ROW || l >= MAX_COL) {}
+                                else if(buttons[k][l].getName() == "heroArcher" || buttons[k][l].getName() == "heroWizard") {
+                                    for(int m = k -1; m <= k + 1; m++) {
+                                        for(int n = l -1; n <= l + 1; n++) {
+                                            if(m < 0 || n < 0 || m >= MAX_ROW || n >= MAX_COL) {}
+                                            else if(buttons[m][n].getName() == null && ((m - i) <= enemyGryff.getMoveRange() && m - i >= 0 || (i - m) <= enemyGryff.getMoveRange() && i - m >= 0) && ((n - j) <= enemyGryff.getMoveRange() && n - j >= 0 || (j - n) <= enemyGryff.getMoveRange() && j - n >= 0)){
+                                                buttons[m][n].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyGryff.png"))));
+                                                buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                                buttons[i][j].setName(null);
+                                                buttons[m][n].setName("enemyGryff");
+                                                enemyGryffQuantity.setPosition(buttons[m][n].getX() + 7, buttons[m][n].getY() + 45);
+                                                isEnemyGryffMoved = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        for(int k = i - enemyGryff.getMoveRange() - 1; k <= i + enemyGryff.getMoveRange() + 1; k++) {
+                            for(int l = j - enemyGryff.getMoveRange() -1 ; l <= j + enemyGryff.getMoveRange() + 1; l++) {
+                                if(k < 0 || l < 0 || k >= MAX_ROW || l >= MAX_COL) {}
+                                else if(buttons[k][l].getName() == "heroPeasant" || buttons[k][l].getName() == "heroWarrior" || buttons[k][l].getName() == "heroGryff") {
+                                    for(int m = k -1; m <= k + 1; m++) {
+                                        for(int n = l -1; n <= l + 1; n++) {
+                                            if(m < 0 || n < 0 || m >= MAX_ROW || n >= MAX_COL) {}
+                                            else if(buttons[m][n].getName() == null && ((m - i) <= enemyGryff.getMoveRange() && m - i >= 0 || (i - m) <= enemyGryff.getMoveRange() && i - m >= 0) && ((n - j) <= enemyGryff.getMoveRange() && n - j >= 0 || (j - n) <= enemyGryff.getMoveRange() && j - n >= 0)){
+                                                buttons[m][n].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyGryff.png"))));
+                                                buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                                buttons[i][j].setName(null);
+                                                buttons[m][n].setName("enemyGryff");
+                                                enemyGryffQuantity.setPosition(buttons[m][n].getX() + 7, buttons[m][n].getY() + 45);
+                                                isEnemyGryffMoved = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            while(!isEnemyGryffMoved) {
+                int row = (int)(Math.random() * enemyGryff.getMoveRange() + 1);
+                int col = (int)(Math.random() * enemyGryff.getMoveRange() + 1);
+                int rowPlus = (int)(Math.random() + 1);
+                int colPlus = (int)(Math.random() + 1);
+
+                for(int i = 0; i < MAX_ROW; i++) {
+                    for(int j = 0; j < MAX_COL; j++) {
+                        if(buttons[i][j].getName() == "enemyGryff") {
+
+                        }
+                    }
+                }
+            }
+        }
+        else if(enemyWarrior.getQuantity() > 0 && !isEnemyWarriorMoved) {
+            for(int i = 0; i < MAX_ROW; i++) {
+                for(int j = 0; j < MAX_COL; j++) {
+                    if(buttons[i][j].getName() == "enemyWarrior") {
+                        for(int k = i - enemyWarrior.getMoveRange() -1; k <= i + enemyWarrior.getMoveRange() + 1; k++) {
+                            for(int l = j - enemyWarrior.getMoveRange() - 1; l <= j + enemyWarrior.getMoveRange() + 1; l++) {
+                                if(k < 0 || l < 0 || k >= MAX_ROW || l >= MAX_COL) {}
+                                else if(buttons[k][l].getName() == "heroArcher" || buttons[k][l].getName() == "heroWizard") {
+                                    for(int m = k -1; m <= k + 1; m++) {
+                                        for(int n = l -1; n <= l + 1; n++) {
+                                            if(m < 0 || n < 0 || m >= MAX_ROW || n >= MAX_COL) {}
+                                            else if(buttons[m][n].getName() == null && ((m - i) <= enemyWarrior.getMoveRange() && m - i >= 0 || (i - m) <= enemyWarrior.getMoveRange() && i - m >= 0) && ((n - j) <= enemyWarrior.getMoveRange() && n - j >= 0 || (j - n) <= enemyWarrior.getMoveRange() && j - n >= 0)){
+                                                buttons[m][n].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyWarrior.png"))));
+                                                buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                                buttons[i][j].setName(null);
+                                                buttons[m][n].setName("enemyWarrior");
+                                                enemyWarriorQuantity.setPosition(buttons[m][n].getX() + 32, buttons[m][n].getY());
+                                                isEnemyWarriorMoved = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        for(int k = i - enemyWarrior.getMoveRange() - 1; k <= i + enemyWarrior.getMoveRange() + 1; k++) {
+                            for(int l = j - enemyWarrior.getMoveRange() - 1; l <= j + enemyWarrior.getMoveRange() + 1; l++) {
+                                if(k < 0 || l < 0 || k >= MAX_ROW || l >= MAX_COL) {}
+                                else if(buttons[k][l].getName() == "heroPeasant" || buttons[k][l].getName() == "heroWarrior" || buttons[k][l].getName() == "heroGryff") {
+                                    for(int m = k -1; m <= k + 1; m++) {
+                                        for(int n = l -1; n <= l + 1; n++) {
+                                            if(m < 0 || n < 0 || m >= MAX_ROW || n >= MAX_COL) {}
+                                            else if(buttons[m][n].getName() == null && ((m - i) <= enemyWarrior.getMoveRange() && m - i >= 0 || (i - m) <= enemyWarrior.getMoveRange() && i - m >= 0) && ((n - j) <= enemyWarrior.getMoveRange() && n - j >= 0 || (j - n) <= enemyWarrior.getMoveRange() && j - n >= 0)){
+                                                buttons[m][n].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyWarrior.png"))));
+                                                buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                                buttons[i][j].setName(null);
+                                                buttons[m][n].setName("enemyWarrior");
+                                                enemyWarriorQuantity.setPosition(buttons[m][n].getX() + 7, buttons[m][n].getY() + 45);
+                                                isEnemyWarriorMoved = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+        else if(enemyWizard.getQuantity() > 0 && !isEnemyWizardMoved) {
+            isEnemyWizardMoved = true;
+
+        }
+        else if(enemyArcher.getQuantity() > 0 && !isEnemyArcherMoved) {
+            isEnemyArcherMoved = true;
+
+        }
+        else if(enemyPeasant.getQuantity() > 0 && !isEnemyPeasantMoved) {
+            for(int i = 0; i < MAX_ROW; i++) {
+                for(int j = 0; j < MAX_COL; j++) {
+                    if(buttons[i][j].getName() == "enemyPeasant") {
+                        for(int k = i - enemyPeasant.getMoveRange() - 1; k <= i + enemyPeasant.getMoveRange() + 1; k++) {
+                            for(int l = j - enemyPeasant.getMoveRange() - 1; l <= j + enemyPeasant.getMoveRange() + 1; l++) {
+                                if(k < 0 || l < 0 || k >= MAX_ROW || l >= MAX_COL) {}
+                                else if(buttons[k][l].getName() == "heroArcher" || buttons[k][l].getName() == "heroWizard") {
+                                    for(int m = k -1; m <= k + 1; m++) {
+                                        for(int n = l -1; n <= l + 1; n++) {
+                                            if(m < 0 || n < 0 || m >= MAX_ROW || n >= MAX_COL) {}
+                                            else if(buttons[m][n].getName() == null && ((m - i) <= enemyPeasant.getMoveRange() && m - i >= 0 || (i - m) <= enemyPeasant.getMoveRange() && i - m >= 0) && ((n - j) <= enemyPeasant.getMoveRange() && n - j >= 0 || (j - n) <= enemyPeasant.getMoveRange() && j - n >= 0)){
+                                                buttons[m][n].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyPeasant.png"))));
+                                                buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                                buttons[i][j].setName(null);
+                                                buttons[m][n].setName("enemyPeasant");
+                                                enemyPeasantQuantity.setPosition(buttons[m][n].getX() + 7, buttons[m][n].getY() + 45);
+                                                isEnemyPeasantMoved = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        for(int k = i - enemyPeasant.getMoveRange() - 1; k <= i + enemyPeasant.getMoveRange() + 1; k++) {
+                            for(int l = j - enemyPeasant.getMoveRange() - 1; l <= j + enemyPeasant.getMoveRange() + 1; l++) {
+                                if(k < 0 || l < 0 || k >= MAX_ROW || l >= MAX_COL) {}
+                                else if(buttons[k][l].getName() == "heroPeasant" || buttons[k][l].getName() == "heroWarrior" || buttons[k][l].getName() == "heroGryff") {
+                                    for(int m = k -1; m <= k + 1; m++) {
+                                        for(int n = l -1; n <= l + 1; n++) {
+                                            if(m < 0 || n < 0 || m >= MAX_ROW || n >= MAX_COL) {}
+                                            else if(buttons[m][n].getName() == null && ((m - i) <= enemyPeasant.getMoveRange() && m - i >= 0 || (i - m) <= enemyPeasant.getMoveRange() && i - m >= 0) && ((n - j) <= enemyPeasant.getMoveRange() && n - j >= 0 || (j - n) <= enemyPeasant.getMoveRange() && j - n >= 0)){
+                                                buttons[m][n].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyPeasant.png"))));
+                                                buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                                buttons[i][j].setName(null);
+                                                buttons[m][n].setName("enemyPeasant");
+                                                enemyPeasantQuantity.setPosition(buttons[m][n].getX() + 7, buttons[m][n].getY() + 45);
+                                                isEnemyPeasantMoved = true;
+                                                return;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+        else {
+            System.out.println("nyertél");
+        }
     }
 
     public void endTurn() {
@@ -90,6 +285,23 @@ public class FightScreen implements Screen {
                 buttons[i][j].clearListeners();
             }
         }
+
+        if(isHeroPeasantMoved && isHeroArcherMoved && isHeroWarriorMoved && isHeroWizardMoved && isHeroGryffMoved) {
+            isHeroPeasantMoved = false;
+            isHeroArcherMoved = false;
+            isHeroWarriorMoved = false;
+            isHeroWizardMoved = false;
+            isHeroGryffMoved = false;
+        }
+        if(isEnemyPeasantMoved && isEnemyArcherMoved && isEnemyWarriorMoved && isEnemyWizardMoved && isEnemyGryffMoved) {
+            isEnemyPeasantMoved = false;
+            isEnemyArcherMoved = false;
+            isEnemyWarriorMoved = false;
+            isEnemyWizardMoved = false;
+            isEnemyGryffMoved = false;
+        }
+
+        enemyTurn();
     }
 
     public void actionUnit(String name, int row, int col) {
@@ -161,18 +373,23 @@ public class FightScreen implements Screen {
 
                             if(name == "heroPeasant") {
                                 heroPeasantQuantity.setPosition(buttons[finalI][finalJ].getX() + 32, buttons[finalI][finalJ].getY());
+                                isHeroPeasantMoved = true;
                             }
                             else if(name == "heroArcher") {
                                 heroArcherQuantity.setPosition(buttons[finalI][finalJ].getX() + 32, buttons[finalI][finalJ].getY());
+                                isHeroArcherMoved = true;
                             }
                             else if(name == "heroWarrior") {
                                 heroWarriorQuantity.setPosition(buttons[finalI][finalJ].getX() + 32, buttons[finalI][finalJ].getY());
+                                isHeroWarriorMoved = true;
                             }
                             else if(name == "heroGryff") {
                                 heroGryffQuantity.setPosition(buttons[finalI][finalJ].getX() + 7, buttons[finalI][finalJ].getY() + 45);
+                                isHeroGryffMoved = true;
                             }
                             else if(name == "heroWizard") {
                                 heroWizardQuantity.setPosition(buttons[finalI][finalJ].getX() + 10, buttons[finalI][finalJ].getY());
+                                isHeroWizardMoved = true;
                             }
 
                             buttons[row][col].setName(null);
@@ -197,7 +414,7 @@ public class FightScreen implements Screen {
     public void selectUnit() {
         for (int i = 0; i < MAX_ROW; i++) {
             for (int j = 0; j < MAX_COL; j++) {
-                if(buttons[i][j].getName() == "heroPeasant" || buttons[i][j].getName() == "heroArcher" || buttons[i][j].getName() == "heroWarrior" || buttons[i][j].getName() == "heroGryff" | buttons[i][j].getName() == "heroWizard") {
+                if((buttons[i][j].getName() == "heroPeasant" && !isHeroPeasantMoved) || (buttons[i][j].getName() == "heroArcher" && !isHeroArcherMoved) || (buttons[i][j].getName() == "heroWarrior" && !isHeroWarriorMoved) || (buttons[i][j].getName() == "heroGryff" && !isHeroGryffMoved) || (buttons[i][j].getName() == "heroWizard" && !isHeroWizardMoved)) {
                     int finalI = i;
                     int finalJ = j;
                     buttons[i][j].setTouchable(Touchable.enabled);
