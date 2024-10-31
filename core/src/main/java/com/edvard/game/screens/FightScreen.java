@@ -144,13 +144,64 @@ public class FightScreen implements Screen {
             while(!isEnemyGryffMoved) {
                 int row = (int)(Math.random() * enemyGryff.getMoveRange() + 1);
                 int col = (int)(Math.random() * enemyGryff.getMoveRange() + 1);
-                int rowPlus = (int)(Math.random() + 1);
-                int colPlus = (int)(Math.random() + 1);
+                int rowPlus = (int)((Math.random() * 2) + 1);
+                int colPlus = (int)((Math.random() * 2) + 1);
 
                 for(int i = 0; i < MAX_ROW; i++) {
                     for(int j = 0; j < MAX_COL; j++) {
                         if(buttons[i][j].getName() == "enemyGryff") {
-
+                            if(rowPlus == 1) {
+                                if(i - row >= 0) {
+                                    if(colPlus == 1) {
+                                        if(j - col >= 0) {
+                                            buttons[i - row][j - col].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyGryff.png"))));
+                                            buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                            buttons[i][j].setName(null);
+                                            buttons[i - row][j - col].setName("enemyGryff");
+                                            enemyGryffQuantity.setPosition(buttons[i - row][j - col].getX() + 7, buttons[i - row][j - col].getY() + 45);
+                                            isEnemyGryffMoved = true;
+                                            return;
+                                        }
+                                    }
+                                    else if(colPlus == 2) {
+                                        if(j + col < MAX_COL) {
+                                            buttons[i - row][j + col].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyGryff.png"))));
+                                            buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                            buttons[i][j].setName(null);
+                                            buttons[i - row][j + col].setName("enemyGryff");
+                                            enemyGryffQuantity.setPosition(buttons[i - row][j + col].getX() + 7, buttons[i - row][j + col].getY() + 45);
+                                            isEnemyGryffMoved = true;
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                            else if(rowPlus == 2) {
+                                if(i + row < MAX_ROW) {
+                                    if(colPlus == 1) {
+                                        if(j - col >= 0) {
+                                            buttons[i + row][j - col].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyGryff.png"))));
+                                            buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                            buttons[i][j].setName(null);
+                                            buttons[i + row][j - col].setName("enemyGryff");
+                                            enemyGryffQuantity.setPosition(buttons[i + row][j - col].getX() + 7, buttons[i + row][j - col].getY() + 45);
+                                            isEnemyGryffMoved = true;
+                                            return;
+                                        }
+                                    }
+                                    else if(colPlus == 2) {
+                                        if(j + col < MAX_COL) {
+                                            buttons[i + row][j + col].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyGryff.png"))));
+                                            buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                            buttons[i][j].setName(null);
+                                            buttons[i + row][j + col].setName("enemyGryff");
+                                            enemyGryffQuantity.setPosition(buttons[i + row][j + col].getX() + 7, buttons[i + row][j + col].getY() + 45);
+                                            isEnemyGryffMoved = true;
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -198,6 +249,72 @@ public class FightScreen implements Screen {
                                                 isEnemyWarriorMoved = true;
                                                 return;
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            while(!isEnemyWarriorMoved) {
+                int row = (int)(Math.random() * enemyWarrior.getMoveRange() + 1);
+                int col = (int)(Math.random() * enemyWarrior.getMoveRange() + 1);
+                int rowPlus = (int)((Math.random() * 2) + 1);
+                int colPlus = (int)((Math.random() * 2) + 1);
+
+                for(int i = 0; i < MAX_ROW; i++) {
+                    for(int j = 0; j < MAX_COL; j++) {
+                        if(buttons[i][j].getName() == "enemyWarrior") {
+                            if(rowPlus == 1) {
+                                if(i - row >= 0) {
+                                    if(colPlus == 1) {
+                                        if(j - col >= 0) {
+                                            buttons[i - row][j - col].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyWarrior.png"))));
+                                            buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                            buttons[i][j].setName(null);
+                                            buttons[i - row][j - col].setName("enemyWarrior");
+                                            enemyWarriorQuantity.setPosition(buttons[i - row][j - col].getX() + 7, buttons[i - row][j - col].getY() + 45);
+                                            isEnemyWarriorMoved = true;
+                                            return;
+                                        }
+                                    }
+                                    else if(colPlus == 2) {
+                                        if(j + col < MAX_COL) {
+                                            buttons[i - row][j + col].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyWarrior.png"))));
+                                            buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                            buttons[i][j].setName(null);
+                                            buttons[i - row][j + col].setName("enemyWarrior");
+                                            enemyWarriorQuantity.setPosition(buttons[i - row][j + col].getX() + 7, buttons[i - row][j + col].getY() + 45);
+                                            isEnemyWarriorMoved = true;
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                            else if(rowPlus == 2) {
+                                if(i + row < MAX_ROW) {
+                                    if(colPlus == 1) {
+                                        if(j - col >= 0) {
+                                            buttons[i + row][j - col].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyWarrior.png"))));
+                                            buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                            buttons[i][j].setName(null);
+                                            buttons[i + row][j - col].setName("enemyWarrior");
+                                            enemyWarriorQuantity.setPosition(buttons[i + row][j - col].getX() + 7, buttons[i + row][j - col].getY() + 45);
+                                            isEnemyWarriorMoved = true;
+                                            return;
+                                        }
+                                    }
+                                    else if(colPlus == 2) {
+                                        if(j + col < MAX_COL) {
+                                            buttons[i + row][j + col].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyWarrior.png"))));
+                                            buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                            buttons[i][j].setName(null);
+                                            buttons[i + row][j + col].setName("enemyWarrior");
+                                            enemyWarriorQuantity.setPosition(buttons[i + row][j + col].getX() + 7, buttons[i + row][j + col].getY() + 45);
+                                            isEnemyWarriorMoved = true;
+                                            return;
                                         }
                                     }
                                 }
@@ -258,6 +375,72 @@ public class FightScreen implements Screen {
                                                 isEnemyPeasantMoved = true;
                                                 return;
                                             }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            while(!isEnemyPeasantMoved) {
+                int row = (int)(Math.random() * enemyPeasant.getMoveRange() + 1);
+                int col = (int)(Math.random() * enemyPeasant.getMoveRange() + 1);
+                int rowPlus = (int)((Math.random() * 2) + 1);
+                int colPlus = (int)((Math.random() * 2) + 1);
+
+                for(int i = 0; i < MAX_ROW; i++) {
+                    for(int j = 0; j < MAX_COL; j++) {
+                        if(buttons[i][j].getName() == "enemyPeasant") {
+                            if(rowPlus == 1) {
+                                if(i - row >= 0) {
+                                    if(colPlus == 1) {
+                                        if(j - col >= 0) {
+                                            buttons[i - row][j - col].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyPeasant.png"))));
+                                            buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                            buttons[i][j].setName(null);
+                                            buttons[i - row][j - col].setName("enemyPeasant");
+                                            enemyPeasantQuantity.setPosition(buttons[i - row][j - col].getX() + 7, buttons[i - row][j - col].getY() + 45);
+                                            isEnemyPeasantMoved = true;
+                                            return;
+                                        }
+                                    }
+                                    else if(colPlus == 2) {
+                                        if(j + col < MAX_COL) {
+                                            buttons[i - row][j + col].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyPeasant.png"))));
+                                            buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                            buttons[i][j].setName(null);
+                                            buttons[i - row][j + col].setName("enemyPeasant");
+                                            enemyPeasantQuantity.setPosition(buttons[i - row][j + col].getX() + 7, buttons[i - row][j + col].getY() + 45);
+                                            isEnemyPeasantMoved = true;
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                            else if(rowPlus == 2) {
+                                if(i + row < MAX_ROW) {
+                                    if(colPlus == 1) {
+                                        if(j - col >= 0) {
+                                            buttons[i + row][j - col].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyPeasant.png"))));
+                                            buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                            buttons[i][j].setName(null);
+                                            buttons[i + row][j - col].setName("enemyPeasant");
+                                            enemyPeasantQuantity.setPosition(buttons[i + row][j - col].getX() + 7, buttons[i + row][j - col].getY() + 45);
+                                            isEnemyPeasantMoved = true;
+                                            return;
+                                        }
+                                    }
+                                    else if(colPlus == 2) {
+                                        if(j + col < MAX_COL) {
+                                            buttons[i + row][j + col].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyPeasant.png"))));
+                                            buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                            buttons[i][j].setName(null);
+                                            buttons[i + row][j + col].setName("enemyPeasant");
+                                            enemyPeasantQuantity.setPosition(buttons[i + row][j + col].getX() + 7, buttons[i + row][j + col].getY() + 45);
+                                            isEnemyPeasantMoved = true;
+                                            return;
                                         }
                                     }
                                 }
