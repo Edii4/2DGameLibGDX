@@ -28,6 +28,8 @@ public class FightScreen implements Screen {
 
     ImageButton startButton;
 
+    private int round = 1;
+
     boolean isEnemyPeasantMoved = false;
     boolean isEnemyArcherMoved = false;
     boolean isEnemyWarriorMoved = false;
@@ -108,6 +110,7 @@ public class FightScreen implements Screen {
                                                 buttons[m][n].setName("enemyGryff");
                                                 enemyGryffQuantity.setPosition(buttons[m][n].getX() + 7, buttons[m][n].getY() + 45);
                                                 isEnemyGryffMoved = true;
+                                                startTurn();
                                                 return;
                                             }
                                         }
@@ -130,6 +133,7 @@ public class FightScreen implements Screen {
                                                 buttons[m][n].setName("enemyGryff");
                                                 enemyGryffQuantity.setPosition(buttons[m][n].getX() + 7, buttons[m][n].getY() + 45);
                                                 isEnemyGryffMoved = true;
+                                                startTurn();
                                                 return;
                                             }
                                         }
@@ -160,6 +164,7 @@ public class FightScreen implements Screen {
                                             buttons[i - row][j - col].setName("enemyGryff");
                                             enemyGryffQuantity.setPosition(buttons[i - row][j - col].getX() + 7, buttons[i - row][j - col].getY() + 45);
                                             isEnemyGryffMoved = true;
+                                            startTurn();
                                             return;
                                         }
                                     }
@@ -171,6 +176,7 @@ public class FightScreen implements Screen {
                                             buttons[i - row][j + col].setName("enemyGryff");
                                             enemyGryffQuantity.setPosition(buttons[i - row][j + col].getX() + 7, buttons[i - row][j + col].getY() + 45);
                                             isEnemyGryffMoved = true;
+                                            startTurn();
                                             return;
                                         }
                                     }
@@ -186,6 +192,7 @@ public class FightScreen implements Screen {
                                             buttons[i + row][j - col].setName("enemyGryff");
                                             enemyGryffQuantity.setPosition(buttons[i + row][j - col].getX() + 7, buttons[i + row][j - col].getY() + 45);
                                             isEnemyGryffMoved = true;
+                                            startTurn();
                                             return;
                                         }
                                     }
@@ -197,6 +204,7 @@ public class FightScreen implements Screen {
                                             buttons[i + row][j + col].setName("enemyGryff");
                                             enemyGryffQuantity.setPosition(buttons[i + row][j + col].getX() + 7, buttons[i + row][j + col].getY() + 45);
                                             isEnemyGryffMoved = true;
+                                            startTurn();
                                             return;
                                         }
                                     }
@@ -225,6 +233,7 @@ public class FightScreen implements Screen {
                                                 buttons[m][n].setName("enemyWarrior");
                                                 enemyWarriorQuantity.setPosition(buttons[m][n].getX() + 32, buttons[m][n].getY());
                                                 isEnemyWarriorMoved = true;
+                                                startTurn();
                                                 return;
                                             }
                                         }
@@ -245,8 +254,9 @@ public class FightScreen implements Screen {
                                                 buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
                                                 buttons[i][j].setName(null);
                                                 buttons[m][n].setName("enemyWarrior");
-                                                enemyWarriorQuantity.setPosition(buttons[m][n].getX() + 7, buttons[m][n].getY() + 45);
+                                                enemyWarriorQuantity.setPosition(buttons[m][n].getX() + 32, buttons[m][n].getY());
                                                 isEnemyWarriorMoved = true;
+                                                startTurn();
                                                 return;
                                             }
                                         }
@@ -275,8 +285,9 @@ public class FightScreen implements Screen {
                                             buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
                                             buttons[i][j].setName(null);
                                             buttons[i - row][j - col].setName("enemyWarrior");
-                                            enemyWarriorQuantity.setPosition(buttons[i - row][j - col].getX() + 7, buttons[i - row][j - col].getY() + 45);
+                                            enemyWarriorQuantity.setPosition(buttons[i - row][j - col].getX() + 32, buttons[i - row][j - col].getY());
                                             isEnemyWarriorMoved = true;
+                                            startTurn();
                                             return;
                                         }
                                     }
@@ -286,8 +297,9 @@ public class FightScreen implements Screen {
                                             buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
                                             buttons[i][j].setName(null);
                                             buttons[i - row][j + col].setName("enemyWarrior");
-                                            enemyWarriorQuantity.setPosition(buttons[i - row][j + col].getX() + 7, buttons[i - row][j + col].getY() + 45);
+                                            enemyWarriorQuantity.setPosition(buttons[i - row][j + col].getX() + 32, buttons[i - row][j + col].getY());
                                             isEnemyWarriorMoved = true;
+                                            startTurn();
                                             return;
                                         }
                                     }
@@ -301,8 +313,9 @@ public class FightScreen implements Screen {
                                             buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
                                             buttons[i][j].setName(null);
                                             buttons[i + row][j - col].setName("enemyWarrior");
-                                            enemyWarriorQuantity.setPosition(buttons[i + row][j - col].getX() + 7, buttons[i + row][j - col].getY() + 45);
+                                            enemyWarriorQuantity.setPosition(buttons[i + row][j - col].getX() + 32, buttons[i + row][j - col].getY());
                                             isEnemyWarriorMoved = true;
+                                            startTurn();
                                             return;
                                         }
                                     }
@@ -312,8 +325,9 @@ public class FightScreen implements Screen {
                                             buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
                                             buttons[i][j].setName(null);
                                             buttons[i + row][j + col].setName("enemyWarrior");
-                                            enemyWarriorQuantity.setPosition(buttons[i + row][j + col].getX() + 7, buttons[i + row][j + col].getY() + 45);
+                                            enemyWarriorQuantity.setPosition(buttons[i + row][j + col].getX() + 32, buttons[i + row][j + col].getY());
                                             isEnemyWarriorMoved = true;
+                                            startTurn();
                                             return;
                                         }
                                     }
@@ -326,11 +340,104 @@ public class FightScreen implements Screen {
 
         }
         else if(enemyWizard.getQuantity() > 0 && !isEnemyWizardMoved) {
+            boolean isEnemySurround = false;
+
+            for(int i = 0; i < MAX_ROW; i++) {
+                for(int j = 0; j < MAX_COL; j++) {
+                    if(buttons[i][j].getName() == "enemyWizard") {
+                        for(int k = i - 1; k <= i + 1; k++) {
+                            for(int l = j - 1; l <= j + 1; l++) {
+                                if(k < 0 || k >= MAX_ROW || l < 0 || l >= MAX_COL) {}
+                                else if(buttons[k][l].getName() == "heroPeasant" || buttons[k][l].getName() == "heroArcher" || buttons[k][l].getName() == "heroWarrior" || buttons[k][l].getName() == "heroWizard" || buttons[k][l].getName() == "heroGryff") {
+                                    isEnemySurround = true;
+                                }
+                            }
+                        }
+
+                        if(isEnemySurround) {
+                            for(int k = i - enemyWizard.getMoveRange(); k <= i + enemyWizard.getMoveRange(); k++) {
+                                for(int l = j - enemyWizard.getMoveRange(); l <= j + enemyWizard.getMoveRange(); l++) {
+                                    isEnemySurround = false;
+                                    if(k < 0 || k >= MAX_ROW || l < 0 || l >= MAX_COL) {}
+                                    else {
+                                        for(int m = k - 1; m <= k + 1; m++) {
+                                            for(int n = l - 1; n <= l + 1; n++) {
+                                                if(m < 0 || m >= MAX_ROW || n < 0 || n >= MAX_COL) {}
+                                                else if(buttons[m][n].getName() == "heroPeasant" || buttons[m][n].getName() == "heroArcher" || buttons[m][n].getName() == "heroWarrior" || buttons[m][n].getName() == "heroWizard" || buttons[m][n].getName() == "heroGryff") {
+                                                    isEnemySurround = true;
+                                                }
+                                            }
+                                        }
+                                        if(!isEnemySurround && buttons[k][l].getName() == null) {
+                                            buttons[k][l].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyWizard.png"))));
+                                            buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                            buttons[i][j].setName(null);
+                                            buttons[k][l].setName("enemyWizard");
+                                            enemyWizardQuantity.setPosition(buttons[k][l].getX() + 10, buttons[k][l].getY());
+                                            isEnemyWizardMoved = true;
+                                            startTurn();
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             isEnemyWizardMoved = true;
+            startTurn();
 
         }
         else if(enemyArcher.getQuantity() > 0 && !isEnemyArcherMoved) {
+            boolean isEnemySurround = false;
+
+            for(int i = 0; i < MAX_ROW; i++) {
+                for(int j = 0; j < MAX_COL; j++) {
+                    if(buttons[i][j].getName() == "enemyArcher") {
+                        for(int k = i - 1; k <= i + 1; k++) {
+                            for(int l = j - 1; l <= j + 1; l++) {
+                                if(k < 0 || k >= MAX_ROW || l < 0 || l >= MAX_COL) {}
+                                else if(buttons[k][l].getName() == "heroPeasant" || buttons[k][l].getName() == "heroArcher" || buttons[k][l].getName() == "heroWarrior" || buttons[k][l].getName() == "heroWizard" || buttons[k][l].getName() == "heroGryff") {
+                                    isEnemySurround = true;
+                                }
+                            }
+                        }
+
+                        if(isEnemySurround) {
+                            for(int k = i - enemyArcher.getMoveRange(); k <= i + enemyArcher.getMoveRange(); k++) {
+                                for(int l = j - enemyArcher.getMoveRange(); l <= j + enemyArcher.getMoveRange(); l++) {
+                                    isEnemySurround = false;
+                                    if(k < 0 || k >= MAX_ROW || l < 0 || l >= MAX_COL) {}
+                                    else {
+                                        for(int m = k - 1; m <= k + 1; m++) {
+                                            for(int n = l - 1; n <= l + 1; n++) {
+                                                if(m < 0 || m >= MAX_ROW || n < 0 || n >= MAX_COL) {}
+                                                else if(buttons[m][n].getName() == "heroPeasant" || buttons[m][n].getName() == "heroArcher" || buttons[m][n].getName() == "heroWarrior" || buttons[m][n].getName() == "heroWizard" || buttons[m][n].getName() == "heroGryff") {
+                                                    isEnemySurround = true;
+                                                }
+                                            }
+                                        }
+                                        if(!isEnemySurround && buttons[k][l].getName() == null) {
+                                            buttons[k][l].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/enemyArcher.png"))));
+                                            buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
+                                            buttons[i][j].setName(null);
+                                            buttons[k][l].setName("enemyArcher");
+                                            enemyArcherQuantity.setPosition(buttons[k][l].getX() + 32, buttons[k][l].getY());
+                                            isEnemyArcherMoved = true;
+                                            startTurn();
+                                            return;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             isEnemyArcherMoved = true;
+            startTurn();
 
         }
         else if(enemyPeasant.getQuantity() > 0 && !isEnemyPeasantMoved) {
@@ -349,8 +456,9 @@ public class FightScreen implements Screen {
                                                 buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
                                                 buttons[i][j].setName(null);
                                                 buttons[m][n].setName("enemyPeasant");
-                                                enemyPeasantQuantity.setPosition(buttons[m][n].getX() + 7, buttons[m][n].getY() + 45);
+                                                enemyPeasantQuantity.setPosition(buttons[m][n].getX() + 32, buttons[m][n].getY());
                                                 isEnemyPeasantMoved = true;
+                                                startTurn();
                                                 return;
                                             }
                                         }
@@ -371,8 +479,9 @@ public class FightScreen implements Screen {
                                                 buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
                                                 buttons[i][j].setName(null);
                                                 buttons[m][n].setName("enemyPeasant");
-                                                enemyPeasantQuantity.setPosition(buttons[m][n].getX() + 7, buttons[m][n].getY() + 45);
+                                                enemyPeasantQuantity.setPosition(buttons[m][n].getX() + 32, buttons[m][n].getY());
                                                 isEnemyPeasantMoved = true;
+                                                startTurn();
                                                 return;
                                             }
                                         }
@@ -401,8 +510,9 @@ public class FightScreen implements Screen {
                                             buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
                                             buttons[i][j].setName(null);
                                             buttons[i - row][j - col].setName("enemyPeasant");
-                                            enemyPeasantQuantity.setPosition(buttons[i - row][j - col].getX() + 7, buttons[i - row][j - col].getY() + 45);
+                                            enemyPeasantQuantity.setPosition(buttons[i - row][j - col].getX() + 32, buttons[i - row][j - col].getY());
                                             isEnemyPeasantMoved = true;
+                                            startTurn();
                                             return;
                                         }
                                     }
@@ -412,8 +522,9 @@ public class FightScreen implements Screen {
                                             buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
                                             buttons[i][j].setName(null);
                                             buttons[i - row][j + col].setName("enemyPeasant");
-                                            enemyPeasantQuantity.setPosition(buttons[i - row][j + col].getX() + 7, buttons[i - row][j + col].getY() + 45);
+                                            enemyPeasantQuantity.setPosition(buttons[i - row][j + col].getX() + 32, buttons[i - row][j + col].getY());
                                             isEnemyPeasantMoved = true;
+                                            startTurn();
                                             return;
                                         }
                                     }
@@ -427,8 +538,9 @@ public class FightScreen implements Screen {
                                             buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
                                             buttons[i][j].setName(null);
                                             buttons[i + row][j - col].setName("enemyPeasant");
-                                            enemyPeasantQuantity.setPosition(buttons[i + row][j - col].getX() + 7, buttons[i + row][j - col].getY() + 45);
+                                            enemyPeasantQuantity.setPosition(buttons[i + row][j - col].getX() + 32, buttons[i + row][j - col].getY());
                                             isEnemyPeasantMoved = true;
+                                            startTurn();
                                             return;
                                         }
                                     }
@@ -438,8 +550,9 @@ public class FightScreen implements Screen {
                                             buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/base_field.png"))));
                                             buttons[i][j].setName(null);
                                             buttons[i + row][j + col].setName("enemyPeasant");
-                                            enemyPeasantQuantity.setPosition(buttons[i + row][j + col].getX() + 7, buttons[i + row][j + col].getY() + 45);
+                                            enemyPeasantQuantity.setPosition(buttons[i + row][j + col].getX() + 32, buttons[i + row][j + col].getY());
                                             isEnemyPeasantMoved = true;
+                                            startTurn();
                                             return;
                                         }
                                     }
@@ -453,10 +566,20 @@ public class FightScreen implements Screen {
         }
         else {
             System.out.println("nyertél");
+            startTurn();
         }
     }
 
+    public void startTurn() {
+        if(isEnemyPeasantMoved && isEnemyArcherMoved && isEnemyWarriorMoved && isEnemyWizardMoved && isEnemyGryffMoved) {
+            round++;
+            System.out.println("round: " + round);
+        }
+        selectUnit();
+    }
+
     public void endTurn() {
+
         for (int i = 0; i < MAX_ROW; i++) {
             for (int j = 0; j < MAX_COL; j++) {
                 if(buttons[i][j].getName() == null){
@@ -494,17 +617,66 @@ public class FightScreen implements Screen {
 
         attackButton.addListener(new ClickListener() {
            public void clicked(InputEvent event, float x, float y) {
+               float dmg = 0;
+
+               if(name == "heroPeasant") {
+                   dmg = heroPeasant.getDamage() * heroPeasant.getQuantity();
+                   isHeroPeasantMoved = true;
+               }
+               else if(name == "heroArcher") {
+                   dmg = heroArcher.getDamage() * heroArcher.getQuantity();
+                   isHeroArcherMoved = true;
+               }
+               else if(name == "heroWarrior") {
+                   dmg = heroWarrior.getDamage() * heroWarrior.getQuantity();
+                   isHeroWarriorMoved = true;
+               }
+               else if(name == "heroWizard") {
+                   dmg = heroWizard.getDamage() * heroWizard.getQuantity();
+                   isHeroWizardMoved = true;
+               }
+               else if(name == "heroGryff") {
+                   dmg = heroGryff.getDamage() * heroGryff.getQuantity();
+                   isHeroGryffMoved = true;
+               }
+
                attackButton.remove();
                abilityButton.remove();
 
-               System.out.println(attackButton.getListeners());
+               //System.out.println(attackButton.getListeners());
                for(int i = 0; i < MAX_ROW; i++) {
                    for(int j = 0; j < MAX_COL; j++) {
                        if(buttons[i][j].getName() != null) {
                            int finalI = i;
                            int finalJ = j;
+                           float finalDmg = dmg;
                            buttons[finalI][finalJ].addListener(new ClickListener() {
                                public void clicked(InputEvent event, float x, float y) {
+                                   float dmg = 0;
+                                   int count = 0;
+                                   if(buttons[finalI][finalJ].getName() == "enemyPeasant") {
+                                       dmg = finalDmg - finalDmg * enemyPeasant.getDefense() / 100;
+                                       for(int i = 0; i < dmg; i = i + enemyPeasant.getHp()) {
+                                           count++;
+                                           System.out.println(count);
+                                       }
+                                       enemyPeasant.setQuantity(enemyPeasant.getQuantity() - count);
+                                       enemyPeasantQuantity.setText(enemyPeasant.getQuantity());
+                                       //TODO: CREATE HP*QUANTITY (MAX HP)
+                                   }
+                                   else if(buttons[finalI][finalJ].getName() == "enemyArcher") {
+                                       dmg = enemyArcher.getDefense() * enemyArcher.getQuantity();
+                                   }
+                                   else if(buttons[finalI][finalJ].getName() == "enemyWarrior") {
+                                       dmg = enemyWarrior.getDefense() * enemyWarrior.getQuantity();
+                                   }
+                                   else if(buttons[finalI][finalJ].getName() == "enemyWizard") {
+                                       dmg = enemyWizard.getDefense() * enemyWizard.getQuantity();
+                                   }
+                                   else if(buttons[finalI][finalJ].getName() == "enemyGryff") {
+                                       dmg = enemyGryff.getDefense() * enemyGryff.getQuantity();
+                                   }
+
                                    System.out.println("suc. hit");
                                    endTurn();
                                }
@@ -620,7 +792,8 @@ public class FightScreen implements Screen {
                             actionUnit(buttons[finalI][finalJ].getName(), finalI, finalJ);
                             for(int i = 0; i < MAX_ROW; i++) {
                                 for(int j = 0; j < MAX_COL; j++) {
-                                    if(buttons[i][j].getName() != null) {
+                                    if(buttons[i][j].getName() == "heroPeasant" || buttons[i][j].getName() == "heroArcher" || buttons[i][j].getName() == "heroWarrior" || buttons[i][j].getName() == "heroGryff" || buttons[i][j].getName() == "heroWizard") {
+                                        buttons[i][j].setTouchable(Touchable.disabled);
                                     }
                                 }
                             }
