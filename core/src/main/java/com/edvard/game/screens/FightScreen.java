@@ -30,6 +30,9 @@ public class FightScreen implements Screen {
 
     private int round = 1;
 
+    int invisibleRow = -1;
+    int invisibleCol = -1;
+    boolean wasInvisible = false;
     boolean isEnemyPeasantMoved = false;
     boolean isEnemyArcherMoved = false;
     boolean isEnemyWarriorMoved = false;
@@ -574,6 +577,12 @@ public class FightScreen implements Screen {
         if(isEnemyPeasantMoved && isEnemyArcherMoved && isEnemyWarriorMoved && isEnemyWizardMoved && isEnemyGryffMoved) {
             round++;
             System.out.println("round: " + round);
+            if(wasInvisible && invisibleRow != -1 && invisibleCol != -1) {
+                buttons[invisibleRow][invisibleCol].setName("heroArcher");
+                buttons[invisibleRow][invisibleCol].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/heroArcher.png"))));
+                invisibleRow = -1;
+                invisibleCol = -1;
+            }
         }
         selectUnit();
     }
@@ -613,7 +622,40 @@ public class FightScreen implements Screen {
     public void actionUnit(String name, int row, int col) {
         ImageButton attackButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/attackButton.png")))));
         ImageButton abilityButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/abilityButton.png")))));
+        ImageButton moveButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/moveButton.png")))));
         attackButton.setPosition(buttons[row][col].getX() + 64, buttons[row][col].getY() + 32);
+
+        boolean canAttack = false;
+        if(name == "heroPeasant" || name == "heroWarrior" || name == "heroGryff") {
+            for(int i = row-1; i <= row+1; i++) {
+                for(int j = col-1; j <= col+1; j++) {
+                    if(i >= 0 && i < MAX_ROW && j >= 0 && j < MAX_COL)  {
+                        //System.out.println(buttons[i][j].getName());
+                        if(buttons[i][j].getName() == "enemyPeasant" || buttons[i][j].getName() == "enemyArcher" || buttons[i][j].getName() == "enemyWizard" || buttons[i][j].getName() == "enemyWarrior" || buttons[i][j].getName() == "enemyGryff") {
+                            canAttack = true;
+                        }
+                    }
+                }
+            }
+        }
+        else {
+            canAttack = true;
+        }
+        System.out.println(canAttack);
+
+        if(!canAttack) {
+            attackButton.setTouchable(Touchable.disabled);
+            attackButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/unavailableAttackButton.png"))));
+            //TODO: this doesnt work, fix
+            for(int i = 0; i < MAX_ROW; i++) {
+                for(int j = 0; j < MAX_COL; j++) {
+                    if(buttons[i][j].getName() == "heroPeasant" || buttons[i][j].getName() == "heroArcher" || buttons[i][j].getName() == "heroWarrior" || buttons[i][j].getName() == "heroGryff" || buttons[i][j].getName() == "heroWizard") {
+                        buttons[i][j].setTouchable(Touchable.enabled);
+                    }
+                }
+            }
+            startTurn();
+        }
 
         attackButton.addListener(new ClickListener() {
            public void clicked(InputEvent event, float x, float y) {
@@ -642,6 +684,7 @@ public class FightScreen implements Screen {
 
                attackButton.remove();
                abilityButton.remove();
+               moveButton.remove();
 
                //System.out.println(attackButton.getListeners());
                for(int i = 0; i < MAX_ROW; i++) {
@@ -655,7 +698,7 @@ public class FightScreen implements Screen {
                                    float dmg = 0;
                                    int count = 0;
                                    if(buttons[finalI][finalJ].getName() == "enemyPeasant") {
-                                       dmg = finalDmg - finalDmg * enemyPeasant.getDefense() / 100;
+                                       dmg = finalDmg - finalDmg * enemyPeasant.getDefense() / 20;
                                        for(int i = 0; i < dmg; i = i + enemyPeasant.getHp()) {
                                            count++;
                                            System.out.println(count);
@@ -665,16 +708,44 @@ public class FightScreen implements Screen {
                                        //TODO: CREATE HP*QUANTITY (MAX HP)
                                    }
                                    else if(buttons[finalI][finalJ].getName() == "enemyArcher") {
-                                       dmg = enemyArcher.getDefense() * enemyArcher.getQuantity();
+                                       dmg = finalDmg - finalDmg * enemyArcher.getDefense() / 20;
+                                       for(int i = 0; i < dmg; i = i + enemyArcher.getHp()) {
+                                           count++;
+                                           System.out.println(count);
+                                       }
+                                       enemyArcher.setQuantity(enemyArcher.getQuantity() - count);
+                                       enemyArcherQuantity.setText(enemyArcher.getQuantity());
+                                       //TODO: CREATE HP*QUANTITY (MAX HP)
                                    }
                                    else if(buttons[finalI][finalJ].getName() == "enemyWarrior") {
-                                       dmg = enemyWarrior.getDefense() * enemyWarrior.getQuantity();
+                                       dmg = finalDmg - finalDmg * enemyWarrior.getDefense() / 20;
+                                       for(int i = 0; i < dmg; i = i + enemyWarrior.getHp()) {
+                                           count++;
+                                           System.out.println(count);
+                                       }
+                                       enemyWarrior.setQuantity(enemyWarrior.getQuantity() - count);
+                                       enemyWarriorQuantity.setText(enemyWarrior.getQuantity());
+                                       //TODO: CREATE HP*QUANTITY (MAX HP)
                                    }
                                    else if(buttons[finalI][finalJ].getName() == "enemyWizard") {
-                                       dmg = enemyWizard.getDefense() * enemyWizard.getQuantity();
+                                       dmg = finalDmg - finalDmg * enemyWizard.getDefense() / 20;
+                                       for(int i = 0; i < dmg; i = i + enemyWizard.getHp()) {
+                                           count++;
+                                           System.out.println(count);
+                                       }
+                                       enemyWizard.setQuantity(enemyWizard.getQuantity() - count);
+                                       enemyWizardQuantity.setText(enemyWizard.getQuantity());
+                                       //TODO: CREATE HP*QUANTITY (MAX HP)
                                    }
                                    else if(buttons[finalI][finalJ].getName() == "enemyGryff") {
-                                       dmg = enemyGryff.getDefense() * enemyGryff.getQuantity();
+                                       dmg = finalDmg - finalDmg * enemyGryff.getDefense() / 20;
+                                       for(int i = 0; i < dmg; i = i + enemyGryff.getHp()) {
+                                           count++;
+                                           System.out.println(count);
+                                       }
+                                       enemyGryff.setQuantity(enemyGryff.getQuantity() - count);
+                                       enemyGryffQuantity.setText(enemyGryff.getQuantity());
+                                       //TODO: CREATE HP*QUANTITY (MAX HP)
                                    }
 
                                    System.out.println("suc. hit");
@@ -687,11 +758,226 @@ public class FightScreen implements Screen {
            }
         });
         stage.addActor(attackButton);
+
         abilityButton.setPosition(buttons[row][col].getX() + 64, buttons[row][col].getY());
+        if((wasInvisible && name == "heroArcher") || name == "heroPeasant") {
+            abilityButton.setTouchable(Touchable.disabled);
+            abilityButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/unavailableAbilityButton.png"))));
+        }
+        abilityButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                float dmg = 0;
+
+                attackButton.remove();
+                abilityButton.remove();
+                moveButton.remove();
+
+                if(name == "heroPeasant") {
+                    isHeroPeasantMoved = true;
+                }
+                else if(name == "heroArcher") {
+                    isHeroArcherMoved = true;
+
+                    buttons[row][col].setName("invisibleHeroArcher");
+                    buttons[row][col].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/invisibleHeroArcher.png"))));
+                    wasInvisible = true;
+                    invisibleRow = row;
+                    invisibleCol = col;
+
+                    endTurn();
+                }
+                else if(name == "heroWarrior") {
+                    isHeroWarriorMoved = true;
+
+                    dmg = heroWarrior.getDamage() * heroWarrior.getQuantity() * 2;
+
+                    for(int j = col+1; j <= col+3; j++) {
+                        System.out.println(j + "," + row);
+                        if(j >= 0 && j < MAX_COL) {
+                            if(buttons[j][row].getName() == "enemyPeasant") {
+                                int count = 0;
+                                dmg -= dmg * enemyPeasant.getDefense() / 20;
+                                for(int k = 0; k < dmg; k = k + enemyPeasant.getHp()) {
+                                    count++;
+                                    System.out.println(count);
+                                }
+                                enemyPeasant.setQuantity(enemyPeasant.getQuantity() - count);
+                                enemyPeasantQuantity.setText(enemyPeasant.getQuantity());
+                                //TODO: CREATE HP*QUANTITY (MAX HP)
+                            }
+                            else if(buttons[j][row].getName() == "enemyArcher") {
+                                int count = 0;
+                                dmg -= dmg * enemyArcher.getDefense() / 20;
+                                for(int k = 0; k < dmg; k = k + enemyArcher.getHp()) {
+                                    count++;
+                                    System.out.println(count);
+                                }
+                                enemyArcher.setQuantity(enemyArcher.getQuantity() - count);
+                                enemyArcherQuantity.setText(enemyArcher.getQuantity());
+                                //TODO: CREATE HP*QUANTITY (MAX HP)
+                            }
+                            else if(buttons[j][row].getName() == "enemyWarrior") {
+                                int count = 0;
+                                dmg -= dmg * enemyWarrior.getDefense() / 20;
+                                for(int k = 0; k < dmg; k = k + enemyWarrior.getHp()) {
+                                    count++;
+                                    System.out.println(count);
+                                }
+                                enemyWarrior.setQuantity(enemyWarrior.getQuantity() - count);
+                                enemyWarriorQuantity.setText(enemyWarrior.getQuantity());
+                                //TODO: CREATE HP*QUANTITY (MAX HP)
+                            }
+                            else if(buttons[j][row].getName() == "enemyWizard") {
+                                int count = 0;
+                                dmg -= dmg * enemyWizard.getDefense() / 20;
+                                for(int k = 0; k < dmg; k = k + enemyWizard.getHp()) {
+                                    count++;
+                                    System.out.println(count);
+                                }
+                                enemyWizard.setQuantity(enemyWizard.getQuantity() - count);
+                                enemyWizardQuantity.setText(enemyWizard.getQuantity());
+                                //TODO: CREATE HP*QUANTITY (MAX HP)
+                            }
+                            else if(buttons[j][row].getName() == "enemyGryff") {
+                                int count = 0;
+                                dmg -= dmg * enemyGryff.getDefense() / 20;
+                                for(int k = 0; k < dmg; k = k + enemyGryff.getHp()) {
+                                    count++;
+                                    System.out.println(count);
+                                }
+                                enemyGryff.setQuantity(enemyGryff.getQuantity() - count);
+                                enemyGryffQuantity.setText(enemyGryff.getQuantity());
+                                //TODO: CREATE HP*QUANTITY (MAX HP)
+                            }
+                        }
+                    }
+                    endTurn();
+                }
+                else if(name == "heroWizard") {
+                    isHeroWizardMoved = true;
+                    System.out.println("wizard ability");
+
+                    for(int i = 0; i < MAX_ROW; i++) {
+                        for(int j = 0; j < MAX_COL; j++) {
+                            if(buttons[i][j].getName() == "heroPeasant" || buttons[i][j].getName() == "heroArcher" || buttons[i][j].getName() == "heroWarrior" || buttons[i][j].getName() == "heroGryff") {
+                                buttons[i][j].setTouchable(Touchable.enabled);
+                                int finalI = i;
+                                int finalJ = j;
+                                float dmgBuff = (float) (heroWizard.getDamage() * heroWizard.getQuantity()) / 10;
+                                float defBuff = (float) (heroWizard.getDamage() * heroWizard.getQuantity()) / 20;
+                                System.out.println("button is ready");
+                                buttons[finalI][finalJ].addListener(new ClickListener(Input.Buttons.RIGHT) {
+                                    public void clicked(InputEvent event, float x, float y) {
+                                        if(buttons[finalI][finalJ].getName() == "heroPeasant") {
+                                            heroPeasant.setDamage((int) (heroPeasant.getDamage() + dmgBuff));
+                                            heroPeasant.setDefense((int) (heroPeasant.getDefense() + defBuff));
+                                            System.out.println("peasant buffed");
+                                        }
+                                        else if(buttons[finalI][finalJ].getName() == "heroArcher") {
+                                            heroArcher.setDamage((int) (heroArcher.getDamage() + dmgBuff));
+                                            heroArcher.setDefense((int) (heroArcher.getDefense() + defBuff));
+                                        }
+                                        else if(buttons[finalI][finalJ].getName() == "heroWarrior") {
+                                            heroWarrior.setDamage((int) (heroWarrior.getDamage() + dmgBuff));
+                                            heroWarrior.setDefense((int) (heroWarrior.getDefense() + defBuff));
+                                        }
+                                        else if(buttons[finalI][finalJ].getName() == "heroGryff") {
+                                            heroGryff.setDamage((int) (heroGryff.getDamage() + dmgBuff));
+                                            heroGryff.setDefense((int) (heroGryff.getDefense() + defBuff));
+                                        }
+                                        endTurn();
+                                    }
+                                });
+                            }
+                        }
+                    }
+
+                }
+                else if(name == "heroGryff") {
+                    dmg = (float) (heroGryff.getDamage() * heroGryff.getQuantity()) / 2;
+                    isHeroGryffMoved = true;
+
+                    for(int i = row-1; i <= row+1; i ++) {
+                        for(int j = col-1; j <= col+1; j ++) {
+                            if(i >= 0 && i < MAX_ROW && j >= 0 && j < MAX_COL) {
+                                if(buttons[i][j].getName() == "enemyPeasant") {
+                                    int count = 0;
+                                    dmg -= dmg * enemyPeasant.getDefense() / 20;
+                                    for(int k = 0; k < dmg; k = k + enemyPeasant.getHp()) {
+                                        count++;
+                                        System.out.println(count);
+                                    }
+                                    enemyPeasant.setQuantity(enemyPeasant.getQuantity() - count);
+                                    enemyPeasantQuantity.setText(enemyPeasant.getQuantity());
+                                    //TODO: CREATE HP*QUANTITY (MAX HP)
+                                }
+                                else if(buttons[i][j].getName() == "enemyArcher") {
+                                    int count = 0;
+                                    dmg -= dmg * enemyArcher.getDefense() / 20;
+                                    for(int k = 0; k < dmg; k = k + enemyArcher.getHp()) {
+                                        count++;
+                                        System.out.println(count);
+                                    }
+                                    enemyArcher.setQuantity(enemyArcher.getQuantity() - count);
+                                    enemyArcherQuantity.setText(enemyArcher.getQuantity());
+                                    //TODO: CREATE HP*QUANTITY (MAX HP)
+                                }
+                                else if(buttons[i][j].getName() == "enemyWarrior") {
+                                    int count = 0;
+                                    dmg -= dmg * enemyWarrior.getDefense() / 20;
+                                    for(int k = 0; k < dmg; k = k + enemyWarrior.getHp()) {
+                                        count++;
+                                        System.out.println(count);
+                                    }
+                                    enemyWarrior.setQuantity(enemyWarrior.getQuantity() - count);
+                                    enemyWarriorQuantity.setText(enemyWarrior.getQuantity());
+                                    //TODO: CREATE HP*QUANTITY (MAX HP)
+                                }
+                                else if(buttons[i][j].getName() == "enemyWizard") {
+                                    int count = 0;
+                                    dmg -= dmg * enemyWizard.getDefense() / 20;
+                                    for(int k = 0; k < dmg; k = k + enemyWizard.getHp()) {
+                                        count++;
+                                        System.out.println(count);
+                                    }
+                                    enemyWizard.setQuantity(enemyWizard.getQuantity() - count);
+                                    enemyWizardQuantity.setText(enemyWizard.getQuantity());
+                                    //TODO: CREATE HP*QUANTITY (MAX HP)
+                                }
+                                else if(buttons[i][j].getName() == "enemyGryff") {
+                                    int count = 0;
+                                    dmg -= dmg * enemyGryff.getDefense() / 20;
+                                    for(int k = 0; k < dmg; k = k + enemyGryff.getHp()) {
+                                        count++;
+                                        System.out.println(count);
+                                    }
+                                    enemyGryff.setQuantity(enemyGryff.getQuantity() - count);
+                                    enemyGryffQuantity.setText(enemyGryff.getQuantity());
+                                    //TODO: CREATE HP*QUANTITY (MAX HP)
+                                }
+                            }
+                        }
+                    }
+                    endTurn();
+                }
+            }
+        });
         stage.addActor(abilityButton);
+
+        moveButton.setPosition(buttons[row][col].getX() + 64, buttons[row][col].getY() - 32);
+        moveButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                attackButton.remove();
+                abilityButton.remove();
+                moveButton.remove();
+                moveUnit(name, row, col);
+            }
+        });
+        stage.addActor(moveButton);
     }
 
     public void moveUnit(String name, int row, int col) {
+        System.out.println("moving started");
         int moveRange = 0;
         if(name == "heroPeasant") {
             moveRange = heroPeasant.getMoveRange();
@@ -774,7 +1060,8 @@ public class FightScreen implements Screen {
                     int finalJ = j;
                     buttons[i][j].setTouchable(Touchable.enabled);
 
-                    buttons[i][j].addListener(new ClickListener() {
+                    //move with left mouse button, i dont need this for now
+                   /* buttons[i][j].addListener(new ClickListener() {
                         public void clicked(InputEvent event, float x, float y) {
                             moveUnit(buttons[finalI][finalJ].getName(), finalI, finalJ);
                             for(int i = 0; i < MAX_ROW; i++) {
@@ -785,7 +1072,7 @@ public class FightScreen implements Screen {
                                 }
                             }
                         }
-                    });
+                    }); */
 
                     buttons[finalI][finalJ].addListener(new ClickListener(Input.Buttons.RIGHT) {
                         public void clicked(InputEvent event, float x, float y) {
