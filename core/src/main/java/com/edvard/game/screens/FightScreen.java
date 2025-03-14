@@ -100,6 +100,87 @@ public class FightScreen implements Screen {
         placeUnits();
     }
 
+    public boolean enemyAttack(float dmg, String name, int row, int col, int range) {
+
+        for(int i = row-range; i <= row+range; i++) {
+            for(int j = col-range; j <= col+range; j++) {
+                if(i >= 0 && i < MAX_ROW && j >= 0 && j < MAX_COL) {
+                    if(buttons[i][j].getName() == "heroPeasant") {
+                        int count = 0;
+                        dmg -= dmg * heroPeasant.getDefense() / 20;
+                        for(int k = 0; k < dmg; k = k + heroPeasant.getHp()) {
+                            count++;
+                            System.out.println(count);
+                        }
+                        heroPeasant.setQuantity(heroPeasant.getQuantity() - count);
+                        heroPeasantQuantity.setText(heroPeasant.getQuantity());
+                        gameFlow.appendText("\nEnemy's " + name + "s killed " + count + " of Hero's Peasants\n");
+                        //TODO: CREATE HP*QUANTITY (MAX HP)
+
+                        return true;
+                    }
+                    else if(buttons[i][j].getName() == "heroArcher") {
+                        int count = 0;
+                        dmg -= dmg * heroArcher.getDefense() / 20;
+                        for(int k = 0; k < dmg; k = k + heroArcher.getHp()) {
+                            count++;
+                            System.out.println(count);
+                        }
+                        heroArcher.setQuantity(heroArcher.getQuantity() - count);
+                        heroArcherQuantity.setText(heroArcher.getQuantity());
+                        gameFlow.appendText("\nEnemy's " + name + "s killed " + count + " of Hero's Archers\n");
+                        //TODO: CREATE HP*QUANTITY (MAX HP)
+
+                        return true;
+                    }
+                    else if(buttons[i][j].getName() == "heroWarrior") {
+                        int count = 0;
+                        dmg -= dmg * heroWarrior.getDefense() / 20;
+                        for(int k = 0; k < dmg; k = k + heroWarrior.getHp()) {
+                            count++;
+                            System.out.println(count);
+                        }
+                        heroWarrior.setQuantity(heroWarrior.getQuantity() - count);
+                        heroWarriorQuantity.setText(heroWarrior.getQuantity());
+                        gameFlow.appendText("\nEnemy's " + name +"s killed " + count + " of Hero's Warriors\n");
+                        //TODO: CREATE HP*QUANTITY (MAX HP)
+
+                        return true;
+                    }
+                    else if(buttons[i][j].getName() == "heroWizard") {
+                        int count = 0;
+                        dmg -= dmg * heroWizard.getDefense() / 20;
+                        for(int k = 0; k < dmg; k = k + heroWizard.getHp()) {
+                            count++;
+                            System.out.println(count);
+                        }
+                        heroWizard.setQuantity(heroWizard.getQuantity() - count);
+                        heroWizardQuantity.setText(heroWizard.getQuantity());
+                        gameFlow.appendText("\nEnemy's " + name + "s killed " + count + " of Hero's Wizards\n");
+                        //TODO: CREATE HP*QUANTITY (MAX HP)
+
+                        return true;
+                    }
+                    else if(buttons[i][j].getName() == "heroGryff") {
+                        int count = 0;
+                        dmg -= dmg * heroGryff.getDefense() / 20;
+                        for(int k = 0; k < dmg; k = k + heroGryff.getHp()) {
+                            count++;
+                            System.out.println(count);
+                        }
+                        heroGryff.setQuantity(heroGryff.getQuantity() - count);
+                        heroGryffQuantity.setText(heroGryff.getQuantity());
+                        gameFlow.appendText("\nEnemy's " + name + "s killed " + count + " of Hero's Gryffs\n");
+                        //TODO: CREATE HP*QUANTITY (MAX HP)
+
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     public void enemyTurn() {
         if(enemyGryff.getQuantity() <= 0) {
             isEnemyGryffMoved = true;
@@ -213,91 +294,10 @@ public class FightScreen implements Screen {
                         else if(heroUnitCount == 1) {
                             float dmg = enemyGryff.getDamage() * enemyGryff.getQuantity();
 
-                            for(int q = i-1; q <= i+1; q++) {
-                                for(int r = j-1; r <= j+1; r++) {
-                                    if(q >= 0 && q < MAX_ROW && r >= 0 && r < MAX_COL) {
-                                        if(buttons[q][r].getName() == "heroPeasant") {
-                                            int count = 0;
-                                            dmg -= dmg * heroPeasant.getDefense() / 20;
-                                            for(int k = 0; k < dmg; k = k + heroPeasant.getHp()) {
-                                                count++;
-                                                System.out.println(count);
-                                            }
-                                            heroPeasant.setQuantity(heroPeasant.getQuantity() - count);
-                                            heroPeasantQuantity.setText(heroPeasant.getQuantity());
-                                            gameFlow.appendText("\nEnemy's Gryffs killed " + count + " of Hero's Peasants\n");
-                                            //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                            isEnemyGryffMoved = true;
-                                            startTurn();
-                                            return;
-                                        }
-                                        else if(buttons[q][r].getName() == "heroArcher") {
-                                            int count = 0;
-                                            dmg -= dmg * heroArcher.getDefense() / 20;
-                                            for(int k = 0; k < dmg; k = k + heroArcher.getHp()) {
-                                                count++;
-                                                System.out.println(count);
-                                            }
-                                            heroArcher.setQuantity(heroArcher.getQuantity() - count);
-                                            heroArcherQuantity.setText(heroArcher.getQuantity());
-                                            gameFlow.appendText("\nEnemy's Gryffs killed " + count + " of Hero's Archers\n");
-                                            //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                            isEnemyGryffMoved = true;
-                                            startTurn();
-                                            return;
-                                        }
-                                        else if(buttons[q][r].getName() == "heroWarrior") {
-                                            int count = 0;
-                                            dmg -= dmg * heroWarrior.getDefense() / 20;
-                                            for(int k = 0; k < dmg; k = k + heroWarrior.getHp()) {
-                                                count++;
-                                                System.out.println(count);
-                                            }
-                                            heroWarrior.setQuantity(heroWarrior.getQuantity() - count);
-                                            heroWarriorQuantity.setText(heroWarrior.getQuantity());
-                                            gameFlow.appendText("\nEnemy's Gryffs killed " + count + " of Hero's Warriors\n");
-                                            //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                            isEnemyGryffMoved = true;
-                                            startTurn();
-                                            return;
-                                        }
-                                        else if(buttons[q][r].getName() == "heroWizard") {
-                                            int count = 0;
-                                            dmg -= dmg * heroWizard.getDefense() / 20;
-                                            for(int k = 0; k < dmg; k = k + heroWizard.getHp()) {
-                                                count++;
-                                                System.out.println(count);
-                                            }
-                                            heroWizard.setQuantity(heroWizard.getQuantity() - count);
-                                            heroWizardQuantity.setText(heroWizard.getQuantity());
-                                            gameFlow.appendText("\nEnemy's Gryffs killed " + count + " of Hero's Wizards\n");
-                                            //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                            isEnemyGryffMoved = true;
-                                            startTurn();
-                                            return;
-                                        }
-                                        else if(buttons[q][r].getName() == "heroGryff") {
-                                            int count = 0;
-                                            dmg -= dmg * heroGryff.getDefense() / 20;
-                                            for(int k = 0; k < dmg; k = k + heroGryff.getHp()) {
-                                                count++;
-                                                System.out.println(count);
-                                            }
-                                            heroGryff.setQuantity(heroGryff.getQuantity() - count);
-                                            heroGryffQuantity.setText(heroGryff.getQuantity());
-                                            gameFlow.appendText("\nEnemy's Gryffs killed " + count + " of Hero's Gryffs\n");
-                                            //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                            isEnemyGryffMoved = true;
-                                            startTurn();
-                                            return;
-                                        }
-                                    }
-                                }
+                            if(enemyAttack(dmg, "Gryff", i, j, 1)) {
+                                isEnemyGryffMoved = true;
+                                startTurn();
+                                return;
                             }
                         }
 
@@ -519,96 +519,10 @@ public class FightScreen implements Screen {
                         if(heroUnitCount == 0) {
                             dmg = enemyWarrior.getDamage() * enemyWarrior.getQuantity();
 
-                            for(int q = i-1; q <= i+1; q++) {
-                                for(int r = j-1; r <= j+1; r++) {
-                                    if(q >= 0 && q < MAX_ROW && r >= 0 && r < MAX_COL) {
-                                        if(buttons[q][r].getName() == "heroPeasant") {
-                                            heroUnitCount++;
-                                            int count = 0;
-                                            dmg -= dmg * heroPeasant.getDefense() / 20;
-                                            for(int k = 0; k < dmg; k = k + heroPeasant.getHp()) {
-                                                count++;
-                                                System.out.println(count);
-                                            }
-                                            heroPeasant.setQuantity(heroPeasant.getQuantity() - count);
-                                            heroPeasantQuantity.setText(heroPeasant.getQuantity());
-                                            gameFlow.appendText("\nEnemy's Warriors killed " + count + " of Hero's Peasants\n");
-                                            //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                            isEnemyWarriorMoved = true;
-                                            startTurn();
-                                            return;
-                                        }
-                                        else if(buttons[q][r].getName() == "heroArcher") {
-                                            heroUnitCount++;
-                                            int count = 0;
-                                            dmg -= dmg * heroArcher.getDefense() / 20;
-                                            for(int k = 0; k < dmg; k = k + heroArcher.getHp()) {
-                                                count++;
-                                                System.out.println(count);
-                                            }
-                                            heroArcher.setQuantity(heroArcher.getQuantity() - count);
-                                            heroArcherQuantity.setText(heroArcher.getQuantity());
-                                            gameFlow.appendText("\nEnemy's Warriors killed " + count + " of Hero's Archers\n");
-                                            //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                            isEnemyWarriorMoved = true;
-                                            startTurn();
-                                            return;
-                                        }
-                                        else if(buttons[q][r].getName() == "heroWarrior") {
-                                            heroUnitCount++;
-                                            int count = 0;
-                                            dmg -= dmg * heroWarrior.getDefense() / 20;
-                                            for(int k = 0; k < dmg; k = k + heroWarrior.getHp()) {
-                                                count++;
-                                                System.out.println(count);
-                                            }
-                                            heroWarrior.setQuantity(heroWarrior.getQuantity() - count);
-                                            heroWarriorQuantity.setText(heroWarrior.getQuantity());
-                                            gameFlow.appendText("\nEnemy's Warriors killed " + count + " of Hero's Warriors\n");
-                                            //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                            isEnemyWarriorMoved = true;
-                                            startTurn();
-                                            return;
-                                        }
-                                        else if(buttons[q][r].getName() == "heroWizard") {
-                                            heroUnitCount++;
-                                            int count = 0;
-                                            dmg -= dmg * heroWizard.getDefense() / 20;
-                                            for(int k = 0; k < dmg; k = k + heroWizard.getHp()) {
-                                                count++;
-                                                System.out.println(count);
-                                            }
-                                            heroWizard.setQuantity(heroWizard.getQuantity() - count);
-                                            heroWizardQuantity.setText(heroWizard.getQuantity());
-                                            gameFlow.appendText("\nEnemy's Warriors killed " + count + " of Hero's Wizards\n");
-                                            //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                            isEnemyWarriorMoved = true;
-                                            startTurn();
-                                            return;
-                                        }
-                                        else if(buttons[q][r].getName() == "heroGryff") {
-                                            heroUnitCount++;
-                                            int count = 0;
-                                            dmg -= dmg * heroGryff.getDefense() / 20;
-                                            for(int k = 0; k < dmg; k = k + heroGryff.getHp()) {
-                                                count++;
-                                                System.out.println(count);
-                                            }
-                                            heroGryff.setQuantity(heroGryff.getQuantity() - count);
-                                            heroGryffQuantity.setText(heroGryff.getQuantity());
-                                            gameFlow.appendText("\nEnemy's Warriors killed " + count + " of Hero's Gryffs\n");
-                                            //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                            isEnemyWarriorMoved = true;
-                                            startTurn();
-                                            return;
-                                        }
-                                    }
-                                }
+                            if(enemyAttack(dmg, "Warrior", i, j, 1)) {
+                                isEnemyGryffMoved = true;
+                                startTurn();
+                                return;
                             }
                         }
 
@@ -821,89 +735,11 @@ public class FightScreen implements Screen {
                         else {
                             //attack
                             float dmg = enemyWizard.getDamage() * enemyWizard.getQuantity();
-                            for(int k = 0; k < MAX_ROW; k++) {
-                                for(int l = 0; l < MAX_COL; l++) {
-                                    if(buttons[k][l].getName() == "heroPeasant") {
-                                        int count = 0;
-                                        dmg -= dmg * heroPeasant.getDefense() / 20;
-                                        for(int m = 0; m < dmg; m = m + heroPeasant.getHp()) {
-                                            count++;
-                                            System.out.println(count);
-                                        }
-                                        heroPeasant.setQuantity(heroPeasant.getQuantity() - count);
-                                        heroPeasantQuantity.setText(heroPeasant.getQuantity());
-                                        gameFlow.appendText("\nEnemy's Wizards killed " + count + " of Hero's Peasant\n");
-                                        //TODO: CREATE HP*QUANTITY (MAX HP)
 
-                                        isEnemyWizardMoved = true;
-                                        startTurn();
-                                        return;
-                                    }
-                                    else if(buttons[k][l].getName() == "heroArcher") {
-                                        int count = 0;
-                                        dmg -= dmg * heroArcher.getDefense() / 20;
-                                        for(int m = 0; m < dmg; m = m + heroArcher.getHp()) {
-                                            count++;
-                                            System.out.println(count);
-                                        }
-                                        heroArcher.setQuantity(heroArcher.getQuantity() - count);
-                                        heroArcherQuantity.setText(heroArcher.getQuantity());
-                                        gameFlow.appendText("\nEnemy's Wizards killed " + count + " of Hero's Archer\n");
-                                        //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                        isEnemyWizardMoved = true;
-                                        startTurn();
-                                        return;
-                                    }
-                                    else if(buttons[k][l].getName() == "heroWarrior") {
-                                        int count = 0;
-                                        dmg -= dmg * heroWarrior.getDefense() / 20;
-                                        for(int m = 0; m < dmg; m = m + heroWarrior.getHp()) {
-                                            count++;
-                                            System.out.println(count);
-                                        }
-                                        heroWarrior.setQuantity(heroWarrior.getQuantity() - count);
-                                        heroWarriorQuantity.setText(heroWarrior.getQuantity());
-                                        gameFlow.appendText("\nEnemy's Wizards killed " + count + " of Hero's Warrior\n");
-                                        //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                        isEnemyWizardMoved = true;
-                                        startTurn();
-                                        return;
-                                    }
-                                    else if(buttons[k][l].getName() == "heroWizard") {
-                                        int count = 0;
-                                        dmg -= dmg * heroWizard.getDefense() / 20;
-                                        for(int m = 0; m < dmg; m = m + heroWizard.getHp()) {
-                                            count++;
-                                            System.out.println(count);
-                                        }
-                                        heroWizard.setQuantity(heroWizard.getQuantity() - count);
-                                        heroWizardQuantity.setText(heroWizard.getQuantity());
-                                        gameFlow.appendText("\nEnemy's Wizards killed " + count + " of Hero's Wizard\n");
-                                        //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                        isEnemyWizardMoved = true;
-                                        startTurn();
-                                        return;
-                                    }
-                                    else if(buttons[k][l].getName() == "heroGryff") {
-                                        int count = 0;
-                                        dmg -= dmg * heroGryff.getDefense() / 20;
-                                        for(int m = 0; m < dmg; m = m + heroGryff.getHp()) {
-                                            count++;
-                                            System.out.println(count);
-                                        }
-                                        heroGryff.setQuantity(heroGryff.getQuantity() - count);
-                                        heroGryffQuantity.setText(heroGryff.getQuantity());
-                                        gameFlow.appendText("\nEnemy's Wizards killed " + count + " of Hero's Gryff\n");
-                                        //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                        isEnemyWizardMoved = true;
-                                        startTurn();
-                                        return;
-                                    }
-                                }
+                            if(enemyAttack(dmg, "Wizard", i, j, 1)) {
+                                isEnemyGryffMoved = true;
+                                startTurn();
+                                return;
                             }
                         }
                     }
@@ -976,89 +812,11 @@ public class FightScreen implements Screen {
 
                         //attack
                         float dmg = enemyArcher.getDamage() * enemyArcher.getQuantity();
-                        for(int k = 0; k < MAX_ROW; k++) {
-                            for(int l = 0; l < MAX_COL; l++) {
-                                if(buttons[k][l].getName() == "heroPeasant") {
-                                    int count = 0;
-                                    dmg -= dmg * heroPeasant.getDefense() / 20;
-                                    for(int m = 0; m < dmg; m = m + heroPeasant.getHp()) {
-                                        count++;
-                                        System.out.println(count);
-                                    }
-                                    heroPeasant.setQuantity(heroPeasant.getQuantity() - count);
-                                    heroPeasantQuantity.setText(heroPeasant.getQuantity());
-                                    gameFlow.appendText("\nEnemy's Archers killed " + count + " of Hero's Peasant\n");
-                                    //TODO: CREATE HP*QUANTITY (MAX HP)
 
-                                    isEnemyArcherMoved = true;
-                                    startTurn();
-                                    return;
-                                }
-                                else if(buttons[k][l].getName() == "heroArcher") {
-                                    int count = 0;
-                                    dmg -= dmg * heroArcher.getDefense() / 20;
-                                    for(int m = 0; m < dmg; m = m + heroArcher.getHp()) {
-                                        count++;
-                                        System.out.println(count);
-                                    }
-                                    heroArcher.setQuantity(heroArcher.getQuantity() - count);
-                                    heroArcherQuantity.setText(heroArcher.getQuantity());
-                                    gameFlow.appendText("\nEnemy's Archers killed " + count + " of Hero's Archers\n");
-                                    //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                    isEnemyArcherMoved = true;
-                                    startTurn();
-                                    return;
-                                }
-                                else if(buttons[k][l].getName() == "heroWarrior") {
-                                    int count = 0;
-                                    dmg -= dmg * heroWarrior.getDefense() / 20;
-                                    for(int m = 0; m < dmg; m = m + heroWarrior.getHp()) {
-                                        count++;
-                                        System.out.println(count);
-                                    }
-                                    heroWarrior.setQuantity(heroWarrior.getQuantity() - count);
-                                    heroWarriorQuantity.setText(heroWarrior.getQuantity());
-                                    gameFlow.appendText("\nEnemy's Archers killed " + count + " of Hero's Warriors\n");
-                                    //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                    isEnemyArcherMoved = true;
-                                    startTurn();
-                                    return;
-                                }
-                                else if(buttons[k][l].getName() == "heroWizard") {
-                                    int count = 0;
-                                    dmg -= dmg * heroWizard.getDefense() / 20;
-                                    for(int m = 0; m < dmg; m = m + heroWizard.getHp()) {
-                                        count++;
-                                        System.out.println(count);
-                                    }
-                                    heroWizard.setQuantity(heroWizard.getQuantity() - count);
-                                    heroWizardQuantity.setText(heroWizard.getQuantity());
-                                    gameFlow.appendText("\nEnemy's Archers killed " + count + " of Hero's Wizards\n");
-                                    //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                    isEnemyArcherMoved = true;
-                                    startTurn();
-                                    return;
-                                }
-                                else if(buttons[k][l].getName() == "heroGryff") {
-                                    int count = 0;
-                                    dmg -= dmg * heroGryff.getDefense() / 20;
-                                    for(int m = 0; m < dmg; m = m + heroGryff.getHp()) {
-                                        count++;
-                                        System.out.println(count);
-                                    }
-                                    heroGryff.setQuantity(heroGryff.getQuantity() - count);
-                                    heroGryffQuantity.setText(heroGryff.getQuantity());
-                                    gameFlow.appendText("\nEnemy's Archers killed " + count + " of Hero's Gryffs\n");
-                                    //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                    isEnemyArcherMoved = true;
-                                    startTurn();
-                                    return;
-                                }
-                            }
+                        if(enemyAttack(dmg, "Gryff", i, j, 1)) {
+                            isEnemyGryffMoved = true;
+                            startTurn();
+                            return;
                         }
                     }
                 }
@@ -1075,91 +833,10 @@ public class FightScreen implements Screen {
                         //attack
                         float dmg = enemyPeasant.getDamage() * enemyPeasant.getQuantity();
 
-                        for(int q = i-1; q <= i+1; q++) {
-                            for(int r = j-1; r <= j+1; r++) {
-                                if(q >= 0 && q < MAX_ROW && r >= 0 && r < MAX_COL) {
-                                    if(buttons[q][r].getName() == "heroPeasant") {
-                                        int count = 0;
-                                        dmg -= dmg * heroPeasant.getDefense() / 20;
-                                        for(int k = 0; k < dmg; k = k + heroPeasant.getHp()) {
-                                            count++;
-                                            System.out.println(count);
-                                        }
-                                        heroPeasant.setQuantity(heroPeasant.getQuantity() - count);
-                                        heroPeasantQuantity.setText(heroPeasant.getQuantity());
-                                        gameFlow.appendText("\nEnemy's Peasants killed " + count + " of Hero's Peasant\n");
-                                        //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                        isEnemyPeasantMoved = true;
-                                        startTurn();
-                                        return;
-                                    }
-                                    else if(buttons[q][r].getName() == "heroArcher") {
-                                        int count = 0;
-                                        dmg -= dmg * heroArcher.getDefense() / 20;
-                                        for(int k = 0; k < dmg; k = k + heroArcher.getHp()) {
-                                            count++;
-                                            System.out.println(count);
-                                        }
-                                        heroArcher.setQuantity(heroArcher.getQuantity() - count);
-                                        heroArcherQuantity.setText(heroArcher.getQuantity());
-                                        gameFlow.appendText("\nEnemy's Peasants killed " + count + " of Hero's Archers\n");
-                                        //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                        isEnemyPeasantMoved = true;
-                                        startTurn();
-                                        return;
-                                    }
-                                    else if(buttons[q][r].getName() == "heroWarrior") {
-                                        int count = 0;
-                                        dmg -= dmg * heroWarrior.getDefense() / 20;
-                                        for(int k = 0; k < dmg; k = k + heroWarrior.getHp()) {
-                                            count++;
-                                            System.out.println(count);
-                                        }
-                                        heroWarrior.setQuantity(heroWarrior.getQuantity() - count);
-                                        heroWarriorQuantity.setText(heroWarrior.getQuantity());
-                                        gameFlow.appendText("\nEnemy's Peasants killed " + count + " of Hero's Warriors\n");
-                                        //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                        isEnemyPeasantMoved = true;
-                                        startTurn();
-                                        return;
-                                    }
-                                    else if(buttons[q][r].getName() == "heroWizard") {
-                                        int count = 0;
-                                        dmg -= dmg * heroWizard.getDefense() / 20;
-                                        for(int k = 0; k < dmg; k = k + heroWizard.getHp()) {
-                                            count++;
-                                            System.out.println(count);
-                                        }
-                                        heroWizard.setQuantity(heroWizard.getQuantity() - count);
-                                        heroWizardQuantity.setText(heroWizard.getQuantity());
-                                        gameFlow.appendText("\nEnemy's Peasants killed " + count + " of Hero's Wizards\n");
-                                        //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                        isEnemyPeasantMoved = true;
-                                        startTurn();
-                                        return;
-                                    }
-                                    else if(buttons[q][r].getName() == "heroGryff") {
-                                        int count = 0;
-                                        dmg -= dmg * heroGryff.getDefense() / 20;
-                                        for(int k = 0; k < dmg; k = k + heroGryff.getHp()) {
-                                            count++;
-                                            System.out.println(count);
-                                        }
-                                        heroGryff.setQuantity(heroGryff.getQuantity() - count);
-                                        heroGryffQuantity.setText(heroGryff.getQuantity());
-                                        gameFlow.appendText("\nEnemy's Peasants killed " + count + " of Hero's Gryffs\n");
-                                        //TODO: CREATE HP*QUANTITY (MAX HP)
-
-                                        isEnemyPeasantMoved = true;
-                                        startTurn();
-                                        return;
-                                    }
-                                }
-                            }
+                        if(enemyAttack(dmg, "Gryff", i, j, 1)) {
+                            isEnemyGryffMoved = true;
+                            startTurn();
+                            return;
                         }
 
                         //move
