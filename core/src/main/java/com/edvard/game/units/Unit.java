@@ -6,13 +6,15 @@ public abstract class Unit {
     private int damage;
     private int hp;
     private int defense;
+    private int moveRange;
 
-    public Unit(boolean heroUnit, int quantity, int damage, int hp, int defense) {
+    public Unit(boolean heroUnit, int quantity, int damage, int hp, int defense, int moveRange) {
         this.heroUnit = heroUnit;
         this.quantity = quantity;
         this.damage = damage;
         this.hp = hp;
         this.defense = defense;
+        this.moveRange = moveRange;
     }
 
     public int getQuantity() {
@@ -53,5 +55,13 @@ public abstract class Unit {
 
     public void setHeroUnit(boolean heroUnit) {
         this.heroUnit = heroUnit;
+    }
+
+    public int getMoveRange() {
+        return moveRange;
+    }
+
+    public void setMoveRange(int moveRange) {
+        this.moveRange = moveRange;
     }
 }
