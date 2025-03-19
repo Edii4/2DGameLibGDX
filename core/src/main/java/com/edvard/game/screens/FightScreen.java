@@ -91,7 +91,7 @@ public class FightScreen implements Screen {
 
     public static PlayScreen playScreen;
 
-    public FightScreen(MainGame game) {
+    public FightScreen(MainGame game, int minPowerLevel, int maxPowerLevel) {
         stage = new Stage(new ScreenViewport());
         this.game = game;
         game.batch = new SpriteBatch();

@@ -3,6 +3,7 @@ package com.edvard.game.sprites;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
+import com.edvard.game.screens.PlayScreen;
 
 public class House extends InteractiveTileObject{
     public House(World world, TiledMap tiledMap, Rectangle bounds) {
@@ -12,11 +13,15 @@ public class House extends InteractiveTileObject{
 
     @Override
     public void onHit() {
-        System.out.println("House");
+        PlayScreen.startFightLabel.setVisible(true);
+        PlayScreen.isSpacePressable = true;
+        PlayScreen.minPowerLevel = 120;
+        PlayScreen.maxPowerLevel = 140;
     }
 
     @Override
     public void afterHit() {
-
+        PlayScreen.startFightLabel.setVisible(false);
+        PlayScreen.isSpacePressable = false;
     }
 }

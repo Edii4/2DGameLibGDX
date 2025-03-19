@@ -20,6 +20,8 @@ public class Chest extends InteractiveTileObject{
     public void onHit() {
         PlayScreen.startFightLabel.setVisible(true);
         PlayScreen.isSpacePressable = true;
+        PlayScreen.minPowerLevel = 60;
+        PlayScreen.maxPowerLevel = 80;
     }
 
     @Override

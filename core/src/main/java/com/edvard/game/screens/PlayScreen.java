@@ -24,6 +24,8 @@ import com.edvard.game.tools.WorldContactListener;
 
 public class PlayScreen implements Screen {
 
+    public static int minPowerLevel;
+    public static int maxPowerLevel;
     public static boolean isSpacePressable;
     public static Label startFightLabel;
 
@@ -122,7 +124,7 @@ public class PlayScreen implements Screen {
 
     public void nextScreen() {
         if(isSpacePressable && Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            game.setScreen(new FightScreen(game));
+            game.setScreen(new FightScreen(game, minPowerLevel, maxPowerLevel));
             FightScreen.playScreen = this;
             System.out.println("pressed");
             System.out.println(this);
