@@ -20,11 +20,15 @@ import com.edvard.game.MainGame;
 import com.edvard.game.units.*;
 
 import java.util.Objects;
+import java.util.Random;
 
 public class FightScreen implements Screen {
 
     private final int MAX_ROW = 10;
     private final int MAX_COL = 10;
+
+    int minPowerLevel;
+    int maxPowerLevel;
 
     ImageButton startButton;
 
@@ -92,6 +96,8 @@ public class FightScreen implements Screen {
     public static PlayScreen playScreen;
 
     public FightScreen(MainGame game, int minPowerLevel, int maxPowerLevel) {
+        this.minPowerLevel = minPowerLevel;
+        this.maxPowerLevel = maxPowerLevel;
         stage = new Stage(new ScreenViewport());
         this.game = game;
         game.batch = new SpriteBatch();
@@ -613,7 +619,7 @@ public class FightScreen implements Screen {
                             dmg = enemyWarrior.getDamage() * enemyWarrior.getQuantity();
 
                             if(enemyAttack(dmg, "Warrior", i, j, 1)) {
-                                isEnemyGryffMoved = true;
+                                isEnemyWarriorMoved = true;
                                 startTurn();
                                 return;
                             }
@@ -829,8 +835,8 @@ public class FightScreen implements Screen {
                             //attack
                             float dmg = enemyWizard.getDamage() * enemyWizard.getQuantity();
 
-                            if(enemyAttack(dmg, "Wizard", i, j, 1)) {
-                                isEnemyGryffMoved = true;
+                            if(enemyAttack(dmg, "Wizard", i, j, MAX_COL+MAX_ROW)) {
+                                isEnemyWizardMoved = true;
                                 startTurn();
                                 return;
                             }
@@ -859,7 +865,7 @@ public class FightScreen implements Screen {
                         }
 
                         //ability
-                        if(isEnemySurround && enemyArcher.getQuantity() <= 60 && !wasEnemyInvisible) {
+                        if(isEnemySurround && enemyArcher.getQuantity() <= (enemyArcher.getQuantity() / 2) && !wasEnemyInvisible) {
                             buttons[i][j].setName("invisibleEnemyArcher");
                             buttons[i][j].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/invisibleEnemyArcher.png"))));
                             wasEnemyInvisible = true;
@@ -906,14 +912,16 @@ public class FightScreen implements Screen {
                         //attack
                         float dmg = enemyArcher.getDamage() * enemyArcher.getQuantity();
 
-                        if(enemyAttack(dmg, "Gryff", i, j, 1)) {
-                            isEnemyGryffMoved = true;
+                        if(enemyAttack(dmg, "Archer", i, j, MAX_COL+MAX_ROW)) {
+                            System.out.println("archer should have attacked 2");
+                            isEnemyArcherMoved = true;
                             startTurn();
                             return;
                         }
                     }
                 }
             }
+            System.out.println("archer should have attacked");
             isEnemyArcherMoved = true;
             startTurn();
 
@@ -926,8 +934,8 @@ public class FightScreen implements Screen {
                         //attack
                         float dmg = enemyPeasant.getDamage() * enemyPeasant.getQuantity();
 
-                        if(enemyAttack(dmg, "Gryff", i, j, 1)) {
-                            isEnemyGryffMoved = true;
+                        if(enemyAttack(dmg, "Peasant", i, j, 1)) {
+                            isEnemyPeasantMoved = true;
                             startTurn();
                             return;
                         }
@@ -1830,15 +1838,15 @@ public class FightScreen implements Screen {
 
     public void createUnits() {
         heroPeasant = new Peasant(true, 100, 3, 5, 10, 2);
-        enemyPeasant = new Peasant(false, 100, 3, 5, 10, 2);
+        enemyPeasant = new Peasant(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 2);
         heroArcher = new Archer(true, 100, 3, 5, 10, 2);
-        enemyArcher = new Archer(false, 100, 3, 5, 10, 2);
+        enemyArcher = new Archer(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 2);
         heroWarrior = new Warrior(true, 100, 3, 5, 10, 2);
-        enemyWarrior  = new Warrior(false, 100, 3, 5, 10, 2);
+        enemyWarrior  = new Warrior(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 2);
         heroWizard = new Wizard(true, 100, 3, 5, 10, 1);
-        enemyWizard = new Wizard(false, 100, 3, 5, 10, 1);
+        enemyWizard = new Wizard(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 1);
         heroGryff = new Gryff(true, 100, 3, 5, 10, 3);
-        enemyGryff = new Gryff(false, 100, 3, 5, 10, 3);
+        enemyGryff = new Gryff(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 3);
     }
 
     public void createField() {
