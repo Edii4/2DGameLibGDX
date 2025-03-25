@@ -30,7 +30,29 @@ public class FightScreen implements Screen {
     int minPowerLevel;
     int maxPowerLevel;
 
+    boolean wasEnemyFireballUsedThisTurn = false;
+    boolean wasEnemyStruckUsedThisTurn = false;
+    boolean wasEnemyShieldUsedThisTurn = false;
+
+    boolean wasEnemyFireballUsed = false;
+    boolean wasEnemyStruckUsed = false;
+    boolean wasEnemyShieldUsed = false;
+
+    boolean wasFireballUsedThisTurn = false;
+    boolean wasStruckUsedThisTurn = false;
+    boolean wasShieldUsedThisTurn = false;
+
+    boolean wasFireballUsed = false;
+    boolean wasStruckUsed = false;
+    boolean wasShieldUsed = false;
+
     ImageButton startButton;
+    ImageButton fireballButton;
+    ImageButton struckButton;
+    ImageButton shieldButton;
+    ImageButton enemyFireballButton;
+    ImageButton enemyStruckButton;
+    ImageButton enemyShieldButton;
 
     TextArea gameFlow;
     ScrollPane scrollPane;
@@ -106,6 +128,724 @@ public class FightScreen implements Screen {
         placeUnits();
     }
 
+    public void enemyShield() {
+        if(enemyGryff.getQuantity() > 0) {
+            enemyGryff.setDefense((int) (enemyGryff.getDefense() * 1.2f));
+            gameFlow.appendText("\nEnemy SHIELDED Enemy's Gryffs\n");
+        }
+        else if(enemyWarrior.getQuantity() > 0) {
+            enemyWarrior.setDefense((int) (enemyWarrior.getDefense() * 1.2f));
+            gameFlow.appendText("\nEnemy SHIELDED Enemy's Warriors\n");
+        }
+        else if(enemyWizard.getQuantity() > 0) {
+            enemyWizard.setDefense((int) (enemyWizard.getDefense() * 1.2f));
+            gameFlow.appendText("\nEnemy SHIELDED Enemy's Wizards\n");
+        }
+        else if(enemyArcher.getQuantity() > 0) {
+            enemyArcher.setDefense((int) (enemyArcher.getDefense() * 1.2f));
+            gameFlow.appendText("\nEnemy SHIELDED Enemy's Archers\n");
+        }
+        else if(enemyPeasant.getQuantity() > 0) {
+            enemyPeasant.setDefense((int) (enemyPeasant.getDefense() * 1.2f));
+            gameFlow.appendText("\nEnemy SHIELDED Enemy's Peasants\n");
+        }
+
+        wasEnemyShieldUsedThisTurn = true;
+        wasEnemyShieldUsed = true;
+        enemyFireballButton.setTouchable(Touchable.disabled);
+        enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballDeactive.png"))));
+
+        enemyStruckButton.setTouchable(Touchable.disabled);
+        enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckDeactive.png"))));
+
+        enemyShieldButton.setTouchable(Touchable.disabled);
+        enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldDeactive.png"))));
+    }
+
+    public void enemyStruck() {
+        float dmg = 300 - 50 * heroPeasant.getDefense() / 20;
+        int count = 0;
+        for(int k = 0; k < dmg; k = k + heroPeasant.getHp()) {
+            count++;
+            System.out.println(count);
+        }
+        if(heroPeasant.getQuantity() <= count) {
+            for(int i = 0; i < MAX_ROW; i++) {
+                for(int j = 0; j < MAX_COL; j++) {
+                    if(buttons[i][j].getName() == "heroPeasant") {
+                        heroPeasant.setQuantity(heroPeasant.getQuantity() - count);
+                        heroPeasantQuantity.setText(enemyPeasant.getQuantity());
+                        gameFlow.appendText("\nEnemy's STRUCK killed " + count + " of Hero's Peasant\n");
+                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                        isUnitDead(i, j, true);
+                        wasEnemyStruckUsedThisTurn = true;
+                        wasEnemyStruckUsed = true;
+                        enemyFireballButton.setTouchable(Touchable.disabled);
+                        enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballDeactive.png"))));
+
+                        enemyStruckButton.setTouchable(Touchable.disabled);
+                        enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckDeactive.png"))));
+
+                        enemyShieldButton.setTouchable(Touchable.disabled);
+                        enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldDeactive.png"))));
+                        return;
+                    }
+                }
+            }
+        }
+        dmg = 300 - 50 * heroArcher.getDefense() / 20;
+        count = 0;
+        for(int k = 0; k < dmg; k = k + heroArcher.getHp()) {
+            count++;
+            System.out.println(count);
+        }
+        if(heroArcher.getQuantity() <= count) {
+            for(int i = 0; i < MAX_ROW; i++) {
+                for(int j = 0; j < MAX_COL; j++) {
+                    if(buttons[i][j].getName() == "heroArcher") {
+                        heroArcher.setQuantity(heroArcher.getQuantity() - count);
+                        heroArcherQuantity.setText(heroArcher.getQuantity());
+                        gameFlow.appendText("\nEnemy's STRUCK killed " + count + " of Hero's Archers\n");
+                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                        isUnitDead(i, j, true);
+                        wasEnemyStruckUsedThisTurn = true;
+                        wasEnemyStruckUsed = true;
+                        enemyFireballButton.setTouchable(Touchable.disabled);
+                        enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballDeactive.png"))));
+
+                        enemyStruckButton.setTouchable(Touchable.disabled);
+                        enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckDeactive.png"))));
+
+                        enemyShieldButton.setTouchable(Touchable.disabled);
+                        enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldDeactive.png"))));
+                        return;
+                    }
+                }
+            }
+        }
+        dmg = 300 - 50 * heroWarrior.getDefense() / 20;
+        count = 0;
+        for(int k = 0; k < dmg; k = k + heroWarrior.getHp()) {
+            count++;
+            System.out.println(count);
+        }
+        if(heroWarrior.getQuantity() <= count) {
+            for(int i = 0; i < MAX_ROW; i++) {
+                for(int j = 0; j < MAX_COL; j++) {
+                    if(buttons[i][j].getName() == "heroWarrior") {
+                        heroWarrior.setQuantity(heroWarrior.getQuantity() - count);
+                        heroWarriorQuantity.setText(heroWarrior.getQuantity());
+                        gameFlow.appendText("\nEnemy's STRUCK killed " + count + " of Hero's Warriors\n");
+                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                        isUnitDead(i, j, true);
+                        wasEnemyStruckUsedThisTurn = true;
+                        wasEnemyStruckUsed = true;
+                        enemyFireballButton.setTouchable(Touchable.disabled);
+                        enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballDeactive.png"))));
+
+                        enemyStruckButton.setTouchable(Touchable.disabled);
+                        enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckDeactive.png"))));
+
+                        enemyShieldButton.setTouchable(Touchable.disabled);
+                        enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldDeactive.png"))));
+                        return;
+                    }
+                }
+            }
+        }
+        dmg = 300 - 50 * heroWizard.getDefense() / 20;
+        count = 0;
+        for(int k = 0; k < dmg; k = k + heroWizard.getHp()) {
+            count++;
+            System.out.println(count);
+        }
+        if(heroWizard.getQuantity() <= dmg) {
+            for(int i = 0; i < MAX_ROW; i++) {
+                for(int j = 0; j < MAX_COL; j++) {
+                    if(buttons[i][j].getName() == "heroWizard") {
+                        heroWizard.setQuantity(heroWizard.getQuantity() - count);
+                        heroWizardQuantity.setText(heroWizard.getQuantity());
+                        gameFlow.appendText("\nEnemy's STRUCK killed " + count + " of Hero's Wizards\n");
+                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                        isUnitDead(i, j, true);
+                        wasEnemyStruckUsedThisTurn = true;
+                        wasEnemyStruckUsed = true;
+                        enemyFireballButton.setTouchable(Touchable.disabled);
+                        enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballDeactive.png"))));
+
+                        enemyStruckButton.setTouchable(Touchable.disabled);
+                        enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckDeactive.png"))));
+
+                        enemyShieldButton.setTouchable(Touchable.disabled);
+                        enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldDeactive.png"))));
+                        return;
+                    }
+                }
+            }
+        }
+        dmg = 300 - 50 * heroGryff.getDefense() / 20;
+        count = 0;
+        for(int k = 0; k < dmg; k = k + heroGryff.getHp()) {
+            count++;
+            System.out.println(count);
+        }
+        if(heroGryff.getQuantity() <= dmg) {
+            for(int i = 0; i < MAX_ROW; i++) {
+                for(int j = 0; j < MAX_COL; j++) {
+                    if(buttons[i][j].getName() == "heroGryff") {
+                        heroGryff.setQuantity(heroGryff.getQuantity() - count);
+                        heroGryffQuantity.setText(heroGryff.getQuantity());
+                        gameFlow.appendText("\nEnemy's STRUCK killed " + count + " of Hero's Gryffs\n");
+                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                        isUnitDead(i, j, true);
+                        wasEnemyStruckUsedThisTurn = true;
+                        wasEnemyStruckUsed = true;
+                        enemyFireballButton.setTouchable(Touchable.disabled);
+                        enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballDeactive.png"))));
+
+                        enemyStruckButton.setTouchable(Touchable.disabled);
+                        enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckDeactive.png"))));
+
+                        enemyShieldButton.setTouchable(Touchable.disabled);
+                        enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldDeactive.png"))));
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    public void enemyFireball() {
+        int finalCount = 0;
+        int finalI = 0;
+        int finalJ = 0;
+
+        for(int i = 0; i < MAX_ROW; i++) {
+            for(int j = 0; j < MAX_COL; j++) {
+                if(buttons[i][j].getName() == "heroPeasant" || buttons[i][j].getName() == "heroArcher" || buttons[i][j].getName() == "heroWarrior" || buttons[i][j].getName() == "heroWizard" || buttons[i][j].getName() == "heroGryff") {
+                    for(int k = i-1; k <= i+1; k++) {
+                        for(int l = j-1; l <= j+1; l++) {
+                            if(k >= 0 && k < MAX_ROW && l >= 0 && l < MAX_COL) {
+
+                                int count = 0;
+                                for(int m = k-1; m <= k+1; m++) {
+                                    for(int n = l-1; n <= l+1; n++) {
+                                        if(m >= 0 && m < MAX_ROW && n >= 0 && n < MAX_COL) {
+
+                                            if(buttons[m][n].getName() == "heroPeasant" || buttons[m][n].getName() == "heroArcher" || buttons[m][n].getName() == "heroWarrior" || buttons[m][n].getName() == "heroWizard" || buttons[m][n].getName() == "heroGryff") {
+                                                count++;
+                                            }
+                                            else if(buttons[m][n].getName() == "enemyPeasant" || buttons[m][n].getName() == "enemyArcher" || buttons[m][n].getName() == "enemyWarrior" || buttons[m][n].getName() == "enemyWizard" || buttons[m][n].getName() == "enemyGryff") {
+                                                count--;
+                                            }
+
+                                        }
+                                    }
+                                }
+
+                                if(count > finalCount) {
+                                    finalCount = count;
+                                    finalI = k;
+                                    finalJ = l;
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if(finalCount >= 2) {
+            System.out.println("[" + finalI + "][" + finalJ + "] is where the fireball landed");
+
+            wasEnemyFireballUsedThisTurn = true;
+            wasEnemyFireballUsed = true;
+            enemyFireballButton.setTouchable(Touchable.disabled);
+            enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballDeactive.png"))));
+
+            enemyStruckButton.setTouchable(Touchable.disabled);
+            enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckDeactive.png"))));
+
+            enemyShieldButton.setTouchable(Touchable.disabled);
+            enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldDeactive.png"))));
+
+            for(int i = finalI-1; i <= finalI+1; i++) {
+                for(int j = finalJ-1; j <= finalJ+1; j++) {
+                    if(i >= 0 && i < MAX_ROW && j >= 0 && j < MAX_COL) {
+                        if(buttons[i][j].getName() == "enemyPeasant") {
+                            int count = 0;
+                            float dmg = 250 - 50 * enemyPeasant.getDefense() / 20;
+                            for(int k = 0; k < dmg; k = k + enemyPeasant.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            enemyPeasant.setQuantity(enemyPeasant.getQuantity() - count);
+                            enemyPeasantQuantity.setText(enemyPeasant.getQuantity());
+                            gameFlow.appendText("\nEnemy's FIREBALL killed " + count + " of Enemy's Peasants\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(i, j, true);
+                        }
+                        else if(buttons[i][j].getName() == "enemyArcher") {
+                            int count = 0;
+                            float dmg = 250 - 50 * enemyArcher.getDefense() / 20;
+                            for(int k = 0; k < dmg; k = k + enemyArcher.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            enemyArcher.setQuantity(enemyArcher.getQuantity() - count);
+                            enemyArcherQuantity.setText(enemyArcher.getQuantity());
+                            gameFlow.appendText("\nEnemy's FIREBALL killed " + count + " of Enemy's Archers\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(i, j, true);
+                        }
+                        else if(buttons[i][j].getName() == "enemyWarrior") {
+                            int count = 0;
+                            float dmg = 250 - 50 * enemyWarrior.getDefense() / 20;
+                            for(int k = 0; k < dmg; k = k + enemyWarrior.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            enemyWarrior.setQuantity(enemyWarrior.getQuantity() - count);
+                            enemyWarriorQuantity.setText(enemyWarrior.getQuantity());
+                            gameFlow.appendText("\nEnemy's FIREBALL killed " + count + " of Enemy's Warriors\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(i, j, true);
+                        }
+                        else if(buttons[i][j].getName() == "enemyWizard") {
+                            int count = 0;
+                            float dmg = 250 - 50 * enemyWizard.getDefense() / 20;
+                            for(int k = 0; k < dmg; k = k + enemyWizard.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            enemyWizard.setQuantity(enemyWizard.getQuantity() - count);
+                            enemyWizardQuantity.setText(enemyWizard.getQuantity());
+                            gameFlow.appendText("\nEnemy's FIREBALL killed " + count + " of Enemy's Wizards\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(i, j, true);
+                        }
+                        else if(buttons[i][j].getName() == "enemyGryff") {
+                            int count = 0;
+                            float dmg = 250 - 50 * enemyGryff.getDefense() / 20;
+                            for(int k = 0; k < dmg; k = k + enemyGryff.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            enemyGryff.setQuantity(enemyGryff.getQuantity() - count);
+                            enemyGryffQuantity.setText(enemyGryff.getQuantity());
+                            gameFlow.appendText("\nEnemy's FIREBALL killed " + count + " of Enemy's Gryffs\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(i, j, true);
+                        }
+
+                        else if(buttons[i][j].getName() == "heroPeasant") {
+                            int count = 0;
+                            float dmg = 250 - 50 * heroPeasant.getDefense() / 20;
+                            for(int k = 0; k < dmg; k = k + heroPeasant.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            heroPeasant.setQuantity(heroPeasant.getQuantity() - count);
+                            heroPeasantQuantity.setText(heroPeasant.getQuantity());
+                            gameFlow.appendText("\nEnemy's FIREBALL killed " + count + " of Hero's Peasants\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(i, j, true);
+                        }
+                        else if(buttons[i][j].getName() == "heroArcher") {
+                            int count = 0;
+                            float dmg = 250 - 50 * heroArcher.getDefense() / 20;
+                            for(int k = 0; k < dmg; k = k + heroArcher.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            heroArcher.setQuantity(heroArcher.getQuantity() - count);
+                            heroArcherQuantity.setText(heroArcher.getQuantity());
+                            gameFlow.appendText("\nEnemy's FIREBALL killed " + count + " of Hero's Archers\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(i, j, true);
+                        }
+                        else if(buttons[i][j].getName() == "heroWarrior") {
+                            int count = 0;
+                            float dmg = 250 - 50 * heroWarrior.getDefense() / 20;
+                            for(int k = 0; k < dmg; k = k + heroWarrior.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            heroWarrior.setQuantity(heroWarrior.getQuantity() - count);
+                            heroWarriorQuantity.setText(heroWarrior.getQuantity());
+                            gameFlow.appendText("\nEnemy's FIREBALL killed " + count + " of Hero's Warriors\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(i, j, true);
+                        }
+                        else if(buttons[i][j].getName() == "heroWizard") {
+                            int count = 0;
+                            float dmg = 250 - 50 * heroWizard.getDefense() / 20;
+                            for(int k = 0; k < dmg; k = k + heroWizard.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            heroWizard.setQuantity(heroWizard.getQuantity() - count);
+                            heroWizardQuantity.setText(heroWizard.getQuantity());
+                            gameFlow.appendText("\nEnemy's FIREBALL killed " + count + " of Hero's Wizards\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(i, j, true);
+                        }
+                        else if(buttons[i][j].getName() == "heroGryff") {
+                            int count = 0;
+                            float dmg = 250 - 50 * heroGryff.getDefense() / 20;
+                            for(int k = 0; k < dmg; k = k + heroGryff.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            heroGryff.setQuantity(heroGryff.getQuantity() - count);
+                            heroGryffQuantity.setText(heroGryff.getQuantity());
+                            gameFlow.appendText("\nEnemy's FIREBALL killed " + count + " of Hero's Wizards\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(i, j, true);
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    public void heroShield() {
+        wasShieldUsedThisTurn = true;
+        wasShieldUsed = true;
+        fireballButton.setTouchable(Touchable.disabled);
+        fireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/fireballDeactive.png"))));
+
+        struckButton.setTouchable(Touchable.disabled);
+        struckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/struckDeactive.png"))));
+
+        shieldButton.setTouchable(Touchable.disabled);
+        shieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/shieldDeactive.png"))));
+
+        for(int i = 0; i < MAX_ROW; i++) {
+            for(int j = 0; j < MAX_COL; j++) {
+                if(buttons[i][j].getName() == "heroPeasant" || buttons[i][j].getName() == "heroArcher" || buttons[i][j].getName() == "heroWarrior" || buttons[i][j].getName() == "heroWizard" || buttons[i][j].getName() == "heroGryff") {
+                    buttons[i][j].setTouchable(Touchable.enabled);
+                }
+                else {
+                    buttons[i][j].setTouchable(Touchable.disabled);
+                }
+                int finalI = i;
+                int finalJ = j;
+                buttons[finalI][finalJ].addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        if(buttons[finalI][finalJ].getName() == "heroPeasant") {
+                            heroPeasant.setDefense((int) (heroPeasant.getDefense() * 1.2f));
+                            gameFlow.appendText("\nHero SHIELDED Hero's Peasants\n");
+                        }
+                        else if(buttons[finalI][finalJ].getName() == "heroArcher") {
+                            heroArcher.setDefense((int) (heroArcher.getDefense() * 1.2f));
+                            gameFlow.appendText("\nHero SHIELDED Hero's Archers\n");
+                        }
+                        else if(buttons[finalI][finalJ].getName() == "heroWarrior") {
+                            heroWarrior.setDefense((int) (heroWarrior.getDefense() * 1.2f));
+                            gameFlow.appendText("\nHero SHIELDED Hero's Warriors\n");
+                        }
+                        else if(buttons[finalI][finalJ].getName() == "heroWizard") {
+                            heroWizard.setDefense((int) (heroWizard.getDefense() * 1.2f));
+                            gameFlow.appendText("\nHero SHIELDED Hero's Wizards\n");
+                        }
+                        else if(buttons[finalI][finalJ].getName() == "heroGryff") {
+                            heroGryff.setDefense((int) (heroGryff.getDefense() * 1.2f));
+                            gameFlow.appendText("\nHero SHIELDED Hero's Gryffs\n");
+                        }
+                        for(int i = 0; i < MAX_ROW; i++) {
+                            for(int j = 0; j < MAX_COL; j++) {
+                                buttons[i][j].setTouchable(Touchable.disabled);
+                                buttons[i][j].clearListeners();
+                            }
+                        }
+                        fireballButton.clearListeners();
+                        struckButton.clearListeners();
+                        shieldButton.clearListeners();
+                        selectUnit();
+                    }
+                });
+            }
+        }
+    }
+
+    public void heroStruck() {
+        wasStruckUsedThisTurn = true;
+        wasStruckUsed = true;
+        fireballButton.setTouchable(Touchable.disabled);
+        fireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/fireballDeactive.png"))));
+
+        struckButton.setTouchable(Touchable.disabled);
+        struckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/struckDeactive.png"))));
+
+        shieldButton.setTouchable(Touchable.disabled);
+        shieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/shieldDeactive.png"))));
+
+        for(int i = 0; i < MAX_ROW; i++) {
+            for(int j = 0; j < MAX_COL; j++) {
+                if(buttons[i][j].getName() == "enemyPeasant" || buttons[i][j].getName() == "enemyArcher" || buttons[i][j].getName() == "enemyWarrior" || buttons[i][j].getName() == "enemyWizard" || buttons[i][j].getName() == "enemyGryff") {
+                    buttons[i][j].setTouchable(Touchable.enabled);
+                }
+                else {
+                    buttons[i][j].setTouchable(Touchable.disabled);
+                }
+                int finalI = i;
+                int finalJ = j;
+                buttons[finalI][finalJ].addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+                        float dmg = 0;
+                        int count = 0;
+                        if(buttons[finalI][finalJ].getName() == "enemyPeasant") {
+                            dmg = 300 - 50 * enemyPeasant.getDefense() / 20;
+                            for(int i = 0; i < dmg; i = i + enemyPeasant.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            enemyPeasant.setQuantity(enemyPeasant.getQuantity() - count);
+                            enemyPeasantQuantity.setText(enemyPeasant.getQuantity());
+                            gameFlow.appendText("\nHero's STRUCK killed " + count + " of Enemy's Peasant\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(finalI, finalJ, false);
+                        }
+                        else if(buttons[finalI][finalJ].getName() == "enemyArcher") {
+                            dmg = 300 - 50 * enemyArcher.getDefense() / 20;
+                            for(int i = 0; i < dmg; i = i + enemyArcher.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            enemyArcher.setQuantity(enemyArcher.getQuantity() - count);
+                            enemyArcherQuantity.setText(enemyArcher.getQuantity());
+                            gameFlow.appendText("\nHero's STRUCK killed " + count + " of Enemy's Archers\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(finalI, finalJ, false);
+                        }
+                        else if(buttons[finalI][finalJ].getName() == "enemyWarrior") {
+                            dmg = 300 - 50 * enemyWarrior.getDefense() / 20;
+                            for(int i = 0; i < dmg; i = i + enemyWarrior.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            enemyWarrior.setQuantity(enemyWarrior.getQuantity() - count);
+                            enemyWarriorQuantity.setText(enemyWarrior.getQuantity());
+                            gameFlow.appendText("\nHero's STRUCK killed " + count + " of Enemy's Warriors\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(finalI, finalJ, false);
+                        }
+                        else if(buttons[finalI][finalJ].getName() == "enemyWizard") {
+                            dmg = 300 - 50 * enemyWizard.getDefense() / 20;
+                            for(int i = 0; i < dmg; i = i + enemyWizard.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            enemyWizard.setQuantity(enemyWizard.getQuantity() - count);
+                            enemyWizardQuantity.setText(enemyWizard.getQuantity());
+                            gameFlow.appendText("\nHero's STRUCK killed " + count + " of Enemy's Wizards\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(finalI, finalJ, false);
+                        }
+                        else if(buttons[finalI][finalJ].getName() == "enemyGryff") {
+                            dmg = 300 - 50 * enemyGryff.getDefense() / 20;
+                            for(int i = 0; i < dmg; i = i + enemyGryff.getHp()) {
+                                count++;
+                                System.out.println(count);
+                            }
+                            enemyGryff.setQuantity(enemyGryff.getQuantity() - count);
+                            enemyGryffQuantity.setText(enemyGryff.getQuantity());
+                            gameFlow.appendText("\nHero's STRUCK killed " + count + " of Enemy's Gryffs\n");
+                            //TODO: CREATE HP*QUANTITY (MAX HP)
+                            isUnitDead(finalI, finalJ, false);
+                        }
+                        for(int i = 0; i < MAX_ROW; i++) {
+                            for(int j = 0; j < MAX_COL; j++) {
+                                buttons[i][j].setTouchable(Touchable.disabled);
+                                buttons[i][j].clearListeners();
+                            }
+                        }
+                        fireballButton.clearListeners();
+                        struckButton.clearListeners();
+                        shieldButton.clearListeners();
+                        selectUnit();
+                    }
+                });
+            }
+        }
+    }
+
+    public void heroFireball() {
+        wasFireballUsedThisTurn = true;
+        wasFireballUsed = true;
+        fireballButton.setTouchable(Touchable.disabled);
+        fireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/fireballDeactive.png"))));
+
+        struckButton.setTouchable(Touchable.disabled);
+        struckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/struckDeactive.png"))));
+
+        shieldButton.setTouchable(Touchable.disabled);
+        shieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/shieldDeactive.png"))));
+
+        for(int i = 0; i < MAX_ROW; i++) {
+            for(int j = 0; j < MAX_COL; j++) {
+                buttons[i][j].setTouchable(Touchable.enabled);
+                int finalI = i;
+                int finalJ = j;
+                buttons[i][j].addListener(new ClickListener() {
+                    public void clicked(InputEvent event, float x, float y) {
+
+                        for(int i = finalI-1; i <= finalI + 1 ; i++) {
+                            for(int j = finalJ-1; j <= finalJ + 1 ; j++) {
+                                if(i >= 0 && i < MAX_ROW && j >= 0 && j < MAX_COL) {
+                                    if(buttons[i][j].getName() == "enemyPeasant") {
+                                        int count = 0;
+                                        float dmg = 250 - 50 * enemyPeasant.getDefense() / 20;
+                                        for(int k = 0; k < dmg; k = k + enemyPeasant.getHp()) {
+                                            count++;
+                                            System.out.println(count);
+                                        }
+                                        enemyPeasant.setQuantity(enemyPeasant.getQuantity() - count);
+                                        enemyPeasantQuantity.setText(enemyPeasant.getQuantity());
+                                        gameFlow.appendText("\nHero's FIREBALL killed " + count + " of Enemy's Peasants\n");
+                                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                                        isUnitDead(i, j, false);
+                                    }
+                                    else if(buttons[i][j].getName() == "enemyArcher") {
+                                        int count = 0;
+                                        float dmg = 250 - 50 * enemyArcher.getDefense() / 20;
+                                        for(int k = 0; k < dmg; k = k + enemyArcher.getHp()) {
+                                            count++;
+                                            System.out.println(count);
+                                        }
+                                        enemyArcher.setQuantity(enemyArcher.getQuantity() - count);
+                                        enemyArcherQuantity.setText(enemyArcher.getQuantity());
+                                        gameFlow.appendText("\nHero's FIREBALL killed " + count + " of Enemy's Archers\n");
+                                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                                        isUnitDead(i, j, false);
+                                    }
+                                    else if(buttons[i][j].getName() == "enemyWarrior") {
+                                        int count = 0;
+                                        float dmg = 250 - 50 * enemyWarrior.getDefense() / 20;
+                                        for(int k = 0; k < dmg; k = k + enemyWarrior.getHp()) {
+                                            count++;
+                                            System.out.println(count);
+                                        }
+                                        enemyWarrior.setQuantity(enemyWarrior.getQuantity() - count);
+                                        enemyWarriorQuantity.setText(enemyWarrior.getQuantity());
+                                        gameFlow.appendText("\nHero's FIREBALL killed " + count + " of Enemy's Warriors\n");
+                                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                                        isUnitDead(i, j, false);
+                                    }
+                                    else if(buttons[i][j].getName() == "enemyWizard") {
+                                        int count = 0;
+                                        float dmg = 250 - 50 * enemyWizard.getDefense() / 20;
+                                        for(int k = 0; k < dmg; k = k + enemyWizard.getHp()) {
+                                            count++;
+                                            System.out.println(count);
+                                        }
+                                        enemyWizard.setQuantity(enemyWizard.getQuantity() - count);
+                                        enemyWizardQuantity.setText(enemyWizard.getQuantity());
+                                        gameFlow.appendText("\nHero's FIREBALL killed " + count + " of Enemy's Wizards\n");
+                                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                                        isUnitDead(i, j, false);
+                                    }
+                                    else if(buttons[i][j].getName() == "enemyGryff") {
+                                        int count = 0;
+                                        float dmg = 250 - 50 * enemyGryff.getDefense() / 20;
+                                        for(int k = 0; k < dmg; k = k + enemyGryff.getHp()) {
+                                            count++;
+                                            System.out.println(count);
+                                        }
+                                        enemyGryff.setQuantity(enemyGryff.getQuantity() - count);
+                                        enemyGryffQuantity.setText(enemyGryff.getQuantity());
+                                        gameFlow.appendText("\nHero's FIREBALL killed " + count + " of Enemy's Gryffs\n");
+                                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                                        isUnitDead(i, j, false);
+                                    }
+
+                                    else if(buttons[i][j].getName() == "heroPeasant") {
+                                        int count = 0;
+                                        float dmg = 250 - 50 * heroPeasant.getDefense() / 20;
+                                        for(int k = 0; k < dmg; k = k + heroPeasant.getHp()) {
+                                            count++;
+                                            System.out.println(count);
+                                        }
+                                        heroPeasant.setQuantity(heroPeasant.getQuantity() - count);
+                                        heroPeasantQuantity.setText(heroPeasant.getQuantity());
+                                        gameFlow.appendText("\nHero's FIREBALL killed " + count + " of Hero's Peasants\n");
+                                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                                        isUnitDead(i, j, false);
+                                    }
+                                    else if(buttons[i][j].getName() == "heroArcher") {
+                                        int count = 0;
+                                        float dmg = 250 - 50 * heroArcher.getDefense() / 20;
+                                        for(int k = 0; k < dmg; k = k + heroArcher.getHp()) {
+                                            count++;
+                                            System.out.println(count);
+                                        }
+                                        heroArcher.setQuantity(heroArcher.getQuantity() - count);
+                                        heroArcherQuantity.setText(heroArcher.getQuantity());
+                                        gameFlow.appendText("\nHero's FIREBALL killed " + count + " of Hero's Archers\n");
+                                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                                        isUnitDead(i, j, false);
+                                    }
+                                    else if(buttons[i][j].getName() == "heroWarrior") {
+                                        int count = 0;
+                                        float dmg = 250 - 50 * heroWarrior.getDefense() / 20;
+                                        for(int k = 0; k < dmg; k = k + heroWarrior.getHp()) {
+                                            count++;
+                                            System.out.println(count);
+                                        }
+                                        heroWarrior.setQuantity(heroWarrior.getQuantity() - count);
+                                        heroWarriorQuantity.setText(heroWarrior.getQuantity());
+                                        gameFlow.appendText("\nHero's FIREBALL killed " + count + " of Hero's Warriors\n");
+                                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                                        isUnitDead(i, j, false);
+                                    }
+                                    else if(buttons[i][j].getName() == "heroWizard") {
+                                        int count = 0;
+                                        float dmg = 250 - 50 * heroWizard.getDefense() / 20;
+                                        for(int k = 0; k < dmg; k = k + heroWizard.getHp()) {
+                                            count++;
+                                            System.out.println(count);
+                                        }
+                                        heroWizard.setQuantity(heroWizard.getQuantity() - count);
+                                        heroWizardQuantity.setText(heroWizard.getQuantity());
+                                        gameFlow.appendText("\nHero's FIREBALL killed " + count + " of Hero's Wizards\n");
+                                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                                        isUnitDead(i, j, false);
+                                    }
+                                    else if(buttons[i][j].getName() == "heroGryff") {
+                                        int count = 0;
+                                        float dmg = 250 - 50 * heroGryff.getDefense() / 20;
+                                        for(int k = 0; k < dmg; k = k + heroGryff.getHp()) {
+                                            count++;
+                                            System.out.println(count);
+                                        }
+                                        heroGryff.setQuantity(heroGryff.getQuantity() - count);
+                                        heroGryffQuantity.setText(heroGryff.getQuantity());
+                                        gameFlow.appendText("\nHero's FIREBALL killed " + count + " of Hero's Gryffs\n");
+                                        //TODO: CREATE HP*QUANTITY (MAX HP)
+                                        isUnitDead(i, j, false);
+                                    }
+                                }
+                            }
+                        }
+                        for(int i = 0; i < MAX_ROW; i++) {
+                            for(int j = 0; j < MAX_COL; j++) {
+                                buttons[i][j].setTouchable(Touchable.disabled);
+                                buttons[i][j].clearListeners();
+                            }
+                        }
+                        fireballButton.clearListeners();
+                        struckButton.clearListeners();
+                        shieldButton.clearListeners();
+                        selectUnit();
+                    }
+                });
+            }
+        }
+    }
+
     public void isUnitDead(int row, int col, boolean isEnemy) {
         if(buttons[row][col].getName() == "heroPeasant" && heroPeasant.getQuantity() <= 0) {
             isHeroPeasantMoved = true;
@@ -178,6 +918,9 @@ public class FightScreen implements Screen {
         else if(isHeroGryffMoved && isHeroWizardMoved && isHeroWarriorMoved && isHeroArcherMoved && isHeroPeasantMoved && !isEnemy) {
             enemyTurn();
         }
+        else if(isHeroGryffMoved && isHeroWizardMoved && isHeroWarriorMoved && isHeroArcherMoved && isHeroPeasantMoved && isEnemy && (!isEnemyGryffMoved || !isEnemyWizardMoved || !isEnemyWarriorMoved || !isEnemyArcherMoved || !isEnemyPeasantMoved)) {
+            enemyTurn();
+        }
         else if(isHeroGryffMoved && isHeroWizardMoved && isHeroWarriorMoved && isHeroArcherMoved && isHeroPeasantMoved && isEnemy) {
             return;
         }
@@ -201,6 +944,13 @@ public class FightScreen implements Screen {
                         gameFlow.appendText("\nEnemy's " + name + "s killed " + count + " of Hero's Peasants\n");
                         //TODO: CREATE HP*QUANTITY (MAX HP)
 
+                        if(name == "Warrior") {
+                            isEnemyWarriorMoved = true;
+                        }
+                        else if(name == "Peasant") {
+                            isEnemyPeasantMoved = true;
+                        }
+
                         isUnitDead(i, j, true);
                         return true;
                     }
@@ -215,6 +965,13 @@ public class FightScreen implements Screen {
                         heroArcherQuantity.setText(heroArcher.getQuantity());
                         gameFlow.appendText("\nEnemy's " + name + "s killed " + count + " of Hero's Archers\n");
                         //TODO: CREATE HP*QUANTITY (MAX HP)
+
+                        if(name == "Warrior") {
+                            isEnemyWarriorMoved = true;
+                        }
+                        else if(name == "Peasant") {
+                            isEnemyPeasantMoved = true;
+                        }
 
                         isUnitDead(i, j, true);
                         return true;
@@ -231,6 +988,13 @@ public class FightScreen implements Screen {
                         gameFlow.appendText("\nEnemy's " + name +"s killed " + count + " of Hero's Warriors\n");
                         //TODO: CREATE HP*QUANTITY (MAX HP)
 
+                        if(name == "Warrior") {
+                            isEnemyWarriorMoved = true;
+                        }
+                        else if(name == "Peasant") {
+                            isEnemyPeasantMoved = true;
+                        }
+
                         isUnitDead(i, j, true);
                         return true;
                     }
@@ -245,6 +1009,13 @@ public class FightScreen implements Screen {
                         heroWizardQuantity.setText(heroWizard.getQuantity());
                         gameFlow.appendText("\nEnemy's " + name + "s killed " + count + " of Hero's Wizards\n");
                         //TODO: CREATE HP*QUANTITY (MAX HP)
+
+                        if(name == "Warrior") {
+                            isEnemyWarriorMoved = true;
+                        }
+                        else if(name == "Peasant") {
+                            isEnemyPeasantMoved = true;
+                        }
 
                         isUnitDead(i, j, true);
                         return true;
@@ -261,6 +1032,13 @@ public class FightScreen implements Screen {
                         gameFlow.appendText("\nEnemy's " + name + "s killed " + count + " of Hero's Gryffs\n");
                         //TODO: CREATE HP*QUANTITY (MAX HP)
 
+                        if(name == "Warrior") {
+                            isEnemyWarriorMoved = true;
+                        }
+                        else if(name == "Peasant") {
+                            isEnemyPeasantMoved = true;
+                        }
+
                         isUnitDead(i, j, true);
                         return true;
                     }
@@ -271,6 +1049,20 @@ public class FightScreen implements Screen {
     }
 
     public void enemyTurn() {
+        wasEnemyFireballUsedThisTurn = false;
+        wasEnemyStruckUsedThisTurn = false;
+        wasEnemyShieldUsedThisTurn = false;
+
+        if(!wasEnemyFireballUsed && !wasEnemyFireballUsedThisTurn && !wasEnemyStruckUsedThisTurn && !wasEnemyShieldUsedThisTurn) {
+            enemyFireball();
+        }
+        if(!wasEnemyStruckUsed && !wasEnemyFireballUsedThisTurn && !wasEnemyStruckUsedThisTurn && !wasEnemyShieldUsedThisTurn) {
+            enemyStruck();
+        }
+        if(!wasEnemyShieldUsed && !wasEnemyFireballUsedThisTurn && !wasEnemyStruckUsedThisTurn && !wasEnemyShieldUsedThisTurn) {
+            enemyShield();
+        }
+
         if(enemyGryff.getQuantity() <= 0) {
             isEnemyGryffMoved = true;
         }
@@ -322,6 +1114,7 @@ public class FightScreen implements Screen {
                                             heroPeasantQuantity.setText(heroPeasant.getQuantity());
                                             gameFlow.appendText("\nEnemy's Gryffs killed " + count + " of Hero's Peasants\n");
                                             //TODO: CREATE HP*QUANTITY (MAX HP)
+                                            isEnemyGryffMoved = true;
                                             isUnitDead(q, r, true);
                                         }
                                         else if(buttons[q][r].getName() == "heroArcher") {
@@ -335,6 +1128,7 @@ public class FightScreen implements Screen {
                                             heroArcherQuantity.setText(heroArcher.getQuantity());
                                             gameFlow.appendText("\nEnemy's Gryffs killed " + count + " of Hero's Archers\n");
                                             //TODO: CREATE HP*QUANTITY (MAX HP)
+                                            isEnemyGryffMoved = true;
                                             isUnitDead(q, r, true);
                                         }
                                         else if(buttons[q][r].getName() == "heroWarrior") {
@@ -348,6 +1142,7 @@ public class FightScreen implements Screen {
                                             heroWarriorQuantity.setText(heroWarrior.getQuantity());
                                             gameFlow.appendText("\nEnemy's Gryffs killed " + count + " of Hero's Warriors\n");
                                             //TODO: CREATE HP*QUANTITY (MAX HP)
+                                            isEnemyGryffMoved = true;
                                             isUnitDead(q, r, true);
                                         }
                                         else if(buttons[q][r].getName() == "heroWizard") {
@@ -361,6 +1156,7 @@ public class FightScreen implements Screen {
                                             heroWizardQuantity.setText(heroWizard.getQuantity());
                                             gameFlow.appendText("\nEnemy's Gryffs killed " + count + " of Hero's Wizards\n");
                                             //TODO: CREATE HP*QUANTITY (MAX HP)
+                                            isEnemyGryffMoved = true;
                                             isUnitDead(q, r, true);
                                         }
                                         else if(buttons[q][r].getName() == "heroGryff") {
@@ -374,6 +1170,7 @@ public class FightScreen implements Screen {
                                             heroGryffQuantity.setText(heroGryff.getQuantity());
                                             gameFlow.appendText("\nEnemy's Gryffs killed " + count + " of Hero's Gryffs\n");
                                             //TODO: CREATE HP*QUANTITY (MAX HP)
+                                            isEnemyGryffMoved = true;
                                             isUnitDead(q, r, true);
                                         }
                                     }
@@ -387,6 +1184,7 @@ public class FightScreen implements Screen {
                         //attack
                         else if(heroUnitCount == 1) {
                             float dmg = enemyGryff.getDamage() * enemyGryff.getQuantity();
+                            isEnemyGryffMoved = true;
 
                             if(enemyAttack(dmg, "Gryff", i, j, 1)) {
                                 isEnemyGryffMoved = true;
@@ -548,6 +1346,7 @@ public class FightScreen implements Screen {
                                     heroPeasantQuantity.setText(heroPeasant.getQuantity());
                                     gameFlow.appendText("\nEnemy's Warriors killed " + count + " of Hero's Peasants\n");
                                     //TODO: CREATE HP*QUANTITY (MAX HP)
+                                    isEnemyWarriorMoved = true;
                                     isUnitDead(i, l, true);
                                 }
                                 else if(buttons[i][l].getName() == "heroArcher") {
@@ -562,6 +1361,7 @@ public class FightScreen implements Screen {
                                     heroArcherQuantity.setText(heroArcher.getQuantity());
                                     gameFlow.appendText("\nEnemy's Warriors killed " + count + " of Hero's Archers\n");
                                     //TODO: CREATE HP*QUANTITY (MAX HP)
+                                    isEnemyWarriorMoved = true;
                                     isUnitDead(i, l, true);
                                 }
                                 else if(buttons[i][l].getName() == "heroWarrior") {
@@ -576,6 +1376,7 @@ public class FightScreen implements Screen {
                                     heroWarriorQuantity.setText(heroWarrior.getQuantity());
                                     gameFlow.appendText("\nEnemy's Warriors killed " + count + " of Hero's Warriors\n");
                                     //TODO: CREATE HP*QUANTITY (MAX HP)
+                                    isEnemyWarriorMoved = true;
                                     isUnitDead(i, l, true);
                                 }
                                 else if(buttons[i][l].getName() == "heroWizard") {
@@ -590,6 +1391,7 @@ public class FightScreen implements Screen {
                                     heroWizardQuantity.setText(heroWizard.getQuantity());
                                     gameFlow.appendText("\nEnemy's Warriors killed " + count + " of Hero's Wizards\n");
                                     //TODO: CREATE HP*QUANTITY (MAX HP)
+                                    isEnemyWarriorMoved = true;
                                     isUnitDead(i, l, true);
                                 }
                                 else if(buttons[i][l].getName() == "heroGryff") {
@@ -604,6 +1406,7 @@ public class FightScreen implements Screen {
                                     heroGryffQuantity.setText(heroGryff.getQuantity());
                                     gameFlow.appendText("\nEnemy's Warriors killed " + count + " of Hero's Gryff\n");
                                     //TODO: CREATE HP*QUANTITY (MAX HP)
+                                    isEnemyWarriorMoved = true;
                                     isUnitDead(i, l, true);
                                 }
                             }
@@ -834,6 +1637,7 @@ public class FightScreen implements Screen {
                         else {
                             //attack
                             float dmg = enemyWizard.getDamage() * enemyWizard.getQuantity();
+                            isEnemyWizardMoved = true;
 
                             if(enemyAttack(dmg, "Wizard", i, j, MAX_COL+MAX_ROW)) {
                                 isEnemyWizardMoved = true;
@@ -911,9 +1715,9 @@ public class FightScreen implements Screen {
 
                         //attack
                         float dmg = enemyArcher.getDamage() * enemyArcher.getQuantity();
+                        isEnemyArcherMoved = true;
 
                         if(enemyAttack(dmg, "Archer", i, j, MAX_COL+MAX_ROW)) {
-                            System.out.println("archer should have attacked 2");
                             isEnemyArcherMoved = true;
                             startTurn();
                             return;
@@ -921,7 +1725,6 @@ public class FightScreen implements Screen {
                     }
                 }
             }
-            System.out.println("archer should have attacked");
             isEnemyArcherMoved = true;
             startTurn();
 
@@ -1076,6 +1879,29 @@ public class FightScreen implements Screen {
         if(isEnemyPeasantMoved && isEnemyArcherMoved && isEnemyWarriorMoved && isEnemyWizardMoved && isEnemyGryffMoved && isHeroPeasantMoved && isHeroArcherMoved && isHeroWarriorMoved && isHeroWizardMoved && isHeroGryffMoved) {
             round++;
             gameFlow.appendText("\n\n\nRound " + round + " started\n\n");
+
+            if(wasFireballUsed) {
+                wasFireballUsed = false;
+            }
+            if(wasStruckUsed) {
+                wasStruckUsed = false;
+            }
+            if(wasShieldUsed) {
+                wasShieldUsed = false;
+            }
+            if(wasEnemyFireballUsed) {
+                wasEnemyFireballUsed = false;
+                enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballActive.png"))));
+            }
+            if(wasEnemyStruckUsed) {
+                wasEnemyStruckUsed = false;
+                enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckActive.png"))));
+            }
+            if(wasEnemyShieldUsed) {
+                wasEnemyShieldUsed = false;
+                enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldActive.png"))));
+            }
+
             if(wasInvisible && invisibleRow != -1 && invisibleCol != -1) {
                 buttons[invisibleRow][invisibleCol].setName("heroArcher");
                 buttons[invisibleRow][invisibleCol].getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("textures/units/heroArcher.png"))));
@@ -1136,6 +1962,36 @@ public class FightScreen implements Screen {
         }
         if(enemyGryff.getQuantity() <= 0) {
             isEnemyGryffMoved = true;
+        }
+
+        if(wasFireballUsedThisTurn) {
+            wasFireballUsedThisTurn = false;
+        }
+        if(wasStruckUsedThisTurn) {
+            wasStruckUsedThisTurn = false;
+        }
+        if(wasShieldUsedThisTurn) {
+            wasShieldUsedThisTurn = false;
+        }
+
+        if(wasEnemyFireballUsedThisTurn) {
+            wasEnemyFireballUsedThisTurn = false;
+        }
+        if(wasEnemyStruckUsedThisTurn) {
+            wasEnemyStruckUsedThisTurn = false;
+        }
+        if(wasEnemyShieldUsedThisTurn) {
+            wasEnemyShieldUsedThisTurn = false;
+        }
+
+        if(!wasEnemyFireballUsed) {
+            enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballActive.png"))));
+        }
+        if(!wasEnemyStruckUsed) {
+            enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckActive.png"))));
+        }
+        if(!wasEnemyShieldUsed) {
+            enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldActive.png"))));
         }
 
         selectUnit();
@@ -1692,6 +2548,35 @@ public class FightScreen implements Screen {
     }
 
     public void selectUnit() {
+
+        if(!wasFireballUsed && !wasShieldUsedThisTurn && !wasStruckUsedThisTurn) {
+            fireballButton.setTouchable(Touchable.enabled);
+            fireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/fireballActive.png"))));
+            fireballButton.addListener(new ClickListener() {
+                public void clicked(InputEvent event, float x, float y) {
+                    heroFireball();
+                }
+            });
+        }
+        if(!wasStruckUsed && !wasShieldUsedThisTurn && !wasFireballUsedThisTurn) {
+            struckButton.setTouchable(Touchable.enabled);
+            struckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/struckActive.png"))));
+            struckButton.addListener(new ClickListener() {
+                public void clicked(InputEvent event, float x, float y) {
+                    heroStruck();
+                }
+            });
+        }
+        if(!wasShieldUsed && !wasStruckUsedThisTurn && !wasFireballUsedThisTurn) {
+            shieldButton.setTouchable(Touchable.enabled);
+            shieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/shieldActive.png"))));
+            shieldButton.addListener(new ClickListener() {
+                public void clicked(InputEvent event, float x, float y) {
+                    heroShield();
+                }
+            });
+        }
+
         for (int i = 0; i < MAX_ROW; i++) {
             for (int j = 0; j < MAX_COL; j++) {
                 if((buttons[i][j].getName() == "heroPeasant" && !isHeroPeasantMoved) || (buttons[i][j].getName() == "heroArcher" && !isHeroArcherMoved) || (buttons[i][j].getName() == "heroWarrior" && !isHeroWarriorMoved) || (buttons[i][j].getName() == "heroGryff" && !isHeroGryffMoved) || (buttons[i][j].getName() == "heroWizard" && !isHeroWizardMoved)) {
@@ -1715,6 +2600,14 @@ public class FightScreen implements Screen {
 
                     buttons[finalI][finalJ].addListener(new ClickListener(Input.Buttons.RIGHT) {
                         public void clicked(InputEvent event, float x, float y) {
+                            fireballButton.setTouchable(Touchable.disabled);
+                            fireballButton.clearListeners();
+                            struckButton.setTouchable(Touchable.disabled);
+                            struckButton.clearListeners();
+                            shieldButton.setTouchable(Touchable.disabled);
+                            shieldButton.clearListeners();
+
+
                             actionUnit(buttons[finalI][finalJ].getName(), finalI, finalJ);
                             for(int i = 0; i < MAX_ROW; i++) {
                                 for(int j = 0; j < MAX_COL; j++) {
@@ -1732,6 +2625,21 @@ public class FightScreen implements Screen {
     }
 
     public void placeUnits() {
+
+        enemyFireballButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballActive.png")))));
+        enemyFireballButton.setPosition(300, 810);
+        enemyFireballButton.setSize(150, 48);
+        stage.addActor(enemyFireballButton);
+
+        enemyStruckButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckActive.png")))));
+        enemyStruckButton.setPosition(545, 810);
+        enemyStruckButton.setSize(150, 48);
+        stage.addActor(enemyStruckButton);
+
+        enemyShieldButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldActive.png")))));
+        enemyShieldButton.setPosition(790, 810);
+        enemyShieldButton.setSize(150, 48);
+        stage.addActor(enemyShieldButton);
 
         int row = (int)(Math.random() * 3);
 
@@ -1819,12 +2727,28 @@ public class FightScreen implements Screen {
                             stage.addActor(heroGryffQuantity);
                             buttons[finalI][finalJ].setName("heroGryff");
 
+                            fireballButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/fireballDeactive.png")))));
+                            fireballButton.setPosition(300, 100);
+                            fireballButton.setSize(150, 48);
+
+                            struckButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/struckDeactive.png")))));
+                            struckButton.setPosition(545, 100);
+                            struckButton.setSize(150, 48);
+
+                            shieldButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/shieldDeactive.png")))));
+                            shieldButton.setPosition(790, 100);
+                            shieldButton.setSize(150, 48);
+
                             startButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/play01.png")))));
                             startButton.setSize(158, 68.4f);
                             startButton.setPosition(Gdx.graphics.getWidth() / 2 - startButton.getWidth() / 2, Gdx.graphics.getHeight() / 8 - startButton.getHeight() / 2);
                             startButton.addListener(new ClickListener() {
                                 public void clicked(InputEvent event, float x, float y) {
+                                    startButton.remove();
                                     gameFlow.appendText("\n\nRound 1 started\n\n");
+                                    stage.addActor(fireballButton);
+                                    stage.addActor(struckButton);
+                                    stage.addActor(shieldButton);
                                     selectUnit();
                                 }
                             });
