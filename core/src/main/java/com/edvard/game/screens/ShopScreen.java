@@ -115,7 +115,7 @@ public class ShopScreen implements Screen {
 
     private MainGame game;
 
-    FightHero hero;
+    public static FightHero hero;
 
     public ShopScreen(MainGame game) {
         stage = new Stage(new ScreenViewport());
