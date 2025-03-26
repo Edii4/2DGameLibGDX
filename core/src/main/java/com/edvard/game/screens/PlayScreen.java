@@ -24,6 +24,8 @@ import com.edvard.game.tools.WorldContactListener;
 
 public class PlayScreen implements Screen {
 
+    public static ShopScreen shopScreen;
+
     public static int minPowerLevel;
     public static int maxPowerLevel;
     public static boolean isSpacePressable;
@@ -128,6 +130,11 @@ public class PlayScreen implements Screen {
             FightScreen.playScreen = this;
             System.out.println("pressed");
             System.out.println(this);
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.C)) {
+            game.setScreen(shopScreen);
+            ShopScreen.playScreen = this;
         }
     }
 
