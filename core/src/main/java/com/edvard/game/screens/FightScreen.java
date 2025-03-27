@@ -124,9 +124,67 @@ public class FightScreen implements Screen {
         this.game = game;
         game.batch = new SpriteBatch();
         helpScreen();
+        showStats();
         createField();
         createUnits();
         placeUnits();
+    }
+
+    public void showStats() {
+        Label heroStatLabel = new Label("Vitality:  " + ShopScreen.hero.getVit() + "\n", new Label.LabelStyle(new BitmapFont(), Color.GREEN));
+        heroStatLabel.setText(heroStatLabel.getText() + "Intelligence:  " + ShopScreen.hero.getMana() + "\n");
+        heroStatLabel.setText(heroStatLabel.getText() + "Strength:  " + ShopScreen.hero.getStrength() + "\n");
+        heroStatLabel.setText(heroStatLabel.getText() + "Magic power:  " + ShopScreen.hero.getMagicPower() + "\n");
+        heroStatLabel.setText(heroStatLabel.getText() + "Luck:  " + ShopScreen.hero.getLuck() + "\n");
+
+        heroStatLabel.setFontScale(1.1f);
+        heroStatLabel.setPosition(20, 30);
+
+        stage.addActor(heroStatLabel);
+    }
+
+    public void endFight(boolean won) {
+        if(won) {
+            if(heroPeasant.getQuantity() <= 0) {
+                ShopScreen.hero.setPeasantAmount(1);
+            }
+            else {
+                ShopScreen.hero.setPeasantAmount(heroPeasant.getQuantity());
+            }
+
+            if(heroArcher.getQuantity() <= 0) {
+                ShopScreen.hero.setArcherAmount(1);
+            }
+            else {
+                ShopScreen.hero.setArcherAmount(heroArcher.getQuantity());
+            }
+
+            if(heroWarrior.getQuantity() <= 0) {
+                ShopScreen.hero.setWarriorAmount(1);
+            }
+            else {
+                ShopScreen.hero.setWarriorAmount(heroWarrior.getQuantity());
+            }
+
+            if(heroWizard.getQuantity() <= 0) {
+                ShopScreen.hero.setWizardAmount(1);
+            }
+            else {
+                ShopScreen.hero.setWizardAmount(heroWizard.getQuantity());
+            }
+
+            if(heroGryff.getQuantity() <= 0) {
+                ShopScreen.hero.setGryffAmount(1);
+            }
+            else {
+                ShopScreen.hero.setGryffAmount(heroGryff.getQuantity());
+            }
+
+            game.setScreen(new EndFightScreen(game, won, 1500));
+        }
+        else {
+            game.setScreen(new EndFightScreen(game, won, 0));
+        }
     }
 
     public void saveFight() {
@@ -939,9 +997,11 @@ public class FightScreen implements Screen {
 
         if(enemyGryff.getQuantity() <= 0 && enemyWarrior.getQuantity() <= 0 && enemyWizard.getQuantity() <= 0 && enemyArcher.getQuantity() <= 0 && enemyPeasant.getQuantity() <= 0) {
             gameFlow.appendText("\nYOU WON\n");
+            endFight(true);
         }
         else if(heroGryff.getQuantity() <= 0 && heroWarrior.getQuantity() <= 0 && heroWizard.getQuantity() <= 0 && heroArcher.getQuantity() <= 0 && heroPeasant.getQuantity() <= 0) {
             gameFlow.appendText("\nYOU LOST\n");
+            endFight(false);
         }
         else if(isHeroGryffMoved && isHeroWizardMoved && isHeroWarriorMoved && isHeroArcherMoved && isHeroPeasantMoved && !isEnemy) {
             enemyTurn();
@@ -2577,7 +2637,7 @@ public class FightScreen implements Screen {
 
     public void selectUnit() {
 
-        if(!wasFireballUsed && !wasShieldUsedThisTurn && !wasStruckUsedThisTurn) {
+        if(!wasFireballUsed && !wasShieldUsedThisTurn && !wasStruckUsedThisTurn && ShopScreen.hero.isFireball()) {
             fireballButton.setTouchable(Touchable.enabled);
             fireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/fireballActive.png"))));
             fireballButton.addListener(new ClickListener() {
@@ -2586,7 +2646,7 @@ public class FightScreen implements Screen {
                 }
             });
         }
-        if(!wasStruckUsed && !wasShieldUsedThisTurn && !wasFireballUsedThisTurn) {
+        if(!wasStruckUsed && !wasShieldUsedThisTurn && !wasFireballUsedThisTurn && ShopScreen.hero.isStruck()) {
             struckButton.setTouchable(Touchable.enabled);
             struckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/struckActive.png"))));
             struckButton.addListener(new ClickListener() {
@@ -2595,7 +2655,7 @@ public class FightScreen implements Screen {
                 }
             });
         }
-        if(!wasShieldUsed && !wasStruckUsedThisTurn && !wasFireballUsedThisTurn) {
+        if(!wasShieldUsed && !wasStruckUsedThisTurn && !wasFireballUsedThisTurn && ShopScreen.hero.isShield()) {
             shieldButton.setTouchable(Touchable.enabled);
             shieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/shieldActive.png"))));
             shieldButton.addListener(new ClickListener() {
@@ -2758,14 +2818,23 @@ public class FightScreen implements Screen {
                             fireballButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/fireballDeactive.png")))));
                             fireballButton.setPosition(300, 100);
                             fireballButton.setSize(150, 48);
+                            if(!ShopScreen.hero.isFireball()) {
+                                fireballButton.setTouchable(Touchable.disabled);
+                            }
 
                             struckButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/struckDeactive.png")))));
                             struckButton.setPosition(545, 100);
                             struckButton.setSize(150, 48);
+                            if(!ShopScreen.hero.isStruck()) {
+                                struckButton.setTouchable(Touchable.disabled);
+                            }
 
                             shieldButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/shieldDeactive.png")))));
                             shieldButton.setPosition(790, 100);
                             shieldButton.setSize(150, 48);
+                            if(!ShopScreen.hero.isShield()) {
+                                shieldButton.setTouchable(Touchable.disabled);
+                            }
 
                             startButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/play01.png")))));
                             startButton.setSize(158, 68.4f);
@@ -2789,15 +2858,15 @@ public class FightScreen implements Screen {
     }
 
     public void createUnits() {
-        heroPeasant = new Peasant(true, 100, 3, 5, 10, 2);
+        heroPeasant = new Peasant(true, ShopScreen.hero.getPeasantAmount(), 3, 5, 10, 2);
         enemyPeasant = new Peasant(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 2);
-        heroArcher = new Archer(true, 100, 3, 5, 10, 2);
+        heroArcher = new Archer(true, ShopScreen.hero.getArcherAmount(), 3, 5, 10, 2);
         enemyArcher = new Archer(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 2);
-        heroWarrior = new Warrior(true, 100, 3, 5, 10, 2);
+        heroWarrior = new Warrior(true, ShopScreen.hero.getWarriorAmount(), 3, 5, 10, 2);
         enemyWarrior  = new Warrior(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 2);
-        heroWizard = new Wizard(true, 100, 3, 5, 10, 1);
+        heroWizard = new Wizard(true, ShopScreen.hero.getWizardAmount(), 3, 5, 10, 1);
         enemyWizard = new Wizard(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 1);
-        heroGryff = new Gryff(true, 100, 3, 5, 10, 3);
+        heroGryff = new Gryff(true, ShopScreen.hero.getGryffAmount(), 3, 5, 10, 3);
         enemyGryff = new Gryff(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 3);
     }
 
