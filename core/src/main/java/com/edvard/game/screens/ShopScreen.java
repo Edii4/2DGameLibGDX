@@ -201,8 +201,6 @@ public class ShopScreen implements Screen {
                     peasantValueLabel.setText(hero.getPeasantAmount());
                     hero.setGoldValue(hero.getGoldValue()-hero.getPeasantPrice());
                     goldLabel.setText(hero.getGoldValue());
-                    hero.setPeasantPrice(hero.getPeasantPrice()+1);
-                    peasantPriceLabel.setText(hero.getPeasantPrice());
                 }
             }
         });
@@ -213,8 +211,6 @@ public class ShopScreen implements Screen {
                     archerValueLabel.setText(hero.getArcherAmount());
                     hero.setGoldValue(hero.getGoldValue()-hero.getArcherPrice());
                     goldLabel.setText(hero.getGoldValue());
-                    hero.setArcherPrice(hero.getArcherPrice()+1);
-                    archerPriceLabel.setText(hero.getArcherPrice());
                 }
             }
         });
@@ -225,8 +221,6 @@ public class ShopScreen implements Screen {
                     warriorValueLabel.setText(hero.getWarriorAmount());
                     hero.setGoldValue(hero.getGoldValue()-hero.getWarriorPrice());
                     goldLabel.setText(hero.getGoldValue());
-                    hero.setWarriorPrice(hero.getWarriorPrice()+1);
-                    warriorPriceLabel.setText(hero.getWarriorPrice());
                 }
             }
         });
@@ -237,8 +231,6 @@ public class ShopScreen implements Screen {
                     wizardValueLabel.setText(hero.getWizardAmount());
                     hero.setGoldValue(hero.getGoldValue()-hero.getWizardPrice());
                     goldLabel.setText(hero.getGoldValue());
-                    hero.setWizardPrice(hero.getWizardPrice()+1);
-                    wizardPriceLabel.setText(hero.getWizardPrice());
                 }
             }
         });
@@ -249,8 +241,6 @@ public class ShopScreen implements Screen {
                     gryffValueLabel.setText(hero.getGryffAmount());
                     hero.setGoldValue(hero.getGoldValue()-hero.getGryffPrice());
                     goldLabel.setText(hero.getGoldValue());
-                    hero.setGryffPrice(hero.getGryffPrice()+1);
-                    gryffPriceLabel.setText(hero.getGryffPrice());
                 }
             }
         });
@@ -260,10 +250,8 @@ public class ShopScreen implements Screen {
                 if(hero.getPeasantAmount() > 10) {
                     hero.setPeasantAmount(hero.getPeasantAmount()-1);
                     peasantValueLabel.setText(hero.getPeasantAmount());
-                    hero.setPeasantPrice(hero.getPeasantPrice()-1);
                     hero.setGoldValue(hero.getGoldValue()+hero.getPeasantPrice());
                     goldLabel.setText(hero.getGoldValue());
-                    peasantPriceLabel.setText(hero.getPeasantPrice());
                 }
             }
         });
@@ -272,10 +260,8 @@ public class ShopScreen implements Screen {
                 if(hero.getArcherAmount() > 10) {
                     hero.setArcherAmount(hero.getArcherAmount()-1);
                     archerValueLabel.setText(hero.getArcherAmount());
-                    hero.setArcherPrice(hero.getArcherPrice()-1);
                     hero.setGoldValue(hero.getGoldValue()+hero.getArcherPrice());
                     goldLabel.setText(hero.getGoldValue());
-                    archerPriceLabel.setText(hero.getArcherPrice());
                 }
             }
         });
@@ -284,10 +270,8 @@ public class ShopScreen implements Screen {
                 if(hero.getWarriorAmount() > 10) {
                     hero.setWarriorAmount(hero.getWarriorAmount()-1);
                     warriorValueLabel.setText(hero.getWarriorAmount());
-                    hero.setWarriorPrice(hero.getWarriorPrice()-1);
                     hero.setGoldValue(hero.getGoldValue()+hero.getWarriorPrice());
                     goldLabel.setText(hero.getGoldValue());
-                    warriorPriceLabel.setText(hero.getWarriorPrice());
                 }
             }
         });
@@ -296,10 +280,8 @@ public class ShopScreen implements Screen {
                 if(hero.getWizardAmount() > 10) {
                     hero.setWizardAmount(hero.getWizardAmount()-1);
                     wizardValueLabel.setText(hero.getWizardAmount());
-                    hero.setWizardPrice(hero.getWizardPrice()-1);
                     hero.setGoldValue(hero.getGoldValue()+hero.getWizardPrice());
                     goldLabel.setText(hero.getGoldValue());
-                    wizardPriceLabel.setText(hero.getWizardPrice());
                 }
             }
         });
@@ -308,10 +290,8 @@ public class ShopScreen implements Screen {
                 if(hero.getGryffAmount() > 10) {
                     hero.setGryffAmount(hero.getGryffAmount()-1);
                     gryffValueLabel.setText(hero.getGryffAmount());
-                    hero.setGryffPrice(hero.getGryffPrice()-1);
                     hero.setGoldValue(hero.getGoldValue()+hero.getGryffPrice());
                     goldLabel.setText(hero.getGoldValue());
-                    gryffPriceLabel.setText(hero.getGryffPrice());
                 }
             }
         });

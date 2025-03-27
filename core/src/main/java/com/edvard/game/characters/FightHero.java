@@ -10,10 +10,10 @@ public class FightHero extends Character{
     int luckPrice = 5;
 
     int peasantPrice = 5;
-    int archerPrice = 5;
-    int warriorPrice = 5;
-    int wizardPrice = 5;
-    int gryffPrice = 5;
+    int archerPrice = 15;
+    int warriorPrice = 25;
+    int wizardPrice = 30;
+    int gryffPrice = 50;
 
     int peasantAmount = 10;
     int archerAmount = 10;
