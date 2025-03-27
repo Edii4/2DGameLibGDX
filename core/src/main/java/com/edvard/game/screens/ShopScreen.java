@@ -154,6 +154,7 @@ public class ShopScreen implements Screen {
 
     public void saveShop() {
         PlayScreen.shopScreen = this;
+        HelpScreen.shopScreen = this;
     }
 
     public void buySpells() {
@@ -455,7 +456,8 @@ public class ShopScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 //Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/button-clicked-sound.mp3"));
                 //sound.play();
-                game.setScreen(new HelpScreen(game));
+                saveShop();
+                game.setScreen(new HelpScreen(game, "shopScreen"));
             }
         });
         stage.addActor(helpButton);
@@ -477,7 +479,12 @@ public class ShopScreen implements Screen {
                 Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/button-clicked-sound.mp3"));
                 sound.play();
                 saveShop();
-                game.setScreen(new PlayScreen(game));
+                if(playScreen != null) {
+                    game.setScreen(playScreen);
+                }
+                else {
+                    game.setScreen(new PlayScreen(game));
+                }
             }
         });
         stage.addActor(playButton);
@@ -849,7 +856,7 @@ public class ShopScreen implements Screen {
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override

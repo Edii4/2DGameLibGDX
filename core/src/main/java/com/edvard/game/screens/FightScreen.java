@@ -123,9 +123,37 @@ public class FightScreen implements Screen {
         stage = new Stage(new ScreenViewport());
         this.game = game;
         game.batch = new SpriteBatch();
+        helpScreen();
         createField();
         createUnits();
         placeUnits();
+    }
+
+    public void saveFight() {
+        HelpScreen.fightScreen = this;
+    }
+
+    public void helpScreen() {
+        ImageButton helpButton;
+        Drawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/shop/helpButton.png"))));
+        helpButton = new ImageButton(drawable);
+        helpButton.setSize((float) 790 /5, (float) 342 /5);
+        helpButton.setPosition(785, 880);
+
+        helpButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/shop/helpButton.png"))));
+        helpButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/shop/helpButton03.png"))));
+
+        helpButton.setTouchable(Touchable.enabled);
+
+        helpButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                //Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/button-clicked-sound.mp3"));
+                //sound.play();
+                saveFight();
+                game.setScreen(new HelpScreen(game, "fightScreen"));
+            }
+        });
+        stage.addActor(helpButton);
     }
 
     public void enemyShield() {
