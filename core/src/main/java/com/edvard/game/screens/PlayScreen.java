@@ -136,6 +136,10 @@ public class PlayScreen implements Screen {
             game.setScreen(shopScreen);
             ShopScreen.playScreen = this;
         }
+        if(Gdx.input.isKeyPressed(Input.Keys.H)) {
+            game.setScreen(new HelpScreen(game, "playScreen"));
+            HelpScreen.playScreen = this;
+        }
     }
 
     public void update(float delta) {

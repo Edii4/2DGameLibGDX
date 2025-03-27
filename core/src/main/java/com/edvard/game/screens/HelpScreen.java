@@ -9,8 +9,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -18,6 +21,10 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.edvard.game.MainGame;
 
 public class HelpScreen implements Screen {
+
+    public static ShopScreen shopScreen;
+    public static PlayScreen playScreen;
+    public static FightScreen fightScreen;
 
     Label descriptionLabel;
 
@@ -47,7 +54,10 @@ public class HelpScreen implements Screen {
 
     OrthographicCamera camera;
 
-    public HelpScreen(MainGame game) {
+    String prevScreen;
+
+    public HelpScreen(MainGame game, String prevScreen) {
+        this.prevScreen = prevScreen;
         this.game = game;
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.setToOrtho(false);
@@ -70,8 +80,36 @@ public class HelpScreen implements Screen {
         createStatLabel();
         createUnitLabel();
         createFightLabel();
+        nextScreen();
 
         stage.addActor(scrollPane);
+    }
+
+    public void nextScreen() {
+        Drawable drawable = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/help/back01.png"))));
+        ImageButton backButton = new ImageButton(drawable);
+        backButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/help/back01.png"))));
+        backButton.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/help/back03.png"))));
+
+        backButton.addListener(new ClickListener() {
+            public void clicked(InputEvent event, float x, float y) {
+                if(prevScreen == "shopScreen") {
+                    game.setScreen(shopScreen);
+                }
+                else if(prevScreen == "playScreen") {
+                    game.setScreen(playScreen);
+                }
+                else if(prevScreen == "fightScreen") {
+                    game.setScreen(fightScreen);
+                }
+            }
+        });
+        table.row().colspan(2).expandX();
+        table.add(backButton).align(Align.center);
+
+        table.row().colspan(2).expandX();
+        Label endLabel = new Label("\n\n", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        table.add(endLabel).align(Align.center);
     }
 
     public void createFightLabel() {
