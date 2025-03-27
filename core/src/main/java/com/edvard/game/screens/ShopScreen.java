@@ -455,7 +455,7 @@ public class ShopScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 //Sound sound = Gdx.audio.newSound(Gdx.files.internal("sounds/button-clicked-sound.mp3"));
                 //sound.play();
-                game.setScreen(new PlayScreen(game));
+                game.setScreen(new HelpScreen(game));
             }
         });
         stage.addActor(helpButton);
