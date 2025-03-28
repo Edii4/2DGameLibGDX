@@ -133,6 +133,12 @@ public class PlayScreen implements Screen {
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.C)) {
+            ShopScreen.goldLabel.setText(ShopScreen.hero.getGoldValue());
+            ShopScreen.peasantValueLabel.setText(ShopScreen.hero.getPeasantAmount());
+            ShopScreen.archerValueLabel.setText(ShopScreen.hero.getArcherAmount());
+            ShopScreen.warriorValueLabel.setText(ShopScreen.hero.getWarriorAmount());
+            ShopScreen.wizardValueLabel.setText(ShopScreen.hero.getWizardPrice());
+            ShopScreen.gryffValueLabel.setText(ShopScreen.hero.getGryffAmount());
             game.setScreen(shopScreen);
             ShopScreen.playScreen = this;
         }

@@ -7,6 +7,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.*;
 import com.edvard.game.MainGame;
 import com.edvard.game.sprites.Chest;
+import com.edvard.game.sprites.EnemyThree;
+import com.edvard.game.sprites.EnemyTwo;
 import com.edvard.game.sprites.House;
 
 public class B2WorldCreator {
@@ -32,15 +34,27 @@ public class B2WorldCreator {
         }
 
         //house
-        for(MapObject object : tiledMap.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
+        for(MapObject object : tiledMap.getLayers().get(4).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             new House(world, tiledMap, rect);
         }
 
         //chests
-        for(MapObject object : tiledMap.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
+        for(MapObject object : tiledMap.getLayers().get(5).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             new Chest(world, tiledMap, rect);
+        }
+
+        //enemyTwo
+        for(MapObject object : tiledMap.getLayers().get(2).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            new EnemyTwo(world, tiledMap, rect);
+        }
+
+        //enemyThree
+        for(MapObject object : tiledMap.getLayers().get(3).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            new EnemyThree(world, tiledMap, rect);
         }
     }
 }
