@@ -62,11 +62,11 @@ public class ShopScreen implements Screen {
 
     ImageButton gold;
 
-    Label peasantValueLabel;
-    Label archerValueLabel;
-    Label warriorValueLabel;
-    Label wizardValueLabel;
-    Label gryffValueLabel;
+    public static Label peasantValueLabel;
+    public static Label archerValueLabel;
+    public static Label warriorValueLabel;
+    public static Label wizardValueLabel;
+    public static Label gryffValueLabel;
 
     ImageButton plusPeasantButton;
     ImageButton minusPeasantButton;
@@ -108,7 +108,7 @@ public class ShopScreen implements Screen {
     Label mpowLabel;
     Label luckLabel;
 
-    Label goldLabel;
+    public static Label goldLabel;
 
     Stage stage;
     OrthographicCamera camera;

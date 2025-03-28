@@ -15,8 +15,8 @@ public class House extends InteractiveTileObject{
     public void onHit() {
         PlayScreen.startFightLabel.setVisible(true);
         PlayScreen.isSpacePressable = true;
-        PlayScreen.minPowerLevel = 120;
-        PlayScreen.maxPowerLevel = 140;
+        PlayScreen.minPowerLevel = 80;
+        PlayScreen.maxPowerLevel = 100;
     }
 
     @Override

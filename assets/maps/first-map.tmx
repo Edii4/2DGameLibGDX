@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="28" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="7" nextobjectid="146">
+<map version="1.10" tiledversion="1.11.0" orientation="orthogonal" renderorder="right-down" width="28" height="28" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="151">
  <tileset firstgid="1" source="SNES - Fire Emblem Mystery of the Emblem JPN - BS Map 04.tsx"/>
+ <tileset firstgid="785" source="SNES - Fire Emblem Mystery of the Emblem JPN - BS Map 02.tsx"/>
  <layer id="1" name="Tile Layer 1" width="28" height="28">
   <data encoding="base64" compression="zlib">
-   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
+   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
   </data>
  </layer>
  <objectgroup id="2" name="terrain">
@@ -102,12 +103,11 @@
   <object id="139" x="413.563" y="128.75" width="10.625" height="10"/>
   <object id="140" x="400.063" y="0.5" width="41.875" height="127.25"/>
   <object id="141" x="384.813" y="0.75" width="15.125" height="111"/>
- </objectgroup>
- <objectgroup id="5" name="house">
+  <object id="147" x="80.0625" y="431.917" width="76.5417" height="15.8333"/>
+  <object id="36" x="0.0625" y="31.5" width="42.625" height="67.25"/>
   <object id="33" x="0" y="0.125" width="31.875" height="31.5"/>
   <object id="34" x="32.3125" y="0.125" width="143.5" height="15.5"/>
   <object id="35" x="32.0625" y="15.5" width="16" height="16.125"/>
-  <object id="36" x="0.0625" y="31.5" width="42.625" height="67.25"/>
   <object id="37" x="0.0625" y="98.75" width="30.75" height="45.125"/>
   <object id="38" x="0.3125" y="144" width="42.875" height="69.5"/>
   <object id="39" x="43.4375" y="157.625" width="13.625" height="42"/>
@@ -116,10 +116,20 @@
   <object id="42" x="32.3125" y="237.375" width="10.25" height="8.875"/>
   <object id="43" x="0.3125" y="271.875" width="15" height="176"/>
   <object id="44" x="15.4375" y="288.875" width="14.125" height="76.75"/>
+  <object id="150" x="251.583" y="1.58333" width="143.5" height="15.5"/>
+ </objectgroup>
+ <objectgroup id="7" name="enemyTwo">
+  <object id="148" x="337.911" y="384.462" width="23.6932" height="26.9545"/>
+ </objectgroup>
+ <objectgroup id="8" name="enemyThree">
+  <object id="149" x="296.278" y="111.273" width="23.6932" height="26.9545"/>
+ </objectgroup>
+ <objectgroup id="5" name="house">
   <object id="142" x="408.5" y="302" width="21.875" height="23.5"/>
  </objectgroup>
  <objectgroup id="6" name="chests">
-  <object id="143" x="327.125" y="28" width="13.5" height="13.75"/>
+  <object id="143" x="327.307" y="44.1818" width="13.5" height="13.75"/>
   <object id="145" x="57.25" y="384.5" width="13.5" height="13.75"/>
+  <object id="146" x="87.047" y="60.022" width="13.5" height="13.75"/>
  </objectgroup>
 </map>

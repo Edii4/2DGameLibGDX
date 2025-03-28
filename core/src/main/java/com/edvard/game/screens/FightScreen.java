@@ -17,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.edvard.game.MainGame;
+import com.edvard.game.characters.FightEnemy;
+import com.edvard.game.characters.FightHero;
 import com.edvard.game.units.*;
 
 import java.util.Objects;
@@ -27,8 +29,15 @@ public class FightScreen implements Screen {
     private final int MAX_ROW = 10;
     private final int MAX_COL = 10;
 
+    private FightEnemy enemy;
+
     int minPowerLevel;
     int maxPowerLevel;
+
+    Label heroManaLabel;
+    Label enemyManaLabel;
+    int heroMana;
+    int enemyMana;
 
     boolean wasEnemyFireballUsedThisTurn = false;
     boolean wasEnemyStruckUsedThisTurn = false;
@@ -124,10 +133,31 @@ public class FightScreen implements Screen {
         this.game = game;
         game.batch = new SpriteBatch();
         helpScreen();
-        showStats();
         createField();
         createUnits();
+        showStats();
         placeUnits();
+    }
+
+    public float doesCrit(float dmg, boolean hero) {
+        Random r = new Random();
+        int low = 0;
+        int high = 100;
+        int result = r.nextInt(high-low) + low;
+
+        int critChance = 0;
+        if(hero) {
+            critChance = ShopScreen.hero.getLuck();
+        }
+        else if(!hero) {
+            critChance = enemy.getLuck();
+        }
+
+        if(result < critChance) {
+            dmg *= 1.6f;
+        }
+
+        return dmg;
     }
 
     public void showStats() {
@@ -141,46 +171,72 @@ public class FightScreen implements Screen {
         heroStatLabel.setPosition(20, 30);
 
         stage.addActor(heroStatLabel);
+
+        Label enemyStatLabel = new Label("Vitality:  " + enemy.getVit() + "\n", new Label.LabelStyle(new BitmapFont(), Color.RED));
+        enemyStatLabel.setText(enemyStatLabel.getText() + "Intelligence:  " + enemy.getMana() + "\n");
+        enemyStatLabel.setText(enemyStatLabel.getText() + "Strength:  " + enemy.getStrength() + "\n");
+        enemyStatLabel.setText(enemyStatLabel.getText() + "Magic power:  " + enemy.getMagicPower() + "\n");
+        enemyStatLabel.setText(enemyStatLabel.getText() + "Luck:  " + enemy.getLuck() + "\n");
+
+        enemyStatLabel.setFontScale(1.1f);
+        enemyStatLabel.setPosition(20, 860);
+
+        stage.addActor(enemyStatLabel);
     }
 
     public void endFight(boolean won) {
         if(won) {
-            if(heroPeasant.getQuantity() <= 0) {
-                ShopScreen.hero.setPeasantAmount(1);
+            if(heroPeasant.getQuantity() <= 10) {
+                ShopScreen.hero.setPeasantAmount(10);
             }
             else {
                 ShopScreen.hero.setPeasantAmount(heroPeasant.getQuantity());
             }
 
-            if(heroArcher.getQuantity() <= 0) {
-                ShopScreen.hero.setArcherAmount(1);
+            if(heroArcher.getQuantity() <= 10) {
+                ShopScreen.hero.setArcherAmount(10);
             }
             else {
                 ShopScreen.hero.setArcherAmount(heroArcher.getQuantity());
             }
 
-            if(heroWarrior.getQuantity() <= 0) {
-                ShopScreen.hero.setWarriorAmount(1);
+            if(heroWarrior.getQuantity() <= 10) {
+                ShopScreen.hero.setWarriorAmount(10);
             }
             else {
                 ShopScreen.hero.setWarriorAmount(heroWarrior.getQuantity());
             }
 
-            if(heroWizard.getQuantity() <= 0) {
-                ShopScreen.hero.setWizardAmount(1);
+            if(heroWizard.getQuantity() <= 10) {
+                ShopScreen.hero.setWizardAmount(10);
             }
             else {
                 ShopScreen.hero.setWizardAmount(heroWizard.getQuantity());
             }
 
-            if(heroGryff.getQuantity() <= 0) {
-                ShopScreen.hero.setGryffAmount(1);
+            if(heroGryff.getQuantity() <= 10) {
+                ShopScreen.hero.setGryffAmount(10);
             }
             else {
                 ShopScreen.hero.setGryffAmount(heroGryff.getQuantity());
             }
 
-            game.setScreen(new EndFightScreen(game, won, 1500));
+            int reward = 0;
+            if(minPowerLevel == 15) {
+                reward = 1500;
+            }
+            else if(minPowerLevel == 30) {
+                reward = 3000;
+            }
+            else if(minPowerLevel == 50) {
+                reward = 5000;
+            }
+            else if(minPowerLevel == 80) {
+                reward = 10000;
+            }
+            ShopScreen.hero.setGoldValue(ShopScreen.hero.getGoldValue() + reward);
+
+            game.setScreen(new EndFightScreen(game, won, reward));
         }
         else {
             game.setScreen(new EndFightScreen(game, won, 0));
@@ -216,26 +272,28 @@ public class FightScreen implements Screen {
 
     public void enemyShield() {
         if(enemyGryff.getQuantity() > 0) {
-            enemyGryff.setDefense((int) (enemyGryff.getDefense() * 1.2f));
+            enemyGryff.setDefense((int) (enemyGryff.getDefense() + (enemyGryff.getDefense() * enemy.getMagicPower() / 100)));
             gameFlow.appendText("\nEnemy SHIELDED Enemy's Gryffs\n");
         }
         else if(enemyWarrior.getQuantity() > 0) {
-            enemyWarrior.setDefense((int) (enemyWarrior.getDefense() * 1.2f));
+            enemyWarrior.setDefense((int) (enemyWarrior.getDefense() + (enemyWarrior.getDefense() * enemy.getMagicPower() / 100)));
             gameFlow.appendText("\nEnemy SHIELDED Enemy's Warriors\n");
         }
         else if(enemyWizard.getQuantity() > 0) {
-            enemyWizard.setDefense((int) (enemyWizard.getDefense() * 1.2f));
+            enemyWizard.setDefense((int) (enemyWizard.getDefense() + (enemyWizard.getDefense() * enemy.getMagicPower() / 100)));
             gameFlow.appendText("\nEnemy SHIELDED Enemy's Wizards\n");
         }
         else if(enemyArcher.getQuantity() > 0) {
-            enemyArcher.setDefense((int) (enemyArcher.getDefense() * 1.2f));
+            enemyArcher.setDefense((int) (enemyArcher.getDefense() + (enemyArcher.getDefense() * enemy.getMagicPower() / 100)));
             gameFlow.appendText("\nEnemy SHIELDED Enemy's Archers\n");
         }
         else if(enemyPeasant.getQuantity() > 0) {
-            enemyPeasant.setDefense((int) (enemyPeasant.getDefense() * 1.2f));
+            enemyPeasant.setDefense((int) (enemyPeasant.getDefense() + (enemyPeasant.getDefense() * enemy.getMagicPower() / 100)));
             gameFlow.appendText("\nEnemy SHIELDED Enemy's Peasants\n");
         }
 
+        enemyMana -= 7;
+        enemyManaLabel.setText("MANA:   " + enemyMana);
         wasEnemyShieldUsedThisTurn = true;
         wasEnemyShieldUsed = true;
         enemyFireballButton.setTouchable(Touchable.disabled);
@@ -249,7 +307,7 @@ public class FightScreen implements Screen {
     }
 
     public void enemyStruck() {
-        float dmg = 300 - 50 * heroPeasant.getDefense() / 20;
+        float dmg =  (5 * enemy.getMagicPower()) / (heroPeasant.getDefense() + (heroPeasant.getDefense() * ShopScreen.hero.getVit() / 100f));
         int count = 0;
         for(int k = 0; k < dmg; k = k + heroPeasant.getHp()) {
             count++;
@@ -264,6 +322,10 @@ public class FightScreen implements Screen {
                         gameFlow.appendText("\nEnemy's STRUCK killed " + count + " of Hero's Peasant\n");
                         //TODO: CREATE HP*QUANTITY (MAX HP)
                         isUnitDead(i, j, true);
+
+                        enemyMana -= 10;
+                        enemyManaLabel.setText("MANA:   " + enemyMana);
+
                         wasEnemyStruckUsedThisTurn = true;
                         wasEnemyStruckUsed = true;
                         enemyFireballButton.setTouchable(Touchable.disabled);
@@ -279,7 +341,7 @@ public class FightScreen implements Screen {
                 }
             }
         }
-        dmg = 300 - 50 * heroArcher.getDefense() / 20;
+        dmg = (5 * enemy.getMagicPower()) / (heroArcher.getDefense() + (heroArcher.getDefense() * ShopScreen.hero.getVit() / 100f));
         count = 0;
         for(int k = 0; k < dmg; k = k + heroArcher.getHp()) {
             count++;
@@ -294,6 +356,10 @@ public class FightScreen implements Screen {
                         gameFlow.appendText("\nEnemy's STRUCK killed " + count + " of Hero's Archers\n");
                         //TODO: CREATE HP*QUANTITY (MAX HP)
                         isUnitDead(i, j, true);
+
+                        enemyMana -= 10;
+                        enemyManaLabel.setText("MANA:   " + enemyMana);
+
                         wasEnemyStruckUsedThisTurn = true;
                         wasEnemyStruckUsed = true;
                         enemyFireballButton.setTouchable(Touchable.disabled);
@@ -309,7 +375,7 @@ public class FightScreen implements Screen {
                 }
             }
         }
-        dmg = 300 - 50 * heroWarrior.getDefense() / 20;
+        dmg = (5 * enemy.getMagicPower()) / (heroWarrior.getDefense() + (heroWarrior.getDefense() * ShopScreen.hero.getVit() / 100f));
         count = 0;
         for(int k = 0; k < dmg; k = k + heroWarrior.getHp()) {
             count++;
@@ -324,6 +390,10 @@ public class FightScreen implements Screen {
                         gameFlow.appendText("\nEnemy's STRUCK killed " + count + " of Hero's Warriors\n");
                         //TODO: CREATE HP*QUANTITY (MAX HP)
                         isUnitDead(i, j, true);
+
+                        enemyMana -= 10;
+                        enemyManaLabel.setText("MANA:   " + enemyMana);
+
                         wasEnemyStruckUsedThisTurn = true;
                         wasEnemyStruckUsed = true;
                         enemyFireballButton.setTouchable(Touchable.disabled);
@@ -339,7 +409,7 @@ public class FightScreen implements Screen {
                 }
             }
         }
-        dmg = 300 - 50 * heroWizard.getDefense() / 20;
+        dmg = (5 * enemy.getMagicPower()) / (heroWizard.getDefense() + (heroWizard.getDefense() * ShopScreen.hero.getVit() / 100f));
         count = 0;
         for(int k = 0; k < dmg; k = k + heroWizard.getHp()) {
             count++;
@@ -354,6 +424,10 @@ public class FightScreen implements Screen {
                         gameFlow.appendText("\nEnemy's STRUCK killed " + count + " of Hero's Wizards\n");
                         //TODO: CREATE HP*QUANTITY (MAX HP)
                         isUnitDead(i, j, true);
+
+                        enemyMana -= 10;
+                        enemyManaLabel.setText("MANA:   " + enemyMana);
+
                         wasEnemyStruckUsedThisTurn = true;
                         wasEnemyStruckUsed = true;
                         enemyFireballButton.setTouchable(Touchable.disabled);
@@ -369,7 +443,7 @@ public class FightScreen implements Screen {
                 }
             }
         }
-        dmg = 300 - 50 * heroGryff.getDefense() / 20;
+        dmg = (5 * enemy.getMagicPower()) / (heroGryff.getDefense() + (heroGryff.getDefense() * ShopScreen.hero.getVit() / 100f));
         count = 0;
         for(int k = 0; k < dmg; k = k + heroGryff.getHp()) {
             count++;
@@ -384,6 +458,10 @@ public class FightScreen implements Screen {
                         gameFlow.appendText("\nEnemy's STRUCK killed " + count + " of Hero's Gryffs\n");
                         //TODO: CREATE HP*QUANTITY (MAX HP)
                         isUnitDead(i, j, true);
+
+                        enemyMana -= 10;
+                        enemyManaLabel.setText("MANA:   " + enemyMana);
+
                         wasEnemyStruckUsedThisTurn = true;
                         wasEnemyStruckUsed = true;
                         enemyFireballButton.setTouchable(Touchable.disabled);
@@ -445,6 +523,9 @@ public class FightScreen implements Screen {
         if(finalCount >= 2) {
             System.out.println("[" + finalI + "][" + finalJ + "] is where the fireball landed");
 
+            enemyMana -= 15;
+            enemyManaLabel.setText("MANA:   " + enemyMana);
+
             wasEnemyFireballUsedThisTurn = true;
             wasEnemyFireballUsed = true;
             enemyFireballButton.setTouchable(Touchable.disabled);
@@ -461,7 +542,7 @@ public class FightScreen implements Screen {
                     if(i >= 0 && i < MAX_ROW && j >= 0 && j < MAX_COL) {
                         if(buttons[i][j].getName() == "enemyPeasant") {
                             int count = 0;
-                            float dmg = 250 - 50 * enemyPeasant.getDefense() / 20;
+                            float dmg = (7 * enemy.getMagicPower()) / (enemyPeasant.getDefense() + (enemyPeasant.getDefense() * enemy.getVit() / 100f));
                             for(int k = 0; k < dmg; k = k + enemyPeasant.getHp()) {
                                 count++;
                                 System.out.println(count);
@@ -474,7 +555,7 @@ public class FightScreen implements Screen {
                         }
                         else if(buttons[i][j].getName() == "enemyArcher") {
                             int count = 0;
-                            float dmg = 250 - 50 * enemyArcher.getDefense() / 20;
+                            float dmg = (7 * enemy.getMagicPower()) / (enemyArcher.getDefense() + (enemyArcher.getDefense() * enemy.getVit() / 100f));
                             for(int k = 0; k < dmg; k = k + enemyArcher.getHp()) {
                                 count++;
                                 System.out.println(count);
@@ -487,7 +568,7 @@ public class FightScreen implements Screen {
                         }
                         else if(buttons[i][j].getName() == "enemyWarrior") {
                             int count = 0;
-                            float dmg = 250 - 50 * enemyWarrior.getDefense() / 20;
+                            float dmg = (7 * enemy.getMagicPower()) / (enemyWarrior.getDefense() + (enemyWarrior.getDefense() * enemy.getVit() / 100f));
                             for(int k = 0; k < dmg; k = k + enemyWarrior.getHp()) {
                                 count++;
                                 System.out.println(count);
@@ -500,7 +581,7 @@ public class FightScreen implements Screen {
                         }
                         else if(buttons[i][j].getName() == "enemyWizard") {
                             int count = 0;
-                            float dmg = 250 - 50 * enemyWizard.getDefense() / 20;
+                            float dmg = (7 * enemy.getMagicPower()) / (enemyWizard.getDefense() + (enemyWizard.getDefense() * enemy.getVit() / 100f));
                             for(int k = 0; k < dmg; k = k + enemyWizard.getHp()) {
                                 count++;
                                 System.out.println(count);
@@ -513,7 +594,7 @@ public class FightScreen implements Screen {
                         }
                         else if(buttons[i][j].getName() == "enemyGryff") {
                             int count = 0;
-                            float dmg = 250 - 50 * enemyGryff.getDefense() / 20;
+                            float dmg = (7 * enemy.getMagicPower()) / (enemyGryff.getDefense() + (enemyGryff.getDefense() * enemy.getVit() / 100f));
                             for(int k = 0; k < dmg; k = k + enemyGryff.getHp()) {
                                 count++;
                                 System.out.println(count);
@@ -527,7 +608,7 @@ public class FightScreen implements Screen {
 
                         else if(buttons[i][j].getName() == "heroPeasant") {
                             int count = 0;
-                            float dmg = 250 - 50 * heroPeasant.getDefense() / 20;
+                            float dmg = (7 * enemy.getMagicPower()) / (heroPeasant.getDefense() + (heroPeasant.getDefense() * ShopScreen.hero.getVit() / 100f));
                             for(int k = 0; k < dmg; k = k + heroPeasant.getHp()) {
                                 count++;
                                 System.out.println(count);
@@ -540,7 +621,7 @@ public class FightScreen implements Screen {
                         }
                         else if(buttons[i][j].getName() == "heroArcher") {
                             int count = 0;
-                            float dmg = 250 - 50 * heroArcher.getDefense() / 20;
+                            float dmg = (7 * enemy.getMagicPower()) / (heroArcher.getDefense() + (heroArcher.getDefense() * ShopScreen.hero.getVit() / 100f));
                             for(int k = 0; k < dmg; k = k + heroArcher.getHp()) {
                                 count++;
                                 System.out.println(count);
@@ -553,7 +634,7 @@ public class FightScreen implements Screen {
                         }
                         else if(buttons[i][j].getName() == "heroWarrior") {
                             int count = 0;
-                            float dmg = 250 - 50 * heroWarrior.getDefense() / 20;
+                            float dmg = (7 * enemy.getMagicPower()) / (heroWarrior.getDefense() + (heroWarrior.getDefense() * ShopScreen.hero.getVit() / 100f));
                             for(int k = 0; k < dmg; k = k + heroWarrior.getHp()) {
                                 count++;
                                 System.out.println(count);
@@ -566,7 +647,7 @@ public class FightScreen implements Screen {
                         }
                         else if(buttons[i][j].getName() == "heroWizard") {
                             int count = 0;
-                            float dmg = 250 - 50 * heroWizard.getDefense() / 20;
+                            float dmg = (7 * enemy.getMagicPower()) / (heroWizard.getDefense() + (heroWizard.getDefense() * ShopScreen.hero.getVit() / 100f));
                             for(int k = 0; k < dmg; k = k + heroWizard.getHp()) {
                                 count++;
                                 System.out.println(count);
@@ -579,14 +660,14 @@ public class FightScreen implements Screen {
                         }
                         else if(buttons[i][j].getName() == "heroGryff") {
                             int count = 0;
-                            float dmg = 250 - 50 * heroGryff.getDefense() / 20;
+                            float dmg = (7 * enemy.getMagicPower()) / (heroGryff.getDefense() + (heroGryff.getDefense() * ShopScreen.hero.getVit() / 100f));
                             for(int k = 0; k < dmg; k = k + heroGryff.getHp()) {
                                 count++;
                                 System.out.println(count);
                             }
                             heroGryff.setQuantity(heroGryff.getQuantity() - count);
                             heroGryffQuantity.setText(heroGryff.getQuantity());
-                            gameFlow.appendText("\nEnemy's FIREBALL killed " + count + " of Hero's Wizards\n");
+                            gameFlow.appendText("\nEnemy's FIREBALL killed " + count + " of Hero's Gryffs\n");
                             //TODO: CREATE HP*QUANTITY (MAX HP)
                             isUnitDead(i, j, true);
                         }
@@ -598,6 +679,9 @@ public class FightScreen implements Screen {
     }
 
     public void heroShield() {
+        heroMana -= 7;
+        heroManaLabel.setText("MANA:   " + heroMana);
+
         wasShieldUsedThisTurn = true;
         wasShieldUsed = true;
         fireballButton.setTouchable(Touchable.disabled);
@@ -622,23 +706,23 @@ public class FightScreen implements Screen {
                 buttons[finalI][finalJ].addListener(new ClickListener() {
                     public void clicked(InputEvent event, float x, float y) {
                         if(buttons[finalI][finalJ].getName() == "heroPeasant") {
-                            heroPeasant.setDefense((int) (heroPeasant.getDefense() * 1.2f));
+                            heroPeasant.setDefense((int) (heroPeasant.getDefense() + (heroPeasant.getDefense() * ShopScreen.hero.getMagicPower() / 100)));
                             gameFlow.appendText("\nHero SHIELDED Hero's Peasants\n");
                         }
                         else if(buttons[finalI][finalJ].getName() == "heroArcher") {
-                            heroArcher.setDefense((int) (heroArcher.getDefense() * 1.2f));
+                            heroArcher.setDefense((int) (heroArcher.getDefense() + (heroArcher.getDefense() * ShopScreen.hero.getMagicPower() / 100)));
                             gameFlow.appendText("\nHero SHIELDED Hero's Archers\n");
                         }
                         else if(buttons[finalI][finalJ].getName() == "heroWarrior") {
-                            heroWarrior.setDefense((int) (heroWarrior.getDefense() * 1.2f));
+                            heroWarrior.setDefense((int) (heroWarrior.getDefense() + (heroWarrior.getDefense() * ShopScreen.hero.getMagicPower() / 100)));
                             gameFlow.appendText("\nHero SHIELDED Hero's Warriors\n");
                         }
                         else if(buttons[finalI][finalJ].getName() == "heroWizard") {
-                            heroWizard.setDefense((int) (heroWizard.getDefense() * 1.2f));
+                            heroWizard.setDefense((int) (heroWizard.getDefense() + (heroWizard.getDefense() * ShopScreen.hero.getMagicPower() / 100)));
                             gameFlow.appendText("\nHero SHIELDED Hero's Wizards\n");
                         }
                         else if(buttons[finalI][finalJ].getName() == "heroGryff") {
-                            heroGryff.setDefense((int) (heroGryff.getDefense() * 1.2f));
+                            heroGryff.setDefense((int) (heroGryff.getDefense() + (heroGryff.getDefense() * ShopScreen.hero.getMagicPower() / 100)));
                             gameFlow.appendText("\nHero SHIELDED Hero's Gryffs\n");
                         }
                         for(int i = 0; i < MAX_ROW; i++) {
@@ -658,6 +742,9 @@ public class FightScreen implements Screen {
     }
 
     public void heroStruck() {
+        heroMana -= 10;
+        heroManaLabel.setText("MANA:   " + heroMana);
+
         wasStruckUsedThisTurn = true;
         wasStruckUsed = true;
         fireballButton.setTouchable(Touchable.disabled);
@@ -684,7 +771,7 @@ public class FightScreen implements Screen {
                         float dmg = 0;
                         int count = 0;
                         if(buttons[finalI][finalJ].getName() == "enemyPeasant") {
-                            dmg = 300 - 50 * enemyPeasant.getDefense() / 20;
+                            dmg = (5 * ShopScreen.hero.getMagicPower()) / (enemyPeasant.getDefense() + (enemyPeasant.getDefense() * enemy.getVit() / 100f));
                             for(int i = 0; i < dmg; i = i + enemyPeasant.getHp()) {
                                 count++;
                                 System.out.println(count);
@@ -696,7 +783,7 @@ public class FightScreen implements Screen {
                             isUnitDead(finalI, finalJ, false);
                         }
                         else if(buttons[finalI][finalJ].getName() == "enemyArcher") {
-                            dmg = 300 - 50 * enemyArcher.getDefense() / 20;
+                            dmg = (5 * ShopScreen.hero.getMagicPower()) / (enemyArcher.getDefense() + (enemyArcher.getDefense() * enemy.getVit() / 100f));
                             for(int i = 0; i < dmg; i = i + enemyArcher.getHp()) {
                                 count++;
                                 System.out.println(count);
@@ -708,7 +795,7 @@ public class FightScreen implements Screen {
                             isUnitDead(finalI, finalJ, false);
                         }
                         else if(buttons[finalI][finalJ].getName() == "enemyWarrior") {
-                            dmg = 300 - 50 * enemyWarrior.getDefense() / 20;
+                            dmg = (5 * ShopScreen.hero.getMagicPower()) / (enemyWarrior.getDefense() + (enemyWarrior.getDefense() * enemy.getVit() / 100f));
                             for(int i = 0; i < dmg; i = i + enemyWarrior.getHp()) {
                                 count++;
                                 System.out.println(count);
@@ -720,7 +807,7 @@ public class FightScreen implements Screen {
                             isUnitDead(finalI, finalJ, false);
                         }
                         else if(buttons[finalI][finalJ].getName() == "enemyWizard") {
-                            dmg = 300 - 50 * enemyWizard.getDefense() / 20;
+                            dmg = (5 * ShopScreen.hero.getMagicPower()) / (enemyWizard.getDefense() + (enemyWizard.getDefense() * enemy.getVit() / 100f));
                             for(int i = 0; i < dmg; i = i + enemyWizard.getHp()) {
                                 count++;
                                 System.out.println(count);
@@ -732,7 +819,7 @@ public class FightScreen implements Screen {
                             isUnitDead(finalI, finalJ, false);
                         }
                         else if(buttons[finalI][finalJ].getName() == "enemyGryff") {
-                            dmg = 300 - 50 * enemyGryff.getDefense() / 20;
+                            dmg = (5 * ShopScreen.hero.getMagicPower()) / (enemyGryff.getDefense() + (enemyGryff.getDefense() * enemy.getVit() / 100f));
                             for(int i = 0; i < dmg; i = i + enemyGryff.getHp()) {
                                 count++;
                                 System.out.println(count);
@@ -760,6 +847,9 @@ public class FightScreen implements Screen {
     }
 
     public void heroFireball() {
+        heroMana -= 15;
+        heroManaLabel.setText("MANA:   " + heroMana);
+
         wasFireballUsedThisTurn = true;
         wasFireballUsed = true;
         fireballButton.setTouchable(Touchable.disabled);
@@ -784,7 +874,7 @@ public class FightScreen implements Screen {
                                 if(i >= 0 && i < MAX_ROW && j >= 0 && j < MAX_COL) {
                                     if(buttons[i][j].getName() == "enemyPeasant") {
                                         int count = 0;
-                                        float dmg = 250 - 50 * enemyPeasant.getDefense() / 20;
+                                        float dmg = (7 * ShopScreen.hero.getMagicPower()) / (enemyPeasant.getDefense() + (enemyPeasant.getDefense() * enemy.getVit() / 100f));
                                         for(int k = 0; k < dmg; k = k + enemyPeasant.getHp()) {
                                             count++;
                                             System.out.println(count);
@@ -797,7 +887,7 @@ public class FightScreen implements Screen {
                                     }
                                     else if(buttons[i][j].getName() == "enemyArcher") {
                                         int count = 0;
-                                        float dmg = 250 - 50 * enemyArcher.getDefense() / 20;
+                                        float dmg = (7 * ShopScreen.hero.getMagicPower()) / (enemyArcher.getDefense() + (enemyArcher.getDefense() * enemy.getVit() / 100f));
                                         for(int k = 0; k < dmg; k = k + enemyArcher.getHp()) {
                                             count++;
                                             System.out.println(count);
@@ -810,7 +900,7 @@ public class FightScreen implements Screen {
                                     }
                                     else if(buttons[i][j].getName() == "enemyWarrior") {
                                         int count = 0;
-                                        float dmg = 250 - 50 * enemyWarrior.getDefense() / 20;
+                                        float dmg = (7 * ShopScreen.hero.getMagicPower()) / (enemyWarrior.getDefense() + (enemyWarrior.getDefense() * enemy.getVit() / 100f));
                                         for(int k = 0; k < dmg; k = k + enemyWarrior.getHp()) {
                                             count++;
                                             System.out.println(count);
@@ -823,7 +913,7 @@ public class FightScreen implements Screen {
                                     }
                                     else if(buttons[i][j].getName() == "enemyWizard") {
                                         int count = 0;
-                                        float dmg = 250 - 50 * enemyWizard.getDefense() / 20;
+                                        float dmg = (7 * ShopScreen.hero.getMagicPower()) / (enemyWizard.getDefense() + (enemyWizard.getDefense() * enemy.getVit() / 100f));
                                         for(int k = 0; k < dmg; k = k + enemyWizard.getHp()) {
                                             count++;
                                             System.out.println(count);
@@ -836,7 +926,7 @@ public class FightScreen implements Screen {
                                     }
                                     else if(buttons[i][j].getName() == "enemyGryff") {
                                         int count = 0;
-                                        float dmg = 250 - 50 * enemyGryff.getDefense() / 20;
+                                        float dmg = (7 * ShopScreen.hero.getMagicPower()) / (enemyGryff.getDefense() + (enemyGryff.getDefense() * enemy.getVit() / 100f));
                                         for(int k = 0; k < dmg; k = k + enemyGryff.getHp()) {
                                             count++;
                                             System.out.println(count);
@@ -850,7 +940,7 @@ public class FightScreen implements Screen {
 
                                     else if(buttons[i][j].getName() == "heroPeasant") {
                                         int count = 0;
-                                        float dmg = 250 - 50 * heroPeasant.getDefense() / 20;
+                                        float dmg = (7 * ShopScreen.hero.getMagicPower()) / (heroPeasant.getDefense() + (heroPeasant.getDefense() * ShopScreen.hero.getVit() / 100f));
                                         for(int k = 0; k < dmg; k = k + heroPeasant.getHp()) {
                                             count++;
                                             System.out.println(count);
@@ -863,7 +953,7 @@ public class FightScreen implements Screen {
                                     }
                                     else if(buttons[i][j].getName() == "heroArcher") {
                                         int count = 0;
-                                        float dmg = 250 - 50 * heroArcher.getDefense() / 20;
+                                        float dmg = (7 * ShopScreen.hero.getMagicPower()) / (heroArcher.getDefense() + (heroArcher.getDefense() * ShopScreen.hero.getVit() / 100f));
                                         for(int k = 0; k < dmg; k = k + heroArcher.getHp()) {
                                             count++;
                                             System.out.println(count);
@@ -876,7 +966,7 @@ public class FightScreen implements Screen {
                                     }
                                     else if(buttons[i][j].getName() == "heroWarrior") {
                                         int count = 0;
-                                        float dmg = 250 - 50 * heroWarrior.getDefense() / 20;
+                                        float dmg = (7 * ShopScreen.hero.getMagicPower()) / (heroWarrior.getDefense() + (heroWarrior.getDefense() * ShopScreen.hero.getVit() / 100f));
                                         for(int k = 0; k < dmg; k = k + heroWarrior.getHp()) {
                                             count++;
                                             System.out.println(count);
@@ -889,7 +979,7 @@ public class FightScreen implements Screen {
                                     }
                                     else if(buttons[i][j].getName() == "heroWizard") {
                                         int count = 0;
-                                        float dmg = 250 - 50 * heroWizard.getDefense() / 20;
+                                        float dmg = (7 * ShopScreen.hero.getMagicPower()) / (heroWizard.getDefense() + (heroWizard.getDefense() * ShopScreen.hero.getVit() / 100f));
                                         for(int k = 0; k < dmg; k = k + heroWizard.getHp()) {
                                             count++;
                                             System.out.println(count);
@@ -902,7 +992,7 @@ public class FightScreen implements Screen {
                                     }
                                     else if(buttons[i][j].getName() == "heroGryff") {
                                         int count = 0;
-                                        float dmg = 250 - 50 * heroGryff.getDefense() / 20;
+                                        float dmg = (7 * ShopScreen.hero.getMagicPower()) / (heroGryff.getDefense() + (heroGryff.getDefense() * ShopScreen.hero.getVit() / 100f));
                                         for(int k = 0; k < dmg; k = k + heroGryff.getHp()) {
                                             count++;
                                             System.out.println(count);
@@ -1022,7 +1112,8 @@ public class FightScreen implements Screen {
                 if(i >= 0 && i < MAX_ROW && j >= 0 && j < MAX_COL) {
                     if(buttons[i][j].getName() == "heroPeasant") {
                         int count = 0;
-                        dmg -= dmg * heroPeasant.getDefense() / 20;
+                        dmg = dmg / (heroPeasant.getDefense() + ((float) (heroPeasant.getDefense() * ShopScreen.hero.getVit()) / 50));
+                        dmg = doesCrit(dmg, false);
                         for(int k = 0; k < dmg; k = k + heroPeasant.getHp()) {
                             count++;
                             System.out.println(count);
@@ -1044,7 +1135,8 @@ public class FightScreen implements Screen {
                     }
                     else if(buttons[i][j].getName() == "heroArcher") {
                         int count = 0;
-                        dmg -= dmg * heroArcher.getDefense() / 20;
+                        dmg = dmg / (heroArcher.getDefense() + ((float) (heroArcher.getDefense() * ShopScreen.hero.getVit()) / 50));
+                        dmg = doesCrit(dmg, false);
                         for(int k = 0; k < dmg; k = k + heroArcher.getHp()) {
                             count++;
                             System.out.println(count);
@@ -1066,7 +1158,8 @@ public class FightScreen implements Screen {
                     }
                     else if(buttons[i][j].getName() == "heroWarrior") {
                         int count = 0;
-                        dmg -= dmg * heroWarrior.getDefense() / 20;
+                        dmg = dmg / (heroWarrior.getDefense() + ((float) (heroWarrior.getDefense() * ShopScreen.hero.getVit()) / 50));
+                        dmg = doesCrit(dmg, false);
                         for(int k = 0; k < dmg; k = k + heroWarrior.getHp()) {
                             count++;
                             System.out.println(count);
@@ -1088,7 +1181,8 @@ public class FightScreen implements Screen {
                     }
                     else if(buttons[i][j].getName() == "heroWizard") {
                         int count = 0;
-                        dmg -= dmg * heroWizard.getDefense() / 20;
+                        dmg = dmg / (heroWizard.getDefense() + ((float) (heroWizard.getDefense() * ShopScreen.hero.getVit()) / 50));
+                        dmg = doesCrit(dmg, false);
                         for(int k = 0; k < dmg; k = k + heroWizard.getHp()) {
                             count++;
                             System.out.println(count);
@@ -1110,7 +1204,8 @@ public class FightScreen implements Screen {
                     }
                     else if(buttons[i][j].getName() == "heroGryff") {
                         int count = 0;
-                        dmg -= dmg * heroGryff.getDefense() / 20;
+                        dmg = dmg / (heroGryff.getDefense() + ((float) (heroGryff.getDefense() * ShopScreen.hero.getVit()) / 50));
+                        dmg = doesCrit(dmg, false);
                         for(int k = 0; k < dmg; k = k + heroGryff.getHp()) {
                             count++;
                             System.out.println(count);
@@ -1141,13 +1236,13 @@ public class FightScreen implements Screen {
         wasEnemyStruckUsedThisTurn = false;
         wasEnemyShieldUsedThisTurn = false;
 
-        if(!wasEnemyFireballUsed && !wasEnemyFireballUsedThisTurn && !wasEnemyStruckUsedThisTurn && !wasEnemyShieldUsedThisTurn) {
+        if(!wasEnemyFireballUsed && !wasEnemyFireballUsedThisTurn && !wasEnemyStruckUsedThisTurn && !wasEnemyShieldUsedThisTurn && enemy.isFireball() && enemyMana >= 15) {
             enemyFireball();
         }
-        if(!wasEnemyStruckUsed && !wasEnemyFireballUsedThisTurn && !wasEnemyStruckUsedThisTurn && !wasEnemyShieldUsedThisTurn) {
+        if(!wasEnemyStruckUsed && !wasEnemyFireballUsedThisTurn && !wasEnemyStruckUsedThisTurn && !wasEnemyShieldUsedThisTurn && enemy.isStruck() && enemyMana >= 10) {
             enemyStruck();
         }
-        if(!wasEnemyShieldUsed && !wasEnemyFireballUsedThisTurn && !wasEnemyStruckUsedThisTurn && !wasEnemyShieldUsedThisTurn) {
+        if(!wasEnemyShieldUsed && !wasEnemyFireballUsedThisTurn && !wasEnemyStruckUsedThisTurn && !wasEnemyShieldUsedThisTurn && enemy.isShield() && enemyMana >= 7) {
             enemyShield();
         }
 
@@ -1186,14 +1281,15 @@ public class FightScreen implements Screen {
 
                         //ability
                         if(heroUnitCount >= 2) {
-                            float dmg = (float) (heroGryff.getDamage() * heroGryff.getQuantity()) / 2;
+                            float dmg = ((enemyGryff.getDamage() + ((float) (enemyGryff.getDamage() * enemy.getStrength()) /50)) * enemyGryff.getQuantity()) * 0.75f;
 
                             for(int q = i-1; q <= i+1; q++) {
                                 for(int r = j-1; r <= j+1; r++) {
                                     if(q >= 0 && q < MAX_ROW && r >= 0 && r < MAX_COL) {
                                         if(buttons[q][r].getName() == "heroPeasant") {
                                             int count = 0;
-                                            dmg -= dmg * heroPeasant.getDefense() / 20;
+                                            dmg = dmg / (heroPeasant.getDefense() + ((float) (heroPeasant.getDefense() * ShopScreen.hero.getVit()) / 50));
+                                            dmg = doesCrit(dmg, false);
                                             for(int k = 0; k < dmg; k = k + heroPeasant.getHp()) {
                                                 count++;
                                                 System.out.println(count);
@@ -1207,7 +1303,8 @@ public class FightScreen implements Screen {
                                         }
                                         else if(buttons[q][r].getName() == "heroArcher") {
                                             int count = 0;
-                                            dmg -= dmg * heroArcher.getDefense() / 20;
+                                            dmg = dmg / (heroArcher.getDefense() + ((float) (heroArcher.getDefense() * ShopScreen.hero.getVit()) / 50));
+                                            dmg = doesCrit(dmg, false);
                                             for(int k = 0; k < dmg; k = k + heroArcher.getHp()) {
                                                 count++;
                                                 System.out.println(count);
@@ -1221,7 +1318,8 @@ public class FightScreen implements Screen {
                                         }
                                         else if(buttons[q][r].getName() == "heroWarrior") {
                                             int count = 0;
-                                            dmg -= dmg * heroWarrior.getDefense() / 20;
+                                            dmg = dmg / (heroWarrior.getDefense() + ((float) (heroWarrior.getDefense() * ShopScreen.hero.getVit()) / 50));
+                                            dmg = doesCrit(dmg, false);
                                             for(int k = 0; k < dmg; k = k + heroWarrior.getHp()) {
                                                 count++;
                                                 System.out.println(count);
@@ -1235,7 +1333,8 @@ public class FightScreen implements Screen {
                                         }
                                         else if(buttons[q][r].getName() == "heroWizard") {
                                             int count = 0;
-                                            dmg -= dmg * heroWizard.getDefense() / 20;
+                                            dmg = dmg / (heroWizard.getDefense() + ((float) (heroWizard.getDefense() * ShopScreen.hero.getVit()) / 50));
+                                            dmg = doesCrit(dmg, false);
                                             for(int k = 0; k < dmg; k = k + heroWizard.getHp()) {
                                                 count++;
                                                 System.out.println(count);
@@ -1249,7 +1348,8 @@ public class FightScreen implements Screen {
                                         }
                                         else if(buttons[q][r].getName() == "heroGryff") {
                                             int count = 0;
-                                            dmg -= dmg * heroGryff.getDefense() / 20;
+                                            dmg = dmg / (heroGryff.getDefense() + ((float) (heroGryff.getDefense() * ShopScreen.hero.getVit()) / 50));
+                                            dmg = doesCrit(dmg, false);
                                             for(int k = 0; k < dmg; k = k + heroGryff.getHp()) {
                                                 count++;
                                                 System.out.println(count);
@@ -1271,7 +1371,7 @@ public class FightScreen implements Screen {
 
                         //attack
                         else if(heroUnitCount == 1) {
-                            float dmg = enemyGryff.getDamage() * enemyGryff.getQuantity();
+                            float dmg = ((enemyGryff.getDamage() + ((float) (enemyGryff.getDamage() * enemy.getStrength()) /50)) * enemyGryff.getQuantity());
                             isEnemyGryffMoved = true;
 
                             if(enemyAttack(dmg, "Gryff", i, j, 1)) {
@@ -1417,7 +1517,7 @@ public class FightScreen implements Screen {
                         int heroUnitCount = 0;
 
                         //ability
-                        float dmg = enemyWarrior.getDamage() * enemyWarrior.getQuantity() * 2;
+                        float dmg = ((enemyWarrior.getDamage() + ((float) (enemyWarrior.getDamage() * enemy.getStrength()) /50)) * enemyWarrior.getQuantity()) * 1.2f;
 
                         for(int l = j-1; l >= j-3; l--) {
                             System.out.println(i + "," + l);
@@ -1425,7 +1525,8 @@ public class FightScreen implements Screen {
                                 if(buttons[i][l].getName() == "heroPeasant") {
                                     heroUnitCount++;
                                     int count = 0;
-                                    dmg -= dmg * heroPeasant.getDefense() / 20;
+                                    dmg = dmg / (heroPeasant.getDefense() + ((float) (heroPeasant.getDefense() * ShopScreen.hero.getVit()) / 50));
+                                    dmg = doesCrit(dmg, false);
                                     for(int k = 0; k < dmg; k = k + heroPeasant.getHp()) {
                                         count++;
                                         System.out.println(count);
@@ -1440,7 +1541,8 @@ public class FightScreen implements Screen {
                                 else if(buttons[i][l].getName() == "heroArcher") {
                                     heroUnitCount++;
                                     int count = 0;
-                                    dmg -= dmg * heroArcher.getDefense() / 20;
+                                    dmg = dmg / (heroArcher.getDefense() + ((float) (heroArcher.getDefense() * ShopScreen.hero.getVit()) / 50));
+                                    dmg = doesCrit(dmg, false);
                                     for(int k = 0; k < dmg; k = k + heroArcher.getHp()) {
                                         count++;
                                         System.out.println(count);
@@ -1455,7 +1557,8 @@ public class FightScreen implements Screen {
                                 else if(buttons[i][l].getName() == "heroWarrior") {
                                     heroUnitCount++;
                                     int count = 0;
-                                    dmg -= dmg * heroWarrior.getDefense() / 20;
+                                    dmg = dmg / (heroWarrior.getDefense() + ((float) (heroWarrior.getDefense() * ShopScreen.hero.getVit()) / 50));
+                                    dmg = doesCrit(dmg, false);
                                     for(int k = 0; k < dmg; k = k + heroWarrior.getHp()) {
                                         count++;
                                         System.out.println(count);
@@ -1470,7 +1573,8 @@ public class FightScreen implements Screen {
                                 else if(buttons[i][l].getName() == "heroWizard") {
                                     heroUnitCount++;
                                     int count = 0;
-                                    dmg -= dmg * heroWizard.getDefense() / 20;
+                                    dmg = dmg / (heroWizard.getDefense() + ((float) (heroWizard.getDefense() * ShopScreen.hero.getVit()) / 50));
+                                    dmg = doesCrit(dmg, false);
                                     for(int k = 0; k < dmg; k = k + heroWizard.getHp()) {
                                         count++;
                                         System.out.println(count);
@@ -1485,7 +1589,8 @@ public class FightScreen implements Screen {
                                 else if(buttons[i][l].getName() == "heroGryff") {
                                     heroUnitCount++;
                                     int count = 0;
-                                    dmg -= dmg * heroGryff.getDefense() / 20;
+                                    dmg = dmg / (heroGryff.getDefense() + ((float) (heroGryff.getDefense() * ShopScreen.hero.getVit()) / 50));
+                                    dmg = doesCrit(dmg, false);
                                     for(int k = 0; k < dmg; k = k + heroGryff.getHp()) {
                                         count++;
                                         System.out.println(count);
@@ -1507,7 +1612,7 @@ public class FightScreen implements Screen {
 
                         //attack
                         if(heroUnitCount == 0) {
-                            dmg = enemyWarrior.getDamage() * enemyWarrior.getQuantity();
+                            dmg = ((enemyWarrior.getDamage() + ((float) (enemyWarrior.getDamage() * enemy.getStrength()) /50)) * enemyWarrior.getQuantity());
 
                             if(enemyAttack(dmg, "Warrior", i, j, 1)) {
                                 isEnemyWarriorMoved = true;
@@ -1692,8 +1797,8 @@ public class FightScreen implements Screen {
                         }
 
                         //ability
-                        float dmgBuff = (float) (enemyWizard.getDamage() * enemyWizard.getQuantity()) / 100;
-                        float defBuff = (float) (enemyWizard.getDamage() * enemyWizard.getQuantity()) / 100;
+                        float dmgBuff = ((float) (enemyWizard.getDamage() * enemy.getMagicPower()) /50);
+                        float defBuff = ((float) (enemyWizard.getDamage() * enemy.getMagicPower()) /75);
 
                         if(enemyGryff.getQuantity() >= 30) {
                             enemyGryff.setDamage((int) (enemyGryff.getDamage() + dmgBuff));
@@ -1724,7 +1829,7 @@ public class FightScreen implements Screen {
                         }
                         else {
                             //attack
-                            float dmg = enemyWizard.getDamage() * enemyWizard.getQuantity();
+                            float dmg = ((enemyWizard.getDamage() + ((float) (enemyWizard.getDamage() * enemy.getStrength()) /50)) * enemyWizard.getQuantity());
                             isEnemyWizardMoved = true;
 
                             if(enemyAttack(dmg, "Wizard", i, j, MAX_COL+MAX_ROW)) {
@@ -1802,7 +1907,7 @@ public class FightScreen implements Screen {
                         }
 
                         //attack
-                        float dmg = enemyArcher.getDamage() * enemyArcher.getQuantity();
+                        float dmg = ((enemyArcher.getDamage() + ((float) (enemyArcher.getDamage() * enemy.getStrength()) /50)) * enemyArcher.getQuantity());
                         isEnemyArcherMoved = true;
 
                         if(enemyAttack(dmg, "Archer", i, j, MAX_COL+MAX_ROW)) {
@@ -1823,7 +1928,7 @@ public class FightScreen implements Screen {
                     if(buttons[i][j].getName() == "enemyPeasant") {
 
                         //attack
-                        float dmg = enemyPeasant.getDamage() * enemyPeasant.getQuantity();
+                        float dmg = ((enemyPeasant.getDamage() + ((float) (enemyPeasant.getDamage() * enemy.getStrength()) /50)) * enemyPeasant.getQuantity());
 
                         if(enemyAttack(dmg, "Peasant", i, j, 1)) {
                             isEnemyPeasantMoved = true;
@@ -2072,13 +2177,13 @@ public class FightScreen implements Screen {
             wasEnemyShieldUsedThisTurn = false;
         }
 
-        if(!wasEnemyFireballUsed) {
+        if(!wasEnemyFireballUsed && enemy.isFireball()) {
             enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballActive.png"))));
         }
-        if(!wasEnemyStruckUsed) {
+        if(!wasEnemyStruckUsed && enemy.isStruck()) {
             enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckActive.png"))));
         }
-        if(!wasEnemyShieldUsed) {
+        if(!wasEnemyShieldUsed && enemy.isShield()) {
             enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldActive.png"))));
         }
 
@@ -2191,27 +2296,32 @@ public class FightScreen implements Screen {
                String unit = "";
 
                if(name == "heroPeasant") {
-                   dmg = heroPeasant.getDamage() * heroPeasant.getQuantity();
+                   dmg = (heroPeasant.getDamage() + ((float) (heroPeasant.getDamage() * ShopScreen.hero.getStrength()) /50)) * heroPeasant.getQuantity();
+                   dmg = doesCrit(dmg, true);
                    unit = "Peasants";
                    isHeroPeasantMoved = true;
                }
                else if(name == "heroArcher") {
-                   dmg = heroArcher.getDamage() * heroArcher.getQuantity();
+                   dmg = (heroArcher.getDamage() + ((float) (heroArcher.getDamage() * ShopScreen.hero.getStrength()) /50)) * heroArcher.getQuantity();
+                   dmg = doesCrit(dmg, true);
                    unit = "Archers";
                    isHeroArcherMoved = true;
                }
                else if(name == "heroWarrior") {
-                   dmg = heroWarrior.getDamage() * heroWarrior.getQuantity();
+                   dmg = (heroWarrior.getDamage() + ((float) (heroWarrior.getDamage() * ShopScreen.hero.getStrength()) /50)) * heroWarrior.getQuantity();
+                   dmg = doesCrit(dmg, true);
                    unit = "Warriors";
                    isHeroWarriorMoved = true;
                }
                else if(name == "heroWizard") {
-                   dmg = heroWizard.getDamage() * heroWizard.getQuantity();
+                   dmg = (heroWizard.getDamage() + ((float) (heroWizard.getDamage() * ShopScreen.hero.getStrength()) /50)) * heroWizard.getQuantity();
+                   dmg = doesCrit(dmg, true);
                    unit = "Wizards";
                    isHeroWizardMoved = true;
                }
                else if(name == "heroGryff") {
-                   dmg = heroGryff.getDamage() * heroGryff.getQuantity();
+                   dmg = (heroGryff.getDamage() + ((float) (heroGryff.getDamage() * ShopScreen.hero.getStrength()) /50)) * heroGryff.getQuantity();
+                   dmg = doesCrit(dmg, true);
                    unit = "Gryffs";
                    isHeroGryffMoved = true;
                }
@@ -2236,7 +2346,7 @@ public class FightScreen implements Screen {
                                    float dmg = 0;
                                    int count = 0;
                                    if(buttons[finalI][finalJ].getName() == "enemyPeasant") {
-                                       dmg = finalDmg - finalDmg * enemyPeasant.getDefense() / 20;
+                                       dmg = finalDmg / (enemyPeasant.getDefense() + ((float) (enemyPeasant.getDefense() * enemy.getVit()) / 50));
                                        for(int i = 0; i < dmg; i = i + enemyPeasant.getHp()) {
                                            count++;
                                            System.out.println(count);
@@ -2248,7 +2358,7 @@ public class FightScreen implements Screen {
                                        isUnitDead(finalI, finalJ, false);
                                    }
                                    else if(buttons[finalI][finalJ].getName() == "enemyArcher") {
-                                       dmg = finalDmg - finalDmg * enemyArcher.getDefense() / 20;
+                                       dmg = finalDmg / (enemyArcher.getDefense() + ((float) (enemyArcher.getDefense() * enemy.getVit()) / 50));
                                        for(int i = 0; i < dmg; i = i + enemyArcher.getHp()) {
                                            count++;
                                            System.out.println(count);
@@ -2260,7 +2370,7 @@ public class FightScreen implements Screen {
                                        isUnitDead(finalI, finalJ, false);
                                    }
                                    else if(buttons[finalI][finalJ].getName() == "enemyWarrior") {
-                                       dmg = finalDmg - finalDmg * enemyWarrior.getDefense() / 20;
+                                       dmg = finalDmg / (enemyWarrior.getDefense() + ((float) (enemyWarrior.getDefense() * enemy.getVit()) / 50));
                                        for(int i = 0; i < dmg; i = i + enemyWarrior.getHp()) {
                                            count++;
                                            System.out.println(count);
@@ -2272,7 +2382,7 @@ public class FightScreen implements Screen {
                                        isUnitDead(finalI, finalJ, false);
                                    }
                                    else if(buttons[finalI][finalJ].getName() == "enemyWizard") {
-                                       dmg = finalDmg - finalDmg * enemyWizard.getDefense() / 20;
+                                       dmg = finalDmg / (enemyWizard.getDefense() + ((float) (enemyWizard.getDefense() * enemy.getVit()) / 50));
                                        for(int i = 0; i < dmg; i = i + enemyWizard.getHp()) {
                                            count++;
                                            System.out.println(count);
@@ -2284,7 +2394,7 @@ public class FightScreen implements Screen {
                                        isUnitDead(finalI, finalJ, false);
                                    }
                                    else if(buttons[finalI][finalJ].getName() == "enemyGryff") {
-                                       dmg = finalDmg - finalDmg * enemyGryff.getDefense() / 20;
+                                       dmg = finalDmg / (enemyGryff.getDefense() + ((float) (enemyGryff.getDefense() * enemy.getVit()) / 50));
                                        for(int i = 0; i < dmg; i = i + enemyGryff.getHp()) {
                                            count++;
                                            System.out.println(count);
@@ -2338,14 +2448,15 @@ public class FightScreen implements Screen {
                 else if(name == "heroWarrior") {
                     isHeroWarriorMoved = true;
 
-                    dmg = heroWarrior.getDamage() * heroWarrior.getQuantity() * 2;
+                    dmg = ((heroWarrior.getDamage() + ((float) (heroWarrior.getDamage() * ShopScreen.hero.getStrength()) /50)) * heroWarrior.getQuantity()) * 1.2f;
+                    dmg = doesCrit(dmg, true);
 
                     for(int j = col+1; j <= col+3; j++) {
                         System.out.println(row + "," + j);
                         if(j >= 0 && j < MAX_ROW) {
                             if(buttons[row][j].getName() == "enemyPeasant") {
                                 int count = 0;
-                                dmg -= dmg * enemyPeasant.getDefense() / 20;
+                                dmg = dmg / (enemyPeasant.getDefense() + ((float) (enemyPeasant.getDefense() * enemy.getVit()) / 50));
                                 for(int k = 0; k < dmg; k = k + enemyPeasant.getHp()) {
                                     count++;
                                     System.out.println(count);
@@ -2358,7 +2469,7 @@ public class FightScreen implements Screen {
                             }
                             else if(buttons[row][j].getName() == "enemyArcher") {
                                 int count = 0;
-                                dmg -= dmg * enemyArcher.getDefense() / 20;
+                                dmg = dmg / (enemyArcher.getDefense() + ((float) (enemyArcher.getDefense() * enemy.getVit()) / 50));
                                 for(int k = 0; k < dmg; k = k + enemyArcher.getHp()) {
                                     count++;
                                     System.out.println(count);
@@ -2371,7 +2482,7 @@ public class FightScreen implements Screen {
                             }
                             else if(buttons[row][j].getName() == "enemyWarrior") {
                                 int count = 0;
-                                dmg -= dmg * enemyWarrior.getDefense() / 20;
+                                dmg = dmg / (enemyWarrior.getDefense() + ((float) (enemyWarrior.getDefense() * enemy.getVit()) / 50));
                                 for(int k = 0; k < dmg; k = k + enemyWarrior.getHp()) {
                                     count++;
                                     System.out.println(count);
@@ -2384,7 +2495,7 @@ public class FightScreen implements Screen {
                             }
                             else if(buttons[row][j].getName() == "enemyWizard") {
                                 int count = 0;
-                                dmg -= dmg * enemyWizard.getDefense() / 20;
+                                dmg = dmg / (enemyWizard.getDefense() + ((float) (enemyWizard.getDefense() * enemy.getVit()) / 50));
                                 for(int k = 0; k < dmg; k = k + enemyWizard.getHp()) {
                                     count++;
                                     System.out.println(count);
@@ -2397,7 +2508,7 @@ public class FightScreen implements Screen {
                             }
                             else if(buttons[row][j].getName() == "enemyGryff") {
                                 int count = 0;
-                                dmg -= dmg * enemyGryff.getDefense() / 20;
+                                dmg = dmg / (enemyGryff.getDefense() + ((float) (enemyGryff.getDefense() * enemy.getVit()) / 50));
                                 for(int k = 0; k < dmg; k = k + enemyGryff.getHp()) {
                                     count++;
                                     System.out.println(count);
@@ -2422,8 +2533,8 @@ public class FightScreen implements Screen {
                                 buttons[i][j].setTouchable(Touchable.enabled);
                                 int finalI = i;
                                 int finalJ = j;
-                                float dmgBuff = (float) (heroWizard.getDamage() * heroWizard.getQuantity()) / 10;
-                                float defBuff = (float) (heroWizard.getDamage() * heroWizard.getQuantity()) / 20;
+                                float dmgBuff = ((float) (heroWizard.getDamage() * ShopScreen.hero.getMagicPower()) /50);
+                                float defBuff = ((float) (heroWizard.getDamage() * ShopScreen.hero.getMagicPower()) /75);
                                 System.out.println("button is ready");
                                 buttons[finalI][finalJ].addListener(new ClickListener() {
                                     public void clicked(InputEvent event, float x, float y) {
@@ -2456,7 +2567,8 @@ public class FightScreen implements Screen {
 
                 }
                 else if(name == "heroGryff") {
-                    dmg = (float) (heroGryff.getDamage() * heroGryff.getQuantity()) / 2;
+                    dmg = ((heroGryff.getDamage() + ((float) (heroGryff.getDamage() * ShopScreen.hero.getStrength()) /50)) * heroGryff.getQuantity()) * 0.75f;
+                    dmg = doesCrit(dmg, true);
                     isHeroGryffMoved = true;
 
                     for(int i = row-1; i <= row+1; i ++) {
@@ -2464,7 +2576,7 @@ public class FightScreen implements Screen {
                             if(i >= 0 && i < MAX_ROW && j >= 0 && j < MAX_COL) {
                                 if(buttons[i][j].getName() == "enemyPeasant") {
                                     int count = 0;
-                                    dmg -= dmg * enemyPeasant.getDefense() / 20;
+                                    dmg = dmg / (enemyPeasant.getDefense() + ((float) (enemyPeasant.getDefense() * enemy.getVit()) / 50));
                                     for(int k = 0; k < dmg; k = k + enemyPeasant.getHp()) {
                                         count++;
                                         System.out.println(count);
@@ -2477,7 +2589,7 @@ public class FightScreen implements Screen {
                                 }
                                 else if(buttons[i][j].getName() == "enemyArcher") {
                                     int count = 0;
-                                    dmg -= dmg * enemyArcher.getDefense() / 20;
+                                    dmg = dmg / (enemyArcher.getDefense() + ((float) (enemyArcher.getDefense() * enemy.getVit()) / 50));
                                     for(int k = 0; k < dmg; k = k + enemyArcher.getHp()) {
                                         count++;
                                         System.out.println(count);
@@ -2490,7 +2602,7 @@ public class FightScreen implements Screen {
                                 }
                                 else if(buttons[i][j].getName() == "enemyWarrior") {
                                     int count = 0;
-                                    dmg -= dmg * enemyWarrior.getDefense() / 20;
+                                    dmg = dmg / (enemyWarrior.getDefense() + ((float) (enemyWarrior.getDefense() * enemy.getVit()) / 50));
                                     for(int k = 0; k < dmg; k = k + enemyWarrior.getHp()) {
                                         count++;
                                         System.out.println(count);
@@ -2503,7 +2615,7 @@ public class FightScreen implements Screen {
                                 }
                                 else if(buttons[i][j].getName() == "enemyWizard") {
                                     int count = 0;
-                                    dmg -= dmg * enemyWizard.getDefense() / 20;
+                                    dmg = dmg / (enemyWizard.getDefense() + ((float) (enemyWizard.getDefense() * enemy.getVit()) / 50));
                                     for(int k = 0; k < dmg; k = k + enemyWizard.getHp()) {
                                         count++;
                                         System.out.println(count);
@@ -2516,7 +2628,7 @@ public class FightScreen implements Screen {
                                 }
                                 else if(buttons[i][j].getName() == "enemyGryff") {
                                     int count = 0;
-                                    dmg -= dmg * enemyGryff.getDefense() / 20;
+                                    dmg = dmg / (enemyGryff.getDefense() + ((float) (enemyGryff.getDefense() * enemy.getVit()) / 50));
                                     for(int k = 0; k < dmg; k = k + enemyGryff.getHp()) {
                                         count++;
                                         System.out.println(count);
@@ -2637,7 +2749,7 @@ public class FightScreen implements Screen {
 
     public void selectUnit() {
 
-        if(!wasFireballUsed && !wasShieldUsedThisTurn && !wasStruckUsedThisTurn && ShopScreen.hero.isFireball()) {
+        if(!wasFireballUsed && !wasShieldUsedThisTurn && !wasStruckUsedThisTurn && ShopScreen.hero.isFireball() && heroMana >= 15) {
             fireballButton.setTouchable(Touchable.enabled);
             fireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/fireballActive.png"))));
             fireballButton.addListener(new ClickListener() {
@@ -2646,7 +2758,7 @@ public class FightScreen implements Screen {
                 }
             });
         }
-        if(!wasStruckUsed && !wasShieldUsedThisTurn && !wasFireballUsedThisTurn && ShopScreen.hero.isStruck()) {
+        if(!wasStruckUsed && !wasShieldUsedThisTurn && !wasFireballUsedThisTurn && ShopScreen.hero.isStruck() && heroMana >= 10) {
             struckButton.setTouchable(Touchable.enabled);
             struckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/struckActive.png"))));
             struckButton.addListener(new ClickListener() {
@@ -2655,7 +2767,7 @@ public class FightScreen implements Screen {
                 }
             });
         }
-        if(!wasShieldUsed && !wasStruckUsedThisTurn && !wasFireballUsedThisTurn && ShopScreen.hero.isShield()) {
+        if(!wasShieldUsed && !wasStruckUsedThisTurn && !wasFireballUsedThisTurn && ShopScreen.hero.isShield() && heroMana >= 7) {
             shieldButton.setTouchable(Touchable.enabled);
             shieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/shieldActive.png"))));
             shieldButton.addListener(new ClickListener() {
@@ -2713,21 +2825,115 @@ public class FightScreen implements Screen {
     }
 
     public void placeUnits() {
+        heroMana = ShopScreen.hero.getMana();
+        heroManaLabel = new Label("MANA:  " + heroMana, new Label.LabelStyle(new BitmapFont(), Color.CYAN));
+        heroManaLabel.setFontScale(1.5f);
+        heroManaLabel.setPosition(20, 120);
+        stage.addActor(heroManaLabel);
 
-        enemyFireballButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballActive.png")))));
+        enemyMana = enemy.getMana();
+        enemyManaLabel = new Label("MANA:  " + enemyMana, new Label.LabelStyle(new BitmapFont(), Color.CYAN));
+        enemyManaLabel.setFontScale(1.5f);
+        enemyManaLabel.setPosition(20, 810);
+        stage.addActor(enemyManaLabel);
+
+        enemyFireballButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballdeActive.png")))));
         enemyFireballButton.setPosition(300, 810);
         enemyFireballButton.setSize(150, 48);
         stage.addActor(enemyFireballButton);
 
-        enemyStruckButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckActive.png")))));
+        enemyStruckButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckDeactive.png")))));
         enemyStruckButton.setPosition(545, 810);
         enemyStruckButton.setSize(150, 48);
         stage.addActor(enemyStruckButton);
 
-        enemyShieldButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldActive.png")))));
+        enemyShieldButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldDeactive.png")))));
         enemyShieldButton.setPosition(790, 810);
         enemyShieldButton.setSize(150, 48);
         stage.addActor(enemyShieldButton);
+
+        if(minPowerLevel == 15) {
+            Random r = new Random();
+            int low = 0;
+            int high = 3;
+            int result = r.nextInt(high-low) + low;
+
+            if(result == 0) {
+                enemy.setFireball(true);
+                enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballActive.png"))));
+            }
+            else if(result == 1) {
+                enemy.setStruck(true);
+                enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckActive.png"))));
+            }
+            else if(result == 2) {
+                enemy.setShield(true);
+                enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldActive.png"))));
+            }
+        }
+        else if(minPowerLevel == 30) {
+            Random r = new Random();
+            int low = 0;
+            int high = 3;
+            int result = r.nextInt(high-low) + low;
+
+            if(result == 0) {
+                enemy.setFireball(true);
+                enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballActive.png"))));
+
+                low = 0;
+                high = 2;
+                result = r.nextInt(high-low) + low;
+                if(result == 0) {
+                    enemy.setStruck(true);
+                    enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckActive.png"))));
+                }
+                else if(result == 1) {
+                    enemy.setShield(true);
+                    enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldActive.png"))));
+                }
+            }
+            else if(result == 1) {
+                enemy.setStruck(true);
+                enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckActive.png"))));
+
+                low = 0;
+                high = 2;
+                result = r.nextInt(high-low) + low;
+                if(result == 0) {
+                    enemy.setFireball(true);
+                    enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballActive.png"))));
+                }
+                else if(result == 1) {
+                    enemy.setShield(true);
+                    enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldActive.png"))));
+                }
+            }
+            else if(result == 2) {
+                enemy.setShield(true);
+                enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldActive.png"))));
+
+                low = 0;
+                high = 2;
+                result = r.nextInt(high-low) + low;
+                if(result == 0) {
+                    enemy.setFireball(true);
+                    enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballActive.png"))));
+                }
+                else if(result == 1) {
+                    enemy.setStruck(true);
+                    enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckActive.png"))));
+                }
+            }
+        }
+        else {
+            enemy.setFireball(true);
+            enemyFireballButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballActive.png"))));
+            enemy.setStruck(true);
+            enemyStruckButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyStruckActive.png"))));
+            enemy.setShield(true);
+            enemyShieldButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyShieldActive.png"))));
+        }
 
         int row = (int)(Math.random() * 3);
 
@@ -2858,16 +3064,18 @@ public class FightScreen implements Screen {
     }
 
     public void createUnits() {
-        heroPeasant = new Peasant(true, ShopScreen.hero.getPeasantAmount(), 3, 5, 10, 2);
-        enemyPeasant = new Peasant(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 2);
-        heroArcher = new Archer(true, ShopScreen.hero.getArcherAmount(), 3, 5, 10, 2);
-        enemyArcher = new Archer(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 2);
-        heroWarrior = new Warrior(true, ShopScreen.hero.getWarriorAmount(), 3, 5, 10, 2);
-        enemyWarrior  = new Warrior(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 2);
-        heroWizard = new Wizard(true, ShopScreen.hero.getWizardAmount(), 3, 5, 10, 1);
-        enemyWizard = new Wizard(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 1);
-        heroGryff = new Gryff(true, ShopScreen.hero.getGryffAmount(), 3, 5, 10, 3);
-        enemyGryff = new Gryff(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 10, 3);
+        enemy = new FightEnemy(new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel);
+
+        heroPeasant = new Peasant(true, ShopScreen.hero.getPeasantAmount(), 3, 5, 9, 2);
+        enemyPeasant = new Peasant(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 3, 5, 9, 2);
+        heroArcher = new Archer(true, ShopScreen.hero.getArcherAmount(), 12, 3, 7, 2);
+        enemyArcher = new Archer(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 12, 3, 7, 2);
+        heroWarrior = new Warrior(true, ShopScreen.hero.getWarriorAmount(), 7, 8, 12, 2);
+        enemyWarrior  = new Warrior(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 7, 8, 12, 2);
+        heroWizard = new Wizard(true, ShopScreen.hero.getWizardAmount(), 4, 3, 7, 1);
+        enemyWizard = new Wizard(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 4, 3, 7, 1);
+        heroGryff = new Gryff(true, ShopScreen.hero.getGryffAmount(), 10, 10, 18, 3);
+        enemyGryff = new Gryff(false, new Random().nextInt(maxPowerLevel - minPowerLevel) + minPowerLevel, 10, 10, 18, 3);
     }
 
     public void createField() {
