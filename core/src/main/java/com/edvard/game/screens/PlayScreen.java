@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -47,8 +49,13 @@ public class PlayScreen implements Screen {
     private OrthogonalTiledMapRenderer renderer;
     private Hud hud;
 
+    private Texture background;
+
     public PlayScreen(MainGame game) {
         atlas = new TextureAtlas("textures/hero/Hero.pack");
+
+        background = new Texture("textures/background.png");
+
 
         this.game = game;
         camera = new OrthographicCamera();
@@ -172,13 +179,14 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        renderer.render();
 
         //debugRenderer.render(world, camera.combined);
 
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
+        game.batch.draw(background, -100/MainGame.PPM, -100/MainGame.PPM, 1500/MainGame.PPM, 1500/MainGame.PPM);
         hero.draw(game.batch);
+        renderer.render();
         game.batch.end();
 
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
