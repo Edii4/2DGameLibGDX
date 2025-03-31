@@ -2837,7 +2837,7 @@ public class FightScreen implements Screen {
         enemyManaLabel.setPosition(20, 810);
         stage.addActor(enemyManaLabel);
 
-        enemyFireballButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballdeActive.png")))));
+        enemyFireballButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("buttons/fight/enemyFireballDeactive.png")))));
         enemyFireballButton.setPosition(300, 810);
         enemyFireballButton.setSize(150, 48);
         stage.addActor(enemyFireballButton);
